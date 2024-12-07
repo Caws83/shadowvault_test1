@@ -1,0 +1,26 @@
+{
+  "LotteryTix":1,
+  "name":"Lottery Tickets",
+  "description":"Claim 5 Draws - MSWAPF Lottery",
+  "image":"ipfs://QmUJ5m6bUp5ibDCq8auk8PQdV1hUiBk9QdQTMdRyZBSJeA/5tix.png",
+  "edition":1,
+  "attributes":
+    [
+      {
+        "trait_type":"LotteryTicket",
+        "value":"MSWAPF"
+      },
+      {
+        "trait_type":"Rarity",
+        "value":"Common"
+      },
+ 	{
+        "trait_type":"Draws",
+        "value":"5 Draws"
+      },
+      {
+        "trait_type":"BlockChain",
+        "value":"Shibarium"
+      }
+    ]
+}

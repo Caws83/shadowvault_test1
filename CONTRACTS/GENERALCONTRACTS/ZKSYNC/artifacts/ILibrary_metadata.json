@@ -1,0 +1,45 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"ZKSYNC/quickcalls.sol": "ILibrary"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"ZKSYNC/quickcalls.sol": {
+			"keccak256": "0x5d84584f49046d482feebb3ec186fafe43566d0728a286b95d5f6e52e0f4029b",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://d173f3128bc58bc7c81c5bc835f24d97b0eedf9f3855dd907aaed8cd33864f3e",
+				"dweb:/ipfs/QmcLxYDTe1p1x41DMvxAZnLsc5X4XPegJmJQNSEm4eYUnv"
+			]
+		}
+	},
+	"version": 1
+}

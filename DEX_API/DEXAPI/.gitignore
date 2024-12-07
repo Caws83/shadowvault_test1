@@ -1,0 +1,7 @@
+# dependencies
+/node_modules
+/dist
+pairs.json
+yarn.lock
+market.json
+.env

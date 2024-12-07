@@ -1,0 +1,26 @@
+{
+  "LotteryTix":2,
+  "name":"Lottery Tickets",
+  "description":"Claim 100 Draws - MSWAPF Lottery",
+  "image":"ipfs://QmUJ5m6bUp5ibDCq8auk8PQdV1hUiBk9QdQTMdRyZBSJeA/100tix.png",
+  "edition":1,
+  "attributes":
+    [
+      {
+        "trait_type":"LotteryTicket",
+        "value":"MSWAPF"
+      },
+      {
+        "trait_type":"Rarity",
+        "value":"Rare"
+      },
+ 	{
+        "trait_type":"Draws",
+        "value":"100 Draws"
+      },
+      {
+        "trait_type":"BlockChain",
+        "value":"Shibarium"
+      }
+    ]
+}

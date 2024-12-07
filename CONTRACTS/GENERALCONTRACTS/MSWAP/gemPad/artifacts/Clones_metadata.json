@@ -1,0 +1,59 @@
+{
+	"compiler": {
+		"version": "0.8.19+commit.7dd6d404"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"name": "ERC1167FailedCreateClone",
+				"type": "error"
+			}
+		],
+		"devdoc": {
+			"details": "https://eips.ethereum.org/EIPS/eip-1167[ERC-1167] is a standard for deploying minimal proxy contracts, also known as \"clones\". > To simply and cheaply clone contract functionality in an immutable way, this standard specifies > a minimal bytecode implementation that delegates all calls to a known, fixed address. The library includes functions to deploy a proxy using either `create` (traditional deployment) or `create2` (salted deterministic deployment). It also includes functions to predict the addresses of clones deployed using the deterministic method.",
+			"errors": {
+				"ERC1167FailedCreateClone()": [
+					{
+						"details": "A clone instance deployment failed."
+					}
+				]
+			},
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"MSWAP/gemPad/DividendToken1.sol": "Clones"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"MSWAP/gemPad/DividendToken1.sol": {
+			"keccak256": "0x668f11f7d15955afd0f6044fee83e6733a7798dfd1376c260af393cba71c3142",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://25d5ded4af5a862b37c45206a5ac20cb9236232412b0d6e522a5f93f94e57043",
+				"dweb:/ipfs/QmXq6DndX8C3ecrYta5D7WkekacuKNyYzbUTWbzoB3VGw5"
+			]
+		}
+	},
+	"version": 1
+}

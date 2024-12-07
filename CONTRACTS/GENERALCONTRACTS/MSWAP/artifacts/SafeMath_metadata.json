@@ -1,0 +1,45 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"MSWAP/OneRouter.sol": "SafeMath"
+		},
+		"evmVersion": "petersburg",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"MSWAP/OneRouter.sol": {
+			"keccak256": "0x87edb815be63a6c7c65271454b2364fe874873f3788dd0143cfe2b5fa6dd4530",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://5adc04c2c7fa79a549b028a689dbf0d04a8924a8c1decc5b3af12647d9bcc46d",
+				"dweb:/ipfs/QmeXnKNGRK9nVm2BQyKdx6LWoqBSrb6JoqCb89RcyHXTxT"
+			]
+		}
+	},
+	"version": 1
+}

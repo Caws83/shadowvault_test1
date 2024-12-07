@@ -1,0 +1,373 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_bnbAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_treasury",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "previousOwner",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "OwnershipTransferred",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "BNBSTORED",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "FeePercent",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_TokenInput",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_TokenH",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_TokenA",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_TokenB",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_routerAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_routerAddress2",
+						"type": "address"
+					}
+				],
+				"name": "_1StakeToken",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_TokenA",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_TokenB",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_routerAddress",
+						"type": "address"
+					}
+				],
+				"name": "_1StakeUsingBNB",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_LPToken",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_TokenInput",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_TokenA",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_TokenB",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_router",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_TokenH",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_router2",
+						"type": "address"
+					}
+				],
+				"name": "_BreakLPReturnToken",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_FeePercentInBip",
+						"type": "uint256"
+					}
+				],
+				"name": "_SetFeePercent",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_TokenOut",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_RouterOut",
+						"type": "address"
+					}
+				],
+				"name": "_bnbToToken",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_TokenIn",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_AmountIn",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "_TokenOut",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_RouterIn",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_RouterOut",
+						"type": "address"
+					}
+				],
+				"name": "_tokenToToken",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "renounceOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "token",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "setBNBBalance",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "transferOwnership",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "treasury",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "withdawlBNB",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_tokenAddress",
+						"type": "address"
+					}
+				],
+				"name": "withdrawlToken",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"stateMutability": "payable",
+				"type": "receive"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"owner()": {
+					"details": "Returns the address of the current owner."
+				},
+				"renounceOwnership()": {
+					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+				},
+				"transferOwnership(address)": {
+					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"ZKSYNC/quickcalls.sol": "QuickCalls"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"ZKSYNC/quickcalls.sol": {
+			"keccak256": "0x5d84584f49046d482feebb3ec186fafe43566d0728a286b95d5f6e52e0f4029b",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://d173f3128bc58bc7c81c5bc835f24d97b0eedf9f3855dd907aaed8cd33864f3e",
+				"dweb:/ipfs/QmcLxYDTe1p1x41DMvxAZnLsc5X4XPegJmJQNSEm4eYUnv"
+			]
+		}
+	},
+	"version": 1
+}

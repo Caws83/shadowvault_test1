@@ -1,0 +1,45 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"MSWAP/Mswap_LPFactory.sol": "Math"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"MSWAP/Mswap_LPFactory.sol": {
+			"keccak256": "0x5e6d47fca4555484140b02cc86910edf1d1e08f256f772f799ff091c8043aea2",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://f7a11ce03f47a590ba708aa93526696544de1f98afa6bbfd60f04071a4a703d8",
+				"dweb:/ipfs/QmNudrJFurbhPQMjK9rCii8p72ERG7aEyfz81ut75BvyE8"
+			]
+		}
+	},
+	"version": 1
+}

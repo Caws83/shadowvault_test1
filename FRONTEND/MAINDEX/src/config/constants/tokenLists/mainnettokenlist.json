@@ -1,0 +1,98 @@
+{
+    "name": "MarSwap Default",
+    "timestamp": "2021-09-13T14:42:54.559Z",
+    "version": {
+      "major": 2,
+      "minor": 15,
+      "patch": 3
+    },
+    "logoURI": "/images/MSWAP.png",
+    "keywords": [
+      "MarSwap",
+      "default"
+    ],
+    "tokens": [
+  
+      {
+        "name": "Wrapped zkCRO",
+        "symbol": "WCRO",
+        "address": "0xC1bF55EE54E16229d9b369a5502Bfe5fC9F20b6d",
+        "chainId": 388,
+        "decimals": 18,
+        "logoURI": "/images/tokens/zkCRO.png"  
+      },
+      {
+        "name": "Veno USD",
+        "symbol": "vUSD",
+        "address": "0x5b91e29Ae5A71d9052620Acb813d5aC25eC7a4A2",
+        "chainId": 388,
+        "decimals": 18,
+        "logoURI": "/images/tokens/vUSD.png"
+      },
+      {
+        "name": "Cronos",
+        "symbol": "CRO",
+        "address": "0xBCaA34FF9D5BFD0d948b18Cf6Bf39a882F4a1cBD",
+        "chainId": 388,
+        "decimals": 8,
+        "logoURI": "https://swap.crodex.app/cro.png"
+      },
+      {
+        "name": "Veno ETH",
+        "symbol": "vETH",
+        "address": "0x271602A97027ee1dd03b1E6e5dB153eB659A80b1",
+        "chainId": 388,
+        "decimals": 18,
+        "logoURI": "/images/tokens/vETH.png"
+      },
+      {
+        "name": "Ether",
+        "symbol": "ETH",
+        "address": "0x898b3560affd6d955b1574d87ee09e46669c60ea",
+        "chainId": 388,
+        "decimals": 18,
+        "logoURI": "/images/tokens/ETH.png"
+      },
+      {
+        "name": "Circle USD",
+        "symbol": "USDC",
+        "address": "0xaa5b845F8C9c047779bEDf64829601d8B264076c",
+        "chainId": 388,
+        "decimals": 18,
+        "logoURI": "/images/tokens/USDC.png"
+      },
+      {
+        "name": "Wrapped BTC",
+        "symbol": "WBTC",
+        "address": "0xD65E5DbA71231D35A5802bA83dC6cB6746c9758d",
+        "chainId": 388,
+        "decimals": 8,
+        "logoURI": "/images/tokens/BTC.png"
+      },
+  
+  
+  
+  
+  
+      {
+        "name": "Wrapped TCRO",
+        "symbol": "WTCRO",
+        "address": "0x73Fd77Fb26192a3FE4f5EFb9EBa5BB5f6Cf96742",
+        "chainId": 282,
+        "decimals": 18,
+        "logoURI": "https://swap.crodex.app/cro.png"
+      },
+      {
+        "name": "Test Token(USD)",
+        "symbol": "T-USD",
+        "address": "0x3e6f8fbcC20a4F470D232cEA9d44C8Df5d2a3c83",
+        "chainId": 282,
+        "decimals": 18,
+        "logoURI": "/images/tokens/0X5B91E29AE5A71D9052620ACB813D5AC25EC7A4A2.png"
+      }
+      
+      
+      
+    ]
+  }
+  

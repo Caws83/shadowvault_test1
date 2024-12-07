@@ -1,0 +1,97 @@
+{
+  "_format": "hh-zksolc-artifact-1",
+  "contractName": "NFTCollection",
+  "sourceName": "contracts/Dex/nftLaunchHost.sol",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "PayToken",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "pageInfo",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "_MaxSupply",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_CurrentSupply",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_MaxMint",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "_PayToken",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_CostBNB",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_CostToken",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bool",
+          "name": "_goPublic",
+          "type": "bool"
+        },
+        {
+          "internalType": "address",
+          "name": "_owner",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_subOp",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes4",
+          "name": "interfaceId",
+          "type": "bytes4"
+        }
+      ],
+      "name": "supportsInterface",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {},
+  "factoryDeps": {}
+}

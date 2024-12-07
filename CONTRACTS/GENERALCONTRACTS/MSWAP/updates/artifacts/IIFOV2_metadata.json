@@ -1,0 +1,325 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "uint8",
+						"name": "_pid",
+						"type": "uint8"
+					}
+				],
+				"name": "depositPool",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint8",
+						"name": "_pid",
+						"type": "uint8"
+					}
+				],
+				"name": "harvestPool",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_offeringAmountPool",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_raisingAmountPool",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_limitPerUserInLP",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "_hasTax",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint8",
+						"name": "_pid",
+						"type": "uint8"
+					}
+				],
+				"name": "setPool",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_pid",
+						"type": "uint256"
+					}
+				],
+				"name": "viewPoolInformation",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_pid",
+						"type": "uint256"
+					}
+				],
+				"name": "viewPoolTaxRateOverflow",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					},
+					{
+						"internalType": "uint8[]",
+						"name": "_pids",
+						"type": "uint8[]"
+					}
+				],
+				"name": "viewUserAllocationPools",
+				"outputs": [
+					{
+						"internalType": "uint256[]",
+						"name": "",
+						"type": "uint256[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					},
+					{
+						"internalType": "uint8[]",
+						"name": "_pids",
+						"type": "uint8[]"
+					}
+				],
+				"name": "viewUserInfo",
+				"outputs": [
+					{
+						"internalType": "uint256[]",
+						"name": "",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "bool[]",
+						"name": "",
+						"type": "bool[]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					},
+					{
+						"internalType": "uint8[]",
+						"name": "_pids",
+						"type": "uint8[]"
+					}
+				],
+				"name": "viewUserOfferingAndRefundingAmountsForPools",
+				"outputs": [
+					{
+						"internalType": "uint256[3][]",
+						"name": "",
+						"type": "uint256[3][]"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"depositPool(uint8)": {
+					"params": {
+						"_pid": ": poolId"
+					}
+				},
+				"harvestPool(uint8)": {
+					"params": {
+						"_pid": ": poolId"
+					}
+				},
+				"setPool(uint256,uint256,uint256,bool,uint8)": {
+					"details": "This function is only callable by admin.",
+					"params": {
+						"_hasTax": ": if the pool has a tax",
+						"_limitPerUserInLP": ": limit per user (in LP tokens)",
+						"_offeringAmountPool": ": offering amount (in tokens)",
+						"_pid": ": poolId",
+						"_raisingAmountPool": ": raising amount (in LP tokens)"
+					}
+				},
+				"viewPoolInformation(uint256)": {
+					"params": {
+						"_pid": ": poolId"
+					}
+				},
+				"viewPoolTaxRateOverflow(uint256)": {
+					"details": "100,000 means 0.1(10%)/ 1 means 0.000001(0.0001%)/ 1,000,000 means 1(100%)",
+					"params": {
+						"_pid": ": poolId"
+					},
+					"returns": {
+						"_0": "It returns the tax percentage"
+					}
+				},
+				"viewUserAllocationPools(address,uint8[])": {
+					"params": {
+						"_pids": "[]: array of pids",
+						"_user": ": user address"
+					}
+				},
+				"viewUserInfo(address,uint8[])": {
+					"params": {
+						"_pids": "[]: array of pids",
+						"_user": ": user address"
+					}
+				},
+				"viewUserOfferingAndRefundingAmountsForPools(address,uint8[])": {
+					"params": {
+						"_pids": ": array of pids",
+						"_user": ": user address"
+					}
+				}
+			},
+			"title": "IIFOV2.",
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"depositPool(uint8)": {
+					"notice": "It allows users to deposit LP tokens to pool"
+				},
+				"harvestPool(uint8)": {
+					"notice": "It allows users to harvest from pool"
+				},
+				"setPool(uint256,uint256,uint256,bool,uint8)": {
+					"notice": "It sets parameters for pool"
+				},
+				"viewPoolInformation(uint256)": {
+					"notice": "It returns the pool information"
+				},
+				"viewPoolTaxRateOverflow(uint256)": {
+					"notice": "It returns the tax overflow rate calculated for a pool"
+				},
+				"viewUserAllocationPools(address,uint8[])": {
+					"notice": "External view function to see user allocations for both pools"
+				},
+				"viewUserInfo(address,uint8[])": {
+					"notice": "External view function to see user information"
+				},
+				"viewUserOfferingAndRefundingAmountsForPools(address,uint8[])": {
+					"notice": "External view function to see user offering and refunding amounts for both pools"
+				}
+			},
+			"notice": "It is an interface for IFOV2.sol",
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"MSWAP/updates/MSWAP_IFOFactoryv3.sol": "IIFOV2"
+		},
+		"evmVersion": "petersburg",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"MSWAP/updates/MSWAP_IFOFactoryv3.sol": {
+			"keccak256": "0xa7aadc3c107b3b4ce47aeab01cae592edd0251925eb6cd3f3c6868500f8d4c9e",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://7be931748dfedde73648cf7958abcacdf36a5a95b78beafe0ab43a5b2c52e3fd",
+				"dweb:/ipfs/QmWpQtv2y22jnVtzP8uJ91ddRo9dBDgBNns3G48rDF6cxE"
+			]
+		}
+	},
+	"version": 1
+}

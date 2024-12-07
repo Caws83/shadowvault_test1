@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+
+  <!-- Preconnect for Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+
+  <!-- Preload Font -->
+  <script>
+    const mainUrl = window.location.origin; // Get the main URL of the site
+    const fontFile = `${mainUrl}/conthrax-sb.otf`;
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.href = fontFile;
+    link.as = 'font';
+    link.type = 'font/otf';
+    link.crossOrigin = 'anonymous';
+    document.head.appendChild(link);
+  </script>
+
+  <!-- Favicons -->
+  <link rel="shortcut icon" href="/favicon3.ico" />
+  <link rel="apple-touch-icon" sizes="48x48" href="/logo2.png" />
+  <link rel="icon" type="image/png" sizes="48x48" href="/logo2.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="msapplication-TileColor" content="#1FC7D4" />
+  <meta name="theme-color" content="#1FC7D4" />
+
+  <!-- Meta Tags -->
+  <title>MARSWAP</title>
+  <meta name="description" content="Trading beyond boundaries." />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, minimum-scale=1" />
+  <meta name="author" content="MARSWAP Team" />
+  <meta name="keywords" content="trading, finance, liquidity, passive income, crypto" />
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="MARSWAP - Trading beyond boundaries." />
+  <meta property="og:description" content="Passive income made easy! Provide liquidity and earn!" />
+  <meta property="og:image" content="/images/hero2.png" />
+  <meta property="og:url" content="https://marswap.com" />
+  <meta property="og:type" content="website" />
+
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="MARSWAP - Trading beyond boundaries." />
+  <meta name="twitter:description" content="Passive income made easy! Provide liquidity and earn!" />
+  <meta name="twitter:image" content="/images/hero2.png" />
+
+</head>
+
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+  <div id="portal-root"></div>    
+
+  <!-- Scripts -->
+  <script type="module" src="/src/index.tsx"></script>
+</body>
+</html>

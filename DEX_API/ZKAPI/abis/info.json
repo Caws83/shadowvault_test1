@@ -1,0 +1,292 @@
+[
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "pid",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "_MC",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "lpToken",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "qToken",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "token",
+				"type": "address"
+			}
+		],
+		"name": "farmInfo",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "APOINT",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "TAPOINT",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "tBalLP",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "qtBalLP",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "lpBalMC",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "lpTotalSupply",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "factory",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "start",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "end",
+				"type": "uint256"
+			}
+		],
+		"name": "getApiInfo",
+		"outputs": [
+			{
+				"internalType": "address[]",
+				"name": "pair",
+				"type": "address[]"
+			},
+			{
+				"internalType": "address[]",
+				"name": "tokenA",
+				"type": "address[]"
+			},
+			{
+				"internalType": "string[]",
+				"name": "aName",
+				"type": "string[]"
+			},
+			{
+				"internalType": "string[]",
+				"name": "aSym",
+				"type": "string[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "aDec",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "address[]",
+				"name": "tokenB",
+				"type": "address[]"
+			},
+			{
+				"internalType": "string[]",
+				"name": "bName",
+				"type": "string[]"
+			},
+			{
+				"internalType": "string[]",
+				"name": "bSym",
+				"type": "string[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "bDec",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "MC",
+				"type": "address"
+			}
+		],
+		"name": "getFarmInfo",
+		"outputs": [
+			{
+				"internalType": "address[]",
+				"name": "pair",
+				"type": "address[]"
+			},
+			{
+				"internalType": "address[]",
+				"name": "tokenA",
+				"type": "address[]"
+			},
+			{
+				"internalType": "string[]",
+				"name": "aName",
+				"type": "string[]"
+			},
+			{
+				"internalType": "string[]",
+				"name": "aSym",
+				"type": "string[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "aDec",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "address[]",
+				"name": "tokenB",
+				"type": "address[]"
+			},
+			{
+				"internalType": "string[]",
+				"name": "bName",
+				"type": "string[]"
+			},
+			{
+				"internalType": "string[]",
+				"name": "bSym",
+				"type": "string[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "bDec",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "poolFactory",
+				"type": "address"
+			}
+		],
+		"name": "getPoolInfo",
+		"outputs": [
+			{
+				"internalType": "address[]",
+				"name": "contractAddress",
+				"type": "address[]"
+			},
+			{
+				"internalType": "address[]",
+				"name": "stakeAddress",
+				"type": "address[]"
+			},
+			{
+				"internalType": "string[]",
+				"name": "stakeName",
+				"type": "string[]"
+			},
+			{
+				"internalType": "string[]",
+				"name": "stakeSym",
+				"type": "string[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "stakeDec",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "address[]",
+				"name": "earnAddress",
+				"type": "address[]"
+			},
+			{
+				"internalType": "string[]",
+				"name": "earnName",
+				"type": "string[]"
+			},
+			{
+				"internalType": "string[]",
+				"name": "earnSym",
+				"type": "string[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "earnDec",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "factory",
+				"type": "address"
+			}
+		],
+		"name": "getSaleInfos",
+		"outputs": [
+			{
+				"internalType": "address[]",
+				"name": "sale",
+				"type": "address[]"
+			},
+			{
+				"internalType": "address[]",
+				"name": "token",
+				"type": "address[]"
+			},
+			{
+				"internalType": "string[]",
+				"name": "tName",
+				"type": "string[]"
+			},
+			{
+				"internalType": "string[]",
+				"name": "tSym",
+				"type": "string[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "tDec",
+				"type": "uint256[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]

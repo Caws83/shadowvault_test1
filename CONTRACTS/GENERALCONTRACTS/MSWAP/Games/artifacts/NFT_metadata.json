@@ -1,0 +1,77 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_howMany",
+						"type": "uint256"
+					}
+				],
+				"name": "addFreeWhitelistUserOrAddMoreSpots",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "subOperator",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "_subOperator",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"MSWAP/Games/Scratchers.sol": "NFT"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": true,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"MSWAP/Games/Scratchers.sol": {
+			"keccak256": "0x04329ef182c8811250b8ed460fbe91c68dabf0939cedfdc652464dc68692f2dd",
+			"license": "UNLICENCED",
+			"urls": [
+				"bzz-raw://c4ec4aae3e7d8f7ebf6bdfe89a2fd7dba4af0c1e501e3762855a8070fb7e967f",
+				"dweb:/ipfs/QmY2PEcSjRPbqAZp6oq2E1AhqAYNv94YsR11eR62UBNMiM"
+			]
+		}
+	},
+	"version": 1
+}

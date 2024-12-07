@@ -1,0 +1,9 @@
+
+Our Cronos ZK Testnet addresses are below chainId 282
+
+Factory: 0x375DA0314dDC5806694c73F14F9b7214E10ec553
+Router: 0x525A9DC223606f5722aDaa80Be2853B6Bcb2d862
+CodeHash: 0x0100066f6e0f23ad31d3f72b6aee3ff2d684fb5ac69589c1259b4860b973260a
+has flat fee structure
+if less than flat fee on buys it will revert to orginal standard methods at .20% therefor giving you the best bang for you buck
+

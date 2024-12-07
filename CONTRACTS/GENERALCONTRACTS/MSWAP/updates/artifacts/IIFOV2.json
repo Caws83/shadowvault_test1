@@ -1,0 +1,263 @@
+{
+	"deploy": {
+		"VM:-": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"main:1": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"ropsten:3": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"rinkeby:4": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"kovan:42": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"goerli:5": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"Custom": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		}
+	},
+	"data": {
+		"bytecode": {
+			"functionDebugData": {},
+			"generatedSources": [],
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"deployedBytecode": {
+			"functionDebugData": {},
+			"generatedSources": [],
+			"immutableReferences": {},
+			"linkReferences": {},
+			"object": "",
+			"opcodes": "",
+			"sourceMap": ""
+		},
+		"gasEstimates": null,
+		"methodIdentifiers": {
+			"depositPool(uint8)": "35b20af5",
+			"harvestPool(uint8)": "2374876c",
+			"setPool(uint256,uint256,uint256,bool,uint8)": "45b8bf91",
+			"viewPoolInformation(uint256)": "46ab91bf",
+			"viewPoolTaxRateOverflow(uint256)": "37f859b8",
+			"viewUserAllocationPools(address,uint8[])": "f9cd5c12",
+			"viewUserInfo(address,uint8[])": "4af3c9b7",
+			"viewUserOfferingAndRefundingAmountsForPools(address,uint8[])": "ca463ca4"
+		}
+	},
+	"abi": [
+		{
+			"inputs": [
+				{
+					"internalType": "uint8",
+					"name": "_pid",
+					"type": "uint8"
+				}
+			],
+			"name": "depositPool",
+			"outputs": [],
+			"stateMutability": "payable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint8",
+					"name": "_pid",
+					"type": "uint8"
+				}
+			],
+			"name": "harvestPool",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_offeringAmountPool",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_raisingAmountPool",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "_limitPerUserInLP",
+					"type": "uint256"
+				},
+				{
+					"internalType": "bool",
+					"name": "_hasTax",
+					"type": "bool"
+				},
+				{
+					"internalType": "uint8",
+					"name": "_pid",
+					"type": "uint8"
+				}
+			],
+			"name": "setPool",
+			"outputs": [],
+			"stateMutability": "nonpayable",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_pid",
+					"type": "uint256"
+				}
+			],
+			"name": "viewPoolInformation",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				},
+				{
+					"internalType": "bool",
+					"name": "",
+					"type": "bool"
+				},
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_pid",
+					"type": "uint256"
+				}
+			],
+			"name": "viewPoolTaxRateOverflow",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_user",
+					"type": "address"
+				},
+				{
+					"internalType": "uint8[]",
+					"name": "_pids",
+					"type": "uint8[]"
+				}
+			],
+			"name": "viewUserAllocationPools",
+			"outputs": [
+				{
+					"internalType": "uint256[]",
+					"name": "",
+					"type": "uint256[]"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_user",
+					"type": "address"
+				},
+				{
+					"internalType": "uint8[]",
+					"name": "_pids",
+					"type": "uint8[]"
+				}
+			],
+			"name": "viewUserInfo",
+			"outputs": [
+				{
+					"internalType": "uint256[]",
+					"name": "",
+					"type": "uint256[]"
+				},
+				{
+					"internalType": "bool[]",
+					"name": "",
+					"type": "bool[]"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "address",
+					"name": "_user",
+					"type": "address"
+				},
+				{
+					"internalType": "uint8[]",
+					"name": "_pids",
+					"type": "uint8[]"
+				}
+			],
+			"name": "viewUserOfferingAndRefundingAmountsForPools",
+			"outputs": [
+				{
+					"internalType": "uint256[3][]",
+					"name": "",
+					"type": "uint256[3][]"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		}
+	]
+}

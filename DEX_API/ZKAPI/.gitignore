@@ -1,0 +1,10 @@
+# dependencies
+/node_modules
+/dist
+pairs.json
+yarn.lock
+market.json
+.env
+.env.tmp
+spins.json
+history.json

@@ -1,0 +1,16 @@
+{
+  "https://tokens.farmageddon.farm/farmageddon-default.json": {
+    "name": "MarSwap Default",
+    "homepage": "/tokenlist/"
+  },
+  "https://tokens.farmageddon.farm/farmageddon-extended.json": {
+    "name": "MarSwap Extended",
+    "homepage": "/tokenlist/"
+    
+  },
+  "https://tokens.farmageddon.farm/farmageddon-top-100.json": {
+    "name": "MarSwap Top 15",
+    "homepage": "/tokenlist/"
+    
+  }
+}

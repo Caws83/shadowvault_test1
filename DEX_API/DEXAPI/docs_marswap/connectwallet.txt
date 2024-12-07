@@ -1,0 +1,17 @@
+🔸Connect Your Wallet
+
+How to connect to MARSWAP Exchange
+
+After you have successfully added the chosen network to your wallet, and bridged native COIN, the next step is to connect your wallet to Marswap Exchange.
+
+Go to: https://zk.marswap.exchange
+
+    Click on the "connect wallet" button.
+
+    Choose your wallet provider.
+
+    Make sure you're connected to the network you intend to use.
+
+    Press "connect" to authenticate.
+
+That's it! You're connected.

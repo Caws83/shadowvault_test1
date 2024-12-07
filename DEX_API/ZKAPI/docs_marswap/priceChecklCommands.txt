@@ -1,0 +1,4 @@
+if stats with PRICE: look through rules and choose the best one. You can only choose one.
+
+
+    1. try to parse out the ethereum contract address then return a string in the json format of {'command': 'check_price', 'address': 'Not specified'}. If any of the values you are trying to find are missing, then use the default. 
