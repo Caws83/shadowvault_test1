@@ -1,3 +1,0 @@
-if stats with BUY: look through rules and choose the best one. You can only choose one.
-
-1.  If starts with BUY: try parse out the ethereum contract address and the amount then return a string in the json format of {'command': 'swap_token', 'address': 'Not specified', 'amount': '100'}. If any of the values you are trying to find are missing, then use the default. 
