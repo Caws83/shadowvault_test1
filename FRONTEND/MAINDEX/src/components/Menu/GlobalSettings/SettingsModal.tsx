@@ -55,7 +55,7 @@ const SettingsModal: React.FC<InjectedModalProps> = ({ onDismiss }) => {
           <Text bold textTransform="uppercase" fontSize="12px" color="secondary" mb="24px">
             {t('Swaps & Liquidity')}
           </Text>
-          <Flex mb="24px" flexDirection="row" justifyContent="space-between" mb="24px" >
+          <Flex flexDirection="row" justifyContent="space-between" mb="24px" >
             <Text>Gas Token</Text>
             <PMTokenSelector />
           </Flex>

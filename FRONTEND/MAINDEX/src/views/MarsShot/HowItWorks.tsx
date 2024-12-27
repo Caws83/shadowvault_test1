@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Modal } from 'uikit'
-import styled from 'styled-components'
-
 import { isMobile } from 'components/isMobile'
 import { useAccount, useChainId, useReadContracts } from 'wagmi'
 import { lanchManagerAbi } from 'config/abi/launchManager'
@@ -9,51 +7,9 @@ import BigNumber from 'bignumber.js'
 import { getAddress } from 'utils/addressHelpers'
 import contracts from 'config/constants/contracts'
 import { defaultChainId } from 'config/constants/chains'
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  max-width: 600px;
-  font-size: ${isMobile ? '12px' : '12px'};
-`
-
-const Item = styled.div`
-  display: flex;
-  align-items: center;
-  margin: 10px 0;
-`
-
-const ImageContainer = styled.div`
-  width: ${isMobile ? '30px' : '40px'};
-  border-radius: 50%;
-  overflow: hidden;
-  margin-right: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
-
-const Text = styled.div`
-  display: flex;
-  color: white;
-  justify-content: center;
-  align-items: center;
-`
-
-const TextContainer = styled.div`
-  color: white;
-  justify-content: center;
-  align-items: center;
-  line-height: 20px;
-  padding-top: 20px;
-`
-
-const BorderContainer = styled.div`
-  border-radius: 4px;
-  flex-grow: 1;
-  flex-basis: 0;
-`
+import { GiThorHammer, GiStopwatch } from 'react-icons/gi'
+import { FaRocket } from 'react-icons/fa'
+import { IoShieldCheckmark } from "react-icons/io5";
 
 const HowItWorks: React.FC<{ onDismiss?: () => void }> = ({ onDismiss }) => {
   const handleDismiss = onDismiss || (() => {})
@@ -110,49 +66,97 @@ const HowItWorks: React.FC<{ onDismiss?: () => void }> = ({ onDismiss }) => {
   }, [])
 
   return (
-    <Modal minWidth='370px' style={{ fontSize: '14px' }} title='How It Works' onDismiss={handleDismiss} overflow='none'>
-      <BorderContainer>
-        <Container>
-          <Item>
-            <ImageContainer>
-              <img src={preloadedImages['/images/icons/create.jxr']} alt='Create your rocket' />
-            </ImageContainer>
-            <Text>
-              <p>1. Create your rocket.</p>
-            </Text>
-          </Item>
+    <Modal 
+      title="How Flash Forge Works" 
+      onDismiss={onDismiss}
+      minWidth={isMobile ? "370px" : "570px"}
+      headerClassName="headerTop"
+    >
+      <div className="how-it-works-container">
+        <div className="how-it-works-step">
+          <div className="step-icon-wrapper">
+            <GiThorHammer size={24} color="white" />
+          </div>
+          <div className="step-content">
+            <h3 className="step-title">1. Create Your Token</h3>
+            <div className="step-list">
+              <div className="step-list-item">
+                <IoShieldCheckmark size={20} color="white" />
+                Zero team tokens
+              </div>
+              <div className="step-list-item">
+                <IoShieldCheckmark size={20} color="white" />
+                50% supply
+              </div>
+              <div className="step-list-item">
+                <IoShieldCheckmark size={20} color="white" />
+                50% presale
+              </div>
+            </div>
+          </div>
+        </div>
 
-          <Item>
-            <ImageContainer>
-              <img src={preloadedImages['/images/icons/1hr.jxr']} alt='Fuel your rocket' />
-            </ImageContainer>
-            <Text>
-              <p>2. You have 1 hour to raise funds.</p>
-            </Text>
-          </Item>
+        <div className="how-it-works-step">
+          <div className="step-icon-wrapper">
+            <GiStopwatch size={24} color="white" />
+          </div>
+          <div className="step-content">
+            <h3 className="step-title">2. Flash Funding</h3>
+            <div className="step-list">
+              <div className="step-list-item">
+                <IoShieldCheckmark size={20} color="white" />
+                You have <span className="oneHourTag"> 1 hour</span>  to raise funds.
+              </div>
+              <div className="step-list-item">
+                <IoShieldCheckmark size={20} color="white" />
+                No minimum cap
+              </div>
+              <div className="step-list-item">
+                <IoShieldCheckmark size={20} color="white" />
+                No maximum cap
+              </div>
+            </div>
+          </div>
+        </div>
 
-          <Item>
-            <ImageContainer>
-              <img src={preloadedImages['/images/icons/launch.jxr']} alt='Rocket is launched' />
-            </ImageContainer>
-            <Text>
-              <p>3. Marswap auto-launch.</p>
-            </Text>
-          </Item>
+        <div className="how-it-works-step">
+          <div className="step-icon-wrapper">
+            <FaRocket size={24} color="white" />
+          </div>
+          <div className="step-content">
+            <h3 className="step-title">3. Auto-Launch</h3>
+            <div className="step-list">
+              <div className="step-list-item">
+                <IoShieldCheckmark size={20} color="white" />
+                Locked liquidity
+              </div>
+              <div className="step-list-item">
+                <IoShieldCheckmark size={20} color="white" />
+                Renounced ownership
+              </div>
+              <div className="step-list-item">
+                <IoShieldCheckmark size={20} color="white" />
+                No users can sell until launch
+              </div>
+            </div>
+          </div>
+        </div>
 
-          <TextContainer>
-            <p>No softcap. No hardcap. No team tokens. 50% supply. 50% presale.</p>
-            <br />
-            <p>Created tokens are 0%, renounced and LP is burnt.</p>
-            <br />
-            <p>Once you buy into a rocket, you cannot sell until it's launched</p>
-            <br />
-            <p>COSTS</p>
-            <p>{`Create: ${Number(new BigNumber(fee).shiftedBy(-18).toFixed(6)).toLocaleString('en-US', { maximumFractionDigits: 5 })} zkCRO`}</p>
-            <p>{`Sponsor: ${Number(new BigNumber(sFee).shiftedBy(-18).toFixed(6)).toLocaleString('en-US', { maximumFractionDigits: 5 })} zkCRO`}</p>
-          </TextContainer>
-        </Container>
-      </BorderContainer>
+        <div className="costs-container">
+          <h4 className="costs-title">Launch Cost</h4>
+          <p className="cost-item">
+            {Number(new BigNumber(fee).shiftedBy(-18).toFixed(6)).toLocaleString('en-US', { maximumFractionDigits: 5 })} zkCRO
+          </p>
+          
+          <div className="sponsor-section">
+            <h5 className="sponsor-title">Optional: Feature Your Token</h5>
+            <p className="sponsor-description">Want your project featured on our platform?</p>
+            <p className="cost-item sponsor-cost">
+              {Number(new BigNumber(sFee).shiftedBy(-18).toFixed(6)).toLocaleString('en-US', { maximumFractionDigits: 5 })} zkCRO
+            </p>
+          </div>
+        </div>
+      </div>
     </Modal>
   )
 }

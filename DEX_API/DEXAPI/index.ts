@@ -124,30 +124,50 @@ function isValidJson (str: string) {
 }
 
 const ai_response_desc = async (inp: string) => {
-  console.log(inp)
-  const response = await queryEngine.query({
-    query: inp
-  })
-  return response.toString()
-}
+  if (!process.env.OPENAI_API_KEY) {
+    console.log("Mocking OpenAI API descriptive response...");
+    return `Mock descriptive response for input: ${inp}`;
+  }
+
+  try {
+    const response = await queryEngine.query({ query: inp });
+    return response.toString();
+  } catch (error) {
+    console.error("Error in ai_response_desc:", error);
+    return "Failed to generate descriptive response";
+  }
+};
 
 const ai_response = async (inp: string) => {
-  const response = await queryEngine.query({
-    query: inp
-  })
-
-  if (isValidJson(response.toString())) {
-    const inputCommand = JSON.parse(response.toString())
-    if (
-      inputCommand.command == 'swap_token' ||
-      inputCommand.command == 'check_price'
-    ) {
-      return getTokenDetails(inputCommand)
-    }
-  } else {
-    return response.toString()
+  if (!process.env.OPENAI_API_KEY) {
+    console.log("Mocking OpenAI API response...");
+    return JSON.stringify({
+      mock: true,
+      message: `Mock response for input: ${inp}`
+    });
   }
-}
+
+  try {
+    const response = await queryEngine.query({ query: inp });
+    if (isValidJson(response.toString())) {
+      const inputCommand = JSON.parse(response.toString());
+      if (
+        inputCommand.command == 'swap_token' ||
+        inputCommand.command == 'check_price'
+      ) {
+        return getTokenDetails(inputCommand);
+      }
+    } else {
+      return response.toString();
+    }
+  } catch (error) {
+    console.error("Error in ai_response:", error);
+    return JSON.stringify({
+      error: true,
+      message: "Failed to get AI response"
+    });
+  }
+};
 
 const createQueryEngine = async () => {
   try {

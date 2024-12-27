@@ -57,7 +57,7 @@ const TableContainer = styled.div``;
 
 const TableHeader = styled.div`
   display: table-row;
-  background: #0577DA;
+  background: #41d1ff;
   opacity: 0.9;
 `;
 

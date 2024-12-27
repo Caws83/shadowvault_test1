@@ -5,6 +5,7 @@ import BigNumber from 'bignumber.js'
 import { usePollBlockNumber } from 'state/block/hooks'
 import { DatePickerPortal } from 'components/DatePicker'
 import GlobalStyle from './style/Global'
+import './style/global.css'
 import Menu from './components/Menu'
 import SuspenseWithChunkError from './components/SuspenseWithChunkError'
 import { ToastListener } from './contexts/ToastsContext'
@@ -63,14 +64,6 @@ BigNumber.config({
   DECIMAL_PLACES: 80,
 })
 
-const Page = styled.div`
-  background-image: url('/bkg6.png');
-  background-size: cover;
-  background-position: center;
-  z-index: -1; /* Ensure the background is behind other content */
-  min-height: 80vh;
-`
-
 const App: React.FC = () => {
   usePollBlockNumber()
   // useFetchProfile();
@@ -84,7 +77,6 @@ const App: React.FC = () => {
         <ResetCSS />
         <GlobalStyle />
         <Menu>
-          <Page>
           <SuspenseWithChunkError fallback={<PageLoader />}>
             <Routes>
               <Route path='/' element={<Home />} />
@@ -142,7 +134,6 @@ const App: React.FC = () => {
               <Route path='*' element={<NotFound />} />
             </Routes>
           </SuspenseWithChunkError>
-          </Page>
         </Menu>
         <ToastListener />
         <DatePickerPortal />

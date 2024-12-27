@@ -57,7 +57,7 @@ export const styleVariants = {
     boxShadow: 'none',
   },
   [variants.ORANGE]: {
-    backgroundColor: '#da6805;',
+    backgroundColor: '#12c446;',
     color: 'primary',
     boxShadow: 'none',
   },

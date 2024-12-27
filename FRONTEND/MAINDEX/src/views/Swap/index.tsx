@@ -49,6 +49,7 @@ import FormattedPriceImpact from './components/FormattedPriceImpact'
 import PMTokenSelector from 'components/Menu/UserMenu/payMasterSelectButton'
 import { usePaymaster } from 'hooks/usePaymaster'
 import PayMasterPreview from 'components/Menu/UserMenu/payMasterPreview'
+import { MdSwapVerticalCircle } from "react-icons/md";
 
 const Label = styled(Text)`
   font-size: 14px;
@@ -57,6 +58,42 @@ const Label = styled(Text)`
 `
 export const MenuWrapper = styled(Card)`
   border-radius: 10px;
+`
+
+const StyledCardHeader = styled(CardHeader)`
+  background: #1b1b1f;
+  border-bottom: 1px solid #3c3f44;
+  padding: 0;
+`;
+
+const HeaderContainer = styled(Flex)`
+  width: 100%;
+  padding: 24px;
+  background: #1b1b1f;
+  padding-left: 48px;
+`;
+
+const StyledButton = styled(Button)`
+  background-image: linear-gradient(9deg, rgb(0, 104, 143) 0%, rgb(138, 212, 249) 100%);
+  color: white;
+`
+
+const AnimatedBorderBox = styled.div`
+  position: relative;
+  border-radius: 24px;
+  padding: 4px;
+  background: linear-gradient(90deg, #0c1b33, #41d1ff, #0c1b33);
+  background-size: 200% 100%;
+  animation: gradient 4s linear infinite;
+
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 200% 50%;
+    }
+  }
 `
 
 export default function Swap () {
@@ -485,146 +522,120 @@ export default function Swap () {
   }
   return (
     <Page>
-      <AppBody>
-        <CardHeader>
-          <Flex flexDirection='row' alignItems='center' justifyContent='space-between' >
-            
-          <PMTokenSelector />
-  
-            <Flex>
-            <TextHeader>SWAP FLAT FEE: </TextHeader>
-            <TextHeader color='primary' >{` ${parseFloat(
-              new BigNumber(FLAT_FEE).shiftedBy(-18).toFixed(5),
-            )} ${publicClient?.chain?.nativeCurrency.symbol}`}</TextHeader>
-          </Flex>
-          </Flex>
-        </CardHeader>
+      <AnimatedBorderBox>
+        <AppBody>
+          <StyledCardHeader>
+            <HeaderContainer flexDirection='row' alignItems='center' justifyContent='space-between' style={{ paddingLeft: '32px' }}>
+              <PMTokenSelector />
+              <Flex>
+                <TextHeader>SWAP FLAT FEE: </TextHeader>
+                <TextHeader color='primary'>{` ${parseFloat(
+                  new BigNumber(FLAT_FEE).shiftedBy(-18).toFixed(5),
+                )} ${publicClient?.chain?.nativeCurrency.symbol}`}</TextHeader>
+              </Flex>
+            </HeaderContainer>
+          </StyledCardHeader>
 
-        <Wrapper>
-          <AutoColumn>
-            <CurrencyInputPanel
-              chainId={localDex.chainId}
-              dex={localDex}
-              label={independentField === Field.OUTPUT && !showWrap && trade ? t('From (estimated)') : t('From')}
-              value={formattedAmounts[Field.INPUT]}
-              showMaxButton={false}
-              currency={currencies[Field.INPUT]}
-              onUserInput={handleTypeInput}
-              onMax={handleMaxInput}
-              onCurrencySelect={handleInputSelect}
-              otherCurrency={currencies[Field.OUTPUT]}
-              id='swap-currency-input'
-            />
+          <Wrapper>
+            <AutoColumn>
+              <CurrencyInputPanel
+                chainId={localDex.chainId}
+                dex={localDex}
+                label={independentField === Field.OUTPUT && !showWrap && trade ? t('From (estimated)') : t('From')}
+                value={formattedAmounts[Field.INPUT]}
+                showMaxButton={false}
+                currency={currencies[Field.INPUT]}
+                onUserInput={handleTypeInput}
+                onMax={handleMaxInput}
+                onCurrencySelect={handleInputSelect}
+                otherCurrency={currencies[Field.OUTPUT]}
+                id='swap-currency-input'
+              />
 
-            <Flex alignItems='right' justifyContent='right' mt='0.5rem'>
-              <Button
-                onClick={() => {
-                  handleMaxInput()
-                }}
-                scale='sm'
-                variant='primary'
-                style={{ textTransform: 'uppercase', padding: '1'}}
-              >
-                {t('Max')}
-              </Button>
-            </Flex>
+              <Flex alignItems='right' justifyContent='right' mt='0.5rem'>
+                <Button
+                  onClick={() => {
+                    handleMaxInput()
+                  }}
+                  scale='sm'
+                  variant='primary'
+                  style={{ textTransform: 'uppercase', padding: '1'}}
+                >
+                  {t('Max')}
+                </Button>
+              </Flex>
 
-            <AutoColumn justify='center'>
-              <AutoRow justify='center' style={{}} mb='0rem'>
-                <ArrowWrapper clickable>
-                  <img
-                    src='/images/Arrows.png'
-                    alt='Mobile Logo'
-                    className='mobile-icon'
-                    style={{ width: `24px`, margin: `8px` }}
-                    onClick={() => {
+              <AutoColumn justify='center'>
+                <AutoRow justify='center' style={{}} mb='0rem'>
+                  <ArrowWrapper clickable>
+                    <MdSwapVerticalCircle size={32} color="#41d1ff" style={{ cursor: 'pointer' }} onClick={() => {
                       onSwitchTokens()
-                    }}
-                  />
-                </ArrowWrapper>
-              </AutoRow>
+                    }} />
+                  </ArrowWrapper>
+                </AutoRow>
+              </AutoColumn>
+
+              <CurrencyInputPanel
+                chainId={localDex.chainId}
+                dex={localDex}
+                value={formattedAmounts[Field.OUTPUT]}
+                onUserInput={handleTypeOutput}
+                label={independentField === Field.INPUT && !showWrap && trade ? t('To (estimated)') : t('To')}
+                showMaxButton={false}
+                currency={currencies[Field.OUTPUT]}
+                onCurrencySelect={handleOutputSelect}
+                otherCurrency={currencies[Field.INPUT]}
+                id='swap-currency-output'
+              />
+
+              {showWrap ? null : (
+                <AutoColumn gap='2px' style={{ padding: '0 16px' }}>
+                  {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
+                    <RowBetween align='center'>
+                      <Label>{t('Slippage Tolerance')}</Label>
+                      <Text bold color='primary' >
+                        {allowedSlippage / 100}%
+                      </Text>
+                    </RowBetween>
+                  )}
+                    <RowBetween align='center'>
+                      <Label>{t('Price Impact')}</Label>
+                      <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
+                    </RowBetween>
+                 
+                </AutoColumn>
+                
+              )}
+
             </AutoColumn>
 
-            <CurrencyInputPanel
-              chainId={localDex.chainId}
-              dex={localDex}
-              value={formattedAmounts[Field.OUTPUT]}
-              onUserInput={handleTypeOutput}
-              label={independentField === Field.INPUT && !showWrap && trade ? t('To (estimated)') : t('To')}
-              showMaxButton={false}
-              currency={currencies[Field.OUTPUT]}
-              onCurrencySelect={handleOutputSelect}
-              otherCurrency={currencies[Field.INPUT]}
-              id='swap-currency-output'
-            />
+            <PayMasterPreview paymasterInfo={paymasterInfo} dex={dex} onDisableStatusChange={handleDisableStatusChange} error={entireError}/>
 
-            {showWrap ? null : (
-              <AutoColumn gap='2px' style={{ padding: '0 16px' }}>
-                {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
-                  <RowBetween align='center'>
-                    <Label>{t('Slippage Tolerance')}</Label>
-                    <Text bold color='primary' >
-                      {allowedSlippage / 100}%
-                    </Text>
-                  </RowBetween>
-                )}
-                  <RowBetween align='center'>
-                    <Label>{t('Price Impact')}</Label>
-                    <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
-                  </RowBetween>
-               
-              </AutoColumn>
-              
-            )}
-
-          </AutoColumn>
-
-          <PayMasterPreview paymasterInfo={paymasterInfo} dex={dex} onDisableStatusChange={handleDisableStatusChange} error={entireError}/>
-
+            
+            <Flex justifyContent="center" alignItems="center" mt="20px" mb="10px">
           
-          <Flex justifyContent="center" alignItems="center" mt="20px" mb="10px">
-        
-        
-            {showConnectButton ? (
-              <Flex justifyContent='center' alignItems='center'>
-                <ConnectWalletButton chain={localDex.chainId} />
-              </Flex>
-            ) : swapIsUnsupported ? (
-              <Button disabled mb='4px'>
-                {t('Unsupported Asset')}
-              </Button>
-            ) : showWrap ? (
-              <Button disabled={Boolean(wrapInputError) || disabledDoToPM} onClick={onWrap}>
-                {wrapInputError ??
-                  (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
-              </Button>
-            ) : noRoute && userHasSpecifiedInputOutput ? (
-              <GreyCard style={{ textAlign: 'center' }}>
-                <Text color='textSubtle' mb='4px'>
-                  {t('Insufficient liquidity for this trade.')}
-                </Text>
-              </GreyCard>
-            ) /* }: showApproveFlow ? (
-              <RowBetween>
-                <Button
-                  variant={approval === ApprovalState.APPROVED ? 'success' : 'primary'}
-                  onClick={approveCallback}
-                  disabled={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
-                 
-                >
-                  {approval === ApprovalState.PENDING ? (
-                    <AutoRow gap='6px' justify='center'>
-                      {t('Enabling')} <CircleLoader stroke='white' />
-                    </AutoRow>
-                  ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
-                    t('Enabled')
-                  ) : (
-                    t(`Enable %asset%`, { asset: currencies[Field.INPUT]?.symbol ?? '' })
-                  )}
+          
+              {showConnectButton ? (
+                <Flex justifyContent='center' alignItems='center'>
+                  <ConnectWalletButton chain={localDex.chainId} />
+                </Flex>
+              ) : swapIsUnsupported ? (
+                <Button disabled mb='4px'>
+                  {t('Unsupported Asset')}
                 </Button>
-
-                <Button
-                  variant={isValid && priceImpactSeverity > 2 ? 'danger' : 'primary'}
+              ) : showWrap ? (
+                <Button disabled={Boolean(wrapInputError) || disabledDoToPM} onClick={onWrap}>
+                  {wrapInputError ??
+                    (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
+                </Button>
+              ) : noRoute && userHasSpecifiedInputOutput ? (
+                <GreyCard style={{ textAlign: 'center' }}>
+                  <Text color='textSubtle' mb='4px'>
+                    {t('Insufficient liquidity for this trade.')}
+                  </Text>
+                </GreyCard>
+              ) : (
+                <StyledButton
                   onClick={() => {
                     setSwapState({
                       tradeToConfirm: trade,
@@ -634,47 +645,23 @@ export default function Swap () {
                     })
                     onPresentConfirmModal()
                   }}
-              
                   id='swap-button'
-                  disabled={!isValid || approval !== ApprovalState.APPROVED || priceImpactSeverity > 3}
+                  disabled={!isValid || priceImpactSeverity > 3 || !!swapCallbackError}
                 >
-                  {priceImpactSeverity > 3
-                    ? t('Price Impact High')
-                    : priceImpactSeverity > 2
-                    ? t('Swap Anyway')
-                    : t('Swap')}
-                </Button>
-              </RowBetween>
-            )*/ : (
-              <Button
-                style={{ padding: 20 }}
-                variant={isValid && priceImpactSeverity > 2 && !swapCallbackError ? 'danger' : 'primary'}
-                onClick={() => {
-                  setSwapState({
-                    tradeToConfirm: trade,
-                    attemptingTxn: false,
-                    swapErrorMessage: undefined,
-                    txHash: undefined,
-                  })
-                  onPresentConfirmModal()
-                }}
-                id='swap-button'
-               
-                disabled={!isValid || priceImpactSeverity > 3 || !!swapCallbackError}
-              >
-                {swapInputError ||
-                  (priceImpactSeverity > 3
-                    ? `Price Impact Too High`
-                    : priceImpactSeverity > 2
-                    ? t(`Swap anyway`)
-                    : t(`Swap`))}
-              </Button>
-            )}
+                  {swapInputError ||
+                    (priceImpactSeverity > 3
+                      ? `Price Impact Too High`
+                      : priceImpactSeverity > 2
+                      ? t(`Swap anyway`)
+                      : t(`Swap`))}
+                </StyledButton>
+              )}
 
-           
-          </Flex>
-        </Wrapper>
-      </AppBody>
+             
+            </Flex>
+          </Wrapper>
+        </AppBody>
+      </AnimatedBorderBox>
     </Page>
   )
 }

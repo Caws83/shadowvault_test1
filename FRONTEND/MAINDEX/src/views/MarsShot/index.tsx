@@ -15,6 +15,12 @@ import BigNumber from 'bignumber.js';
 import SearchInput from 'components/SearchInput';
 import ContributeButton from './ContributeButton';
 import { defaultChainId } from 'config/constants/chains';
+import { GiThorHammer } from 'react-icons/gi';
+import { FaInfoCircle } from 'react-icons/fa';
+import { RiMedal2Fill } from "react-icons/ri";
+import { IoShieldCheckmark } from "react-icons/io5";
+import { GiStopwatch } from "react-icons/gi";
+import { MdLockClock } from "react-icons/md";
 
 
 
@@ -40,16 +46,17 @@ const LinkSocial = styled.div`
 
 const CardHeader = styled.div`
   display: grid;
-  background: #0577DA;
+  background: rgba(20, 20, 22, 0.95);
   border-radius: 8px 8px 0 0;
   padding: 5px;
-
+  border-bottom: 1px solid #3c3f44;
 `
 const CardHeader2 = styled.div`
   display: grid;
-  background: #da6805;
+  background: rgba(20, 20, 22, 0.95);
   border-radius: 8px 8px 0 0;
   padding: 5px;
+  border-bottom: 1px solid #3c3f44;
 `
 
 const GridCol = styled.div`
@@ -236,6 +243,7 @@ const Item = styled.div`
   align-items: center;
   margin-left: 4px;
   font-size: 14px;
+  gap: 12px;
 `;
 
 const ButtonItem = styled.div`
@@ -256,13 +264,41 @@ const LabelWrapper = styled.div`
   padding-bottom: ${isMobile ? '10px' : '0px'};
 `;
 const Body = styled.div`
-border-radius: 4px;
-width: ${isMobile ? '330px' : '400px'};
-height: ${isMobile ? '120px' : '150px'};
-z-index: 1;
-background: ${({ theme }) => theme.colors.backgroundAlt};
-border-radius: 20px;
+  border-radius: 4px;
+  width: ${isMobile ? '330px' : '400px'};
+  height: ${isMobile ? '120px' : '150px'};
+  z-index: 1;
+  background: rgba(129, 192, 231, 0.1);
+  border-radius: 20px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(129, 192, 231, 0.15);
+    transform: translateY(-2px);
+  }
 `;
+
+const FeatureRow = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 24px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+`
+
+const FeatureItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #dadad2;
+  font-size: 17px;
+
+  svg {
+    color: #dadad2;
+    font-size: 30px;
+  }
+`
 
 // MarsShot component
 const MarsShot: React.FC = () => {
@@ -386,44 +422,57 @@ function formatTimeLeft(endEpoch) {
   
   return (
     <StyledPage >
-     <GridColButtons>
-      { haveContract &&
-            <ButtonItem onClick={openCreateRocket}>
-                <Image>
-                  <img src='/images/icons/rocket.jxr' alt='Create your rocket' style={{ width: '100%', height: 'auto' }} />
-                </Image>
-                <TextT>Create</TextT>
-              </ButtonItem>
-}
-              <ButtonItem onClick={openHowItWorks}>
-                <Image>
-                  <img src='/images/icons/create.jxr' alt='How it Works' style={{ width: '100%', height: 'auto' }} />
-                </Image>
-                <TextT>How It Works</TextT>
-              </ButtonItem>
-              
-          {activeIndex !== 0 ? (
-        <>
-          {isMobile ? (
-            <img
-              src={`/search.png`}
-              alt={`search`}
-              onClick={searchClick}
-              className="desktop-icon"
-              style={{ width: `25px` }}
-            />
-          ) : (
-            <LabelWrapper>
-              <SearchInput
-                onChange={handleChangeSearchQuery}
-                starting={searchQuery}
-                placeholder="Search by Name"
+      <div className="forge-heading">
+        <h3>Create your own token with Flash Forge!</h3>
+        <FeatureRow>
+          <FeatureItem>
+            <IoShieldCheckmark />
+            No team tokens
+          </FeatureItem>
+          <FeatureItem>
+            <GiStopwatch />
+            1 hour to raise funds
+          </FeatureItem>
+          <FeatureItem>
+            <MdLockClock />
+            No selling until launch
+          </FeatureItem>
+        </FeatureRow>
+      </div>
+      <GridColButtons>
+        { haveContract &&
+          <button className="create-button" onClick={openCreateRocket}>
+            <GiThorHammer size={30} />
+            Create Token
+          </button>
+        }
+        <button className="how-it-works-button" onClick={openHowItWorks}>
+          <FaInfoCircle size={20} />
+          How it Works
+        </button>
+
+        {activeIndex !== 0 ? (
+          <>
+            {isMobile ? (
+              <img
+                src={`/search.png`}
+                alt={`search`}
+                onClick={searchClick}
+                className="desktop-icon"
+                style={{ width: `25px` }}
               />
-            </LabelWrapper>
-          )}
-        </>
-      ) : null}
-  </GridColButtons>
+            ) : (
+              <LabelWrapper>
+                <SearchInput
+                  onChange={handleChangeSearchQuery}
+                  starting={searchQuery}
+                  placeholder="Search by Name"
+                />
+              </LabelWrapper>
+            )}
+          </>
+        ) : null}
+      </GridColButtons>
       {showSearch && activeIndex !== 0 ? (
         <LabelWrapper>
           <SearchInput
@@ -435,168 +484,142 @@ function formatTimeLeft(endEpoch) {
       ) : null}
 
       <PageLayout>
-      <GridCol>
-      
-        <Body>
-          <CardHeader>
-            <Item>
-              <ImageBox>
-                <img src='/images/icons/rocket2.png' alt='Top Rocket' style={{ width: '100%', height: 'auto' }} />
-              </ImageBox>
-              <TextT>Top Rocket</TextT>
-            </Item>
-          </CardHeader>
-          {!topLiveIfo ? <TextNo>There is currently no active Top Rocket.</TextNo> :
-             <CustomBodyWrapper3>
-                   <LogoTextContainer  className="first">
-      <ImageContainer>
-      <ImageTop>
-        {isValidLogoUrl(topLiveIfo.logo) ? (
-          <img src={topLiveIfo.logo} alt='Sponsor Logo' />
-        ) : (
-          <img src={'/default.png'} alt='Default Logo' />
-        )}
-      </ImageTop>
-    </ImageContainer>
-    <TextContainer>
-                <Item>
-                <TextTBName>{`${topLiveIfo?.name}`}</TextTBName>
-                </Item>
-                <Item>
-                <TextTB>{`Raised: ${Number(new BigNumber(topLiveIfo?.totalRaised.toString()).shiftedBy(-18).toFixed(decimalsToShow))}`}</TextTB>
-                </Item>
-                <Item>
-                <TextTB>{`Minimum: ${Number(new BigNumber(topLiveIfo?.softCap.toString()).shiftedBy(-18).toFixed(decimalsToShow))}`}</TextTB>
-                </Item>
-                <Item>
-                <TextTB>{`Time Left: ${formatTimeLeft(topLiveIfo?.endEpoch)}`}</TextTB>
-                </Item>
-               
-             
-              </TextContainer>
-              </LogoTextContainer>
-              <GridColSpon  className="last">
-             
-                <Flex mt='5px' mb='5px'flexDirection='row' justifyContent='center' alignItems='center'>
-                <LinkSocial>
-  <a href={topLiveIfo.telegram}>
-    <img src="/images/home/icons/telegram.png" alt="Telegram" className="desktop-icon" style={{ width: '25px' }} />
-  </a>
-</LinkSocial>
-           
-              <LinkSocial >
-              <a href={topLiveIfo.website}>
-                <img src={`/images/home/icons/web.png`} alt={`Web`} className="desktop-icon" style={{ width: `25px` }} />
-                </a>
-                </LinkSocial>
-              
-                </Flex>
-                
-           <ButtonCon>
-             <ContributeButton  variantType={'primary'} variantSize={'xs'} poolId={Number(topLiveIfo.roundId.toString())} outToken={topLiveIfo.tokenContract} account={account} chainId={chain?.id} isFinished={topLiveIfo.isFinished} canFinalize={parseInt(formatTimeLeft(topLiveIfo.endEpoch), 10) < 0} />
-             </ButtonCon>
-            </GridColSpon>
-         
-            </CustomBodyWrapper3>
-        }
-        </Body>
-      
+        <GridCol>
+          <Body>
+            <CardHeader className="CardHeader">
+              <Item>
+                <GiThorHammer size={30} color="#41d1ff" />
+                <TextT className="top-tokens-title">Top Flash Forge</TextT>
+              </Item>
+            </CardHeader>
+            {!topLiveIfo ? <TextNo>There is currently no active tokens.</TextNo> :
+              <CustomBodyWrapper3>
+                <LogoTextContainer  className="first">
+                  <ImageContainer>
+                    <ImageTop>
+                      {isValidLogoUrl(topLiveIfo.logo) ? (
+                        <img src={topLiveIfo.logo} alt='Sponsor Logo' />
+                      ) : (
+                        <img src={'/default.png'} alt='Default Logo' />
+                      )}
+                    </ImageTop>
+                  </ImageContainer>
+                  <TextContainer>
+                    <Item>
+                      <TextTBName>{`${topLiveIfo?.name}`}</TextTBName>
+                    </Item>
+                    <Item>
+                      <TextTB>{`Raised: ${Number(new BigNumber(topLiveIfo?.totalRaised.toString()).shiftedBy(-18).toFixed(decimalsToShow))}`}</TextTB>
+                    </Item>
+                    <Item>
+                      <TextTB>{`Minimum: ${Number(new BigNumber(topLiveIfo?.softCap.toString()).shiftedBy(-18).toFixed(decimalsToShow))}`}</TextTB>
+                    </Item>
+                    <Item>
+                      <TextTB>{`Time Left: ${formatTimeLeft(topLiveIfo?.endEpoch)}`}</TextTB>
+                    </Item>
+                  </TextContainer>
+                </LogoTextContainer>
+                <GridColSpon  className="last">
+                  <Flex mt='5px' mb='5px'flexDirection='row' justifyContent='center' alignItems='center'>
+                    <LinkSocial>
+                      <a href={topLiveIfo.telegram}>
+                        <img src="/images/home/icons/telegram.png" alt="Telegram" className="desktop-icon" style={{ width: '25px' }} />
+                      </a>
+                    </LinkSocial>
+                    <LinkSocial >
+                      <a href={topLiveIfo.website}>
+                        <img src={`/images/home/icons/web.png`} alt={`Web`} className="desktop-icon" style={{ width: `25px` }} />
+                      </a>
+                    </LinkSocial>
+                  </Flex>
+                  <ButtonCon>
+                    <ContributeButton  variantType={'primary'} variantSize={'xs'} poolId={Number(topLiveIfo.roundId.toString())} outToken={topLiveIfo.tokenContract} account={account} chainId={chain?.id} isFinished={topLiveIfo.isFinished} canFinalize={parseInt(formatTimeLeft(topLiveIfo.endEpoch), 10) < 0} />
+                  </ButtonCon>
+                </GridColSpon>
+              </CustomBodyWrapper3>
+            }
+          </Body>
 
-        <Body>
-          <CardHeader2>
-            <Item>
-              <ImageBox>
-                <img src='/images/icons/sponsored.png' alt='Top Rocket' style={{ width: '100%', height: 'auto' }} />
-              </ImageBox>
-              <TextT>Sponsored Rockets</TextT>
-            </Item>
-          </CardHeader2>
-          {sponsors.length > 0 && sponsorIndex <= sponsors.length ? 
-        
-          <CustomBodyWrapper3>
-  
-  <LogoTextContainer  className="first">
-            <ImageContainer>
-              <ImageTop>
-              { 
-        !isValidLogoUrl(sponsors[sponsorIndex].logo) ? (
-          <img src={'/default.png'} alt='Default Logo' />
-        ) : (
-          <img src={sponsors[sponsorIndex].logo} alt='Sponsor Logo' />
-        )
-      } </ImageTop>
-      </ImageContainer>
-              <TextContainer className="bigger">
-                <Item>
-                <TextTBName>{`${sponsors[sponsorIndex].name}`}</TextTBName>
-                </Item>
-                <Item>
-                <TextTB>{`Raised: ${new BigNumber(sponsors[sponsorIndex].totalRaised.toString()).shiftedBy(-18).toFixed(decimalsToShow)}`}</TextTB>
-                </Item>
-                <Item>
-                <TextTB>{`Minimum: ${new BigNumber(sponsors[sponsorIndex].softCap.toString()).shiftedBy(-18).toFixed(decimalsToShow)}`}</TextTB>
-                </Item>
-                <Item>
-                <TextTB>{`Time Left: ${formatTimeLeft(sponsors[sponsorIndex].endEpoch)}`}</TextTB>
-                </Item>
-               
-             
-              </TextContainer>
-              
-              </LogoTextContainer>
-              <GridColSpon className="last">
-              
-                <Flex mt='10px' flexDirection='row' justifyContent='center' alignItems='center'>
-                <LinkSocial>
-  <a href={sponsors[sponsorIndex].telegram} target="_blank" rel="noopener noreferrer">
-    <img src="/images/home/icons/telegram.png" alt="Telegram" className="desktop-icon" style={{ width: '20px' }} />
-  </a>
-</LinkSocial>
-           
-              <LinkSocial >
-              <a href={sponsors[sponsorIndex].website} target="_blank" rel="noopener noreferrer">
-                <img src={`/images/home/icons/web.png`} alt={`Web`} className="desktop-icon" style={{ width: `20px` }} />
-                </a>
-                </LinkSocial>
-                </Flex>
-                <ButtonCon>
-                 <ContributeButton variantType={'primary'} variantSize={'xs'} poolId={Number(sponsors[sponsorIndex].roundId.toString())} outToken={sponsors[sponsorIndex].tokenContract} account={account} chainId={chain?.id} isFinished={sponsors[sponsorIndex].isFinished} canFinalize={parseInt(formatTimeLeft(sponsors[sponsorIndex].endEpoch), 10) < 0} />
-                 </ButtonCon>
-                  </GridColSpon>
-             
-            </CustomBodyWrapper3> : <TextNo>There is currently no active Sponsored Rocket.</TextNo>
-          
-        }
-        </Body>
-
+          <Body>
+            <CardHeader2 className="CardHeader">
+              <Item>
+                <RiMedal2Fill size={30} color="#41d1ff" />
+                <TextT className="top-tokens-title">Sponsored Tokens</TextT>
+              </Item>
+            </CardHeader2>
+            {sponsors.length > 0 && sponsorIndex <= sponsors.length ? 
+              <CustomBodyWrapper3>
+                <LogoTextContainer  className="first">
+                  <ImageContainer>
+                    <ImageTop>
+                      { 
+                        !isValidLogoUrl(sponsors[sponsorIndex].logo) ? (
+                          <img src={'/default.png'} alt='Default Logo' />
+                        ) : (
+                          <img src={sponsors[sponsorIndex].logo} alt='Sponsor Logo' />
+                        )
+                      }
+                    </ImageTop>
+                  </ImageContainer>
+                  <TextContainer className="bigger">
+                    <Item>
+                      <TextTBName>{`${sponsors[sponsorIndex].name}`}</TextTBName>
+                    </Item>
+                    <Item>
+                      <TextTB>{`Raised: ${new BigNumber(sponsors[sponsorIndex].totalRaised.toString()).shiftedBy(-18).toFixed(decimalsToShow)}`}</TextTB>
+                    </Item>
+                    <Item>
+                      <TextTB>{`Minimum: ${new BigNumber(sponsors[sponsorIndex].softCap.toString()).shiftedBy(-18).toFixed(decimalsToShow)}`}</TextTB>
+                    </Item>
+                    <Item>
+                      <TextTB>{`Time Left: ${formatTimeLeft(sponsors[sponsorIndex].endEpoch)}`}</TextTB>
+                    </Item>
+                  </TextContainer>
+                </LogoTextContainer>
+                <GridColSpon className="last">
+                  <Flex mt='10px' flexDirection='row' justifyContent='center' alignItems='center'>
+                    <LinkSocial>
+                      <a href={sponsors[sponsorIndex].telegram} target="_blank" rel="noopener noreferrer">
+                        <img src="/images/home/icons/telegram.png" alt="Telegram" className="desktop-icon" style={{ width: '20px' }} />
+                      </a>
+                    </LinkSocial>
+                    <LinkSocial >
+                      <a href={sponsors[sponsorIndex].website} target="_blank" rel="noopener noreferrer">
+                        <img src={`/images/home/icons/web.png`} alt={`Web`} className="desktop-icon" style={{ width: `20px` }} />
+                      </a>
+                    </LinkSocial>
+                  </Flex>
+                  <ButtonCon>
+                    <ContributeButton variantType={'primary'} variantSize={'xs'} poolId={Number(sponsors[sponsorIndex].roundId.toString())} outToken={sponsors[sponsorIndex].tokenContract} account={account} chainId={chain?.id} isFinished={sponsors[sponsorIndex].isFinished} canFinalize={parseInt(formatTimeLeft(sponsors[sponsorIndex].endEpoch), 10) < 0} />
+                  </ButtonCon>
+                </GridColSpon>
+              </CustomBodyWrapper3> : <TextNo>There is currently no active sponsored tokens.</TextNo>
+            }
+          </Body>
         </GridCol>
       </PageLayout>
 
+      <Flex justifyContent='center' alignItems='center' mt='30px'mb='30px'>
+        <ButtonMenu activeIndex={activeIndex} scale='sm' variant='subtle'>
+          <ButtonMenuItem as={Link} to='/marshot/hot5'>
+            {t('Hot 5')}
+          </ButtonMenuItem>
+          <ButtonMenuItem as={Link} to='/marshot/allLive'>
+            {t('All Live')}
+          </ButtonMenuItem>
+          <ButtonMenuItem as={Link} to='/marshot/history'>
+            {t('Finalized')}
+          </ButtonMenuItem>
+        </ButtonMenu>
+      </Flex>
 
-    
-
-          <Flex justifyContent='center' alignItems='center' mt='30px'mb='30px'>
-            <ButtonMenu activeIndex={activeIndex} scale='sm' variant='subtle'>
-              <ButtonMenuItem as={Link} to='/marshot/hot5'>
-                {t('Hot 5')}
-              </ButtonMenuItem>
-              <ButtonMenuItem as={Link} to='/marshot/allLive'>
-                {t('All Live')}
-              </ButtonMenuItem>
-              <ButtonMenuItem as={Link} to='/marshot/history'>
-                {t('Finalized')}
-              </ButtonMenuItem>
-            </ButtonMenu>
-          </Flex>
-
-          <Routes>
-          <Route path='/' element={<CurrentIfo account={account} state={activeIndex} setTopLiveIfo={setTopLiveIfo} setSponsors={setSponsors} searchQuery={searchQuery} />} />
-          <Route path='hot5' element={<CurrentIfo account={account} state={activeIndex} setTopLiveIfo={setTopLiveIfo} setSponsors={setSponsors} searchQuery={null} />} />
-          <Route path='alllive' element={<CurrentIfo account={account} state={activeIndex} setTopLiveIfo={setTopLiveIfo} setSponsors={setSponsors} searchQuery={searchQuery} />} />
-          <Route path='history' element={<CurrentIfo account={account} state={activeIndex} setTopLiveIfo={setTopLiveIfo} setSponsors={setSponsors} searchQuery={searchQuery} />} />
-        </Routes>
- 
-</StyledPage>
+      <Routes>
+        <Route path='/' element={<CurrentIfo account={account} state={activeIndex} setTopLiveIfo={setTopLiveIfo} setSponsors={setSponsors} searchQuery={searchQuery} />} />
+        <Route path='hot5' element={<CurrentIfo account={account} state={activeIndex} setTopLiveIfo={setTopLiveIfo} setSponsors={setSponsors} searchQuery={null} />} />
+        <Route path='alllive' element={<CurrentIfo account={account} state={activeIndex} setTopLiveIfo={setTopLiveIfo} setSponsors={setSponsors} searchQuery={searchQuery} />} />
+        <Route path='history' element={<CurrentIfo account={account} state={activeIndex} setTopLiveIfo={setTopLiveIfo} setSponsors={setSponsors} searchQuery={searchQuery} />} />
+      </Routes>
+    </StyledPage>
   )
 }
 

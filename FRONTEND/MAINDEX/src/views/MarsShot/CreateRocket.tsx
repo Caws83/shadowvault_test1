@@ -18,11 +18,21 @@ import useToast from 'hooks/useToast'
 import { defaultChainId } from 'config/constants/chains'
 import { API_URL } from 'config'
 
-const Container = styled.div``
+const Container = styled.div`
+  width: 100%;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`
 
 const GridContainer = styled.div`
-
-  display: grid;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 `
 
 const WavyLineContainer = styled.div`
@@ -34,26 +44,37 @@ const WavyLineContainer = styled.div`
 `
 const Dropdown = styled.select`
   width: 100%;
+  max-width: 300px;
   padding: 8px;
-  font-size: 20px;
+  font-size: 16px;
   border-radius: 4px;
   border: 1px solid #ccc;
-   width: 300px;
-  margin-top: 10px; /* Add space between text and input */
+  margin: 0 auto;
+  display: block;
+  margin-bottom: 16px;
+
+  &::placeholder {
+    font-size: 16px;
+  }
 `
 
 const InputMarsShot = styled.input`
   border-radius: 3.2px;
   padding: 8px 12px;
   border: 1px solid #ccc;
-  font-size: 12px;
+  font-size: 16px;
   display: flex;
   align-items: center;
-    overflow: auto; /* Ensuring a scrollbar appears if necessary */
-  box-sizing: border-box; /* Ensures padding is included in height */
-  resize: none; /* Prevents the textarea from being resizable */
-  white-space: pre-wrap; /* Ensures that whitespace is preserved and wraps when needed */
-  word-wrap: break-word; /* Breaks long words to fit within the textarea */
+  overflow: auto;
+  box-sizing: border-box;
+  resize: none;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  width: 100%;
+
+  &::placeholder {
+    font-size: 16px;
+  }
 `
 
 
@@ -83,13 +104,13 @@ const ToggleWrapper = styled.div`
 const WavyLine = styled.div<{ valid: boolean }>`
   width: 100%;
   height: 6px;
-  background: ${({ valid }) => (valid ? '#da6805;' : 'white')};
+  background: ${({ valid }) => (valid ? '#12c446;' : 'white')};
 `
 
 const ButtonPoint = styled.div<{ active: boolean; filled: boolean }>`
-  width: 20px;
-  height: 20px;
-  background: ${({ active, filled }) => (active ? '#0577DA' : filled ? '#da6805' : 'white')};
+  width: 32px;
+  height: 32px;
+  background: ${({ active, filled }) => (active ? '#41d1ff' : filled ? '#12c446' : 'white')};
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -97,6 +118,7 @@ const ButtonPoint = styled.div<{ active: boolean; filled: boolean }>`
   justify-content: center;
   flex-shrink: 0;
   position: relative;
+  margin: 0 4px;
 `
 
 const ButtonIndex = styled.span`
@@ -105,22 +127,8 @@ const ButtonIndex = styled.span`
   left: 50%;
   transform: translate(-50%, -50%);
   color: black;
-  font-size: 12px;
-`
-
-const ImageC = styled.div`
-  width: ${isMobile ? '100px' : '130px'};
-
-  overflow: hidden;
-  justify-content: center;
-  align-items: center;
-`
-
-const ContainerR = styled.div`
-  padding-bottom: ${isMobile ? '20px' : '30px'};
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  font-size: 16px;
+  font-weight: 500;
 `
 
 const ContainerRS = styled.div`
@@ -128,6 +136,46 @@ const ContainerRS = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`
+
+const LabelText = styled(Text)`
+  font-size: 20px;
+  color: #41d1ff;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 8px;
+  margin-top: ${({ isSecond }) => isSecond ? '8px' : '0'};
+`
+
+const GradientButton = styled(Button)`
+  background-image: linear-gradient(9deg, rgb(0, 104, 143) 0%, rgb(138, 212, 249) 100%);
+  opacity: ${({ disabled }) => (disabled ? '0.6' : '1')};
+  color: white;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  &:hover:not(:disabled) {
+    box-shadow: 0 4px 15px rgba(0, 104, 143, 0.3);
+    transform: translateY(-1px);
+  }
+  
+  &:disabled {
+    background-image: linear-gradient(9deg, rgb(0, 104, 143) 0%, rgb(138, 212, 249) 100%);
+    color: white;
+    cursor: not-allowed;
+  }
+  
+  &:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 8px rgba(0, 104, 143, 0.2);
+  }
 `
 
 const CreateRocket: React.FC<{ onDismiss?: () => void }> = ({ onDismiss }) => {
@@ -405,7 +453,8 @@ const CreateRocket: React.FC<{ onDismiss?: () => void }> = ({ onDismiss }) => {
     telegram: useRef<HTMLInputElement>(null),
     logo: useRef<HTMLInputElement>(null),
     description: useRef<HTMLInputElement>(null),
-    timeframe: useRef<HTMLInputElement>(null),
+    timeframe: useRef<HTMLSelectElement>(null),
+    minimum: useRef<HTMLSelectElement>(null),
   }
 
   useEffect(() => {
@@ -434,49 +483,18 @@ const CreateRocket: React.FC<{ onDismiss?: () => void }> = ({ onDismiss }) => {
     }
   }, [currentStep, handleNext])
 
-  const [preloadedImages, setPreloadedImages] = useState<{ [key: string]: string }>({})
-
-  const preloadImages = (srcArray: string[]) => {
-    const images: { [key: string]: string } = {}
-    srcArray.forEach((src) => {
-      const img = new Image()
-      img.src = src
-      images[src] = img.src
-    })
-    setPreloadedImages(images)
-  }
-
-  useEffect(() => {
-    const images = [
-      '/images/icons/r1.jxr',
-      '/images/icons/r2.jxr',
-      '/images/icons/r3.jxr',
-      '/images/icons/r4.jxr',
-      '/images/icons/r5.jxr',
-      '/images/icons/r6.jxr',
-      '/images/icons/r6.jxr',
-    ]
-    preloadImages(images)
-  }, [])
-
   const steps = [
     {
       label: 'Step 1: Name',
       content: (
         <>
-          <ContainerR>
-            {' '}
-            <ImageC>
-              <img src={preloadedImages['/images/icons/r1.jxr']} alt='Create your rocket' />
-            </ImageC>
-          </ContainerR>
-          <Text>Name</Text>
+          <LabelText>Name</LabelText>
           <InputMarsShot
             ref={inputRefs.name}
             value={name}
             onChange={e => handleChange('name', e.target.value)}
             placeholder='Token Name'
-          />{' '}
+          />
         </>
       ),
     },
@@ -484,19 +502,13 @@ const CreateRocket: React.FC<{ onDismiss?: () => void }> = ({ onDismiss }) => {
       label: 'Step 2: Symbol',
       content: (
         <>
-          <ContainerR>
-            {' '}
-            <ImageC>
-              <img src={preloadedImages['/images/icons/r2.jxr']} alt='Create your rocket' />
-            </ImageC>
-          </ContainerR>
-          <Text>Symbol</Text>
+          <LabelText>Symbol</LabelText>
           <InputMarsShot
             ref={inputRefs.symbol}
             value={symbol}
             onChange={e => handleChange('symbol', e.target.value)}
             placeholder='Token Symbol'
-          />{' '}
+          />
         </>
       ),
     },
@@ -504,19 +516,13 @@ const CreateRocket: React.FC<{ onDismiss?: () => void }> = ({ onDismiss }) => {
       label: 'Step 3: Website',
       content: (
         <>
-          <ContainerR>
-            {' '}
-            <ImageC>
-              <img src={preloadedImages['/images/icons/r3.jxr']} alt='Create your rocket' />
-            </ImageC>
-          </ContainerR>
-          <Text>Website</Text>
+          <LabelText>Website</LabelText>
           <InputMarsShot
             ref={inputRefs.website}
             value={website}
             onChange={e => handleChange('website', e.target.value)}
             placeholder='Website URL'
-          />{' '}
+          />
         </>
       ),
     },
@@ -524,19 +530,13 @@ const CreateRocket: React.FC<{ onDismiss?: () => void }> = ({ onDismiss }) => {
       label: 'Step 4: Telegram',
       content: (
         <>
-          <ContainerR>
-            {' '}
-            <ImageC>
-              <img src={preloadedImages['/images/icons/r4.jxr']} alt='Create your rocket' />
-            </ImageC>
-          </ContainerR>
-          <Text>Telegram</Text>
+          <LabelText>Telegram</LabelText>
           <InputMarsShot
             ref={inputRefs.telegram}
             value={telegram}
             onChange={e => handleChange('telegram', e.target.value)}
             placeholder='Telegram Link'
-          />{' '}
+          />
         </>
       ),
     },
@@ -544,19 +544,13 @@ const CreateRocket: React.FC<{ onDismiss?: () => void }> = ({ onDismiss }) => {
       label: 'Step 5: Logo',
       content: (
         <>
-          <ContainerR>
-            {' '}
-            <ImageC>
-              <img src={validateImageFile(logo) ? logo : preloadedImages['/images/icons/r5.jxr']} alt='Create your rocket' />
-            </ImageC>
-          </ContainerR>
-          <Text>Logo</Text>
+          <LabelText>Logo</LabelText>
           <InputMarsShot
             ref={inputRefs.logo}
             value={logo}
             onChange={e => handleChange('logo', e.target.value)}
             placeholder='Logo URL'
-          />{' '}
+          />
         </>
       ),
     },
@@ -564,19 +558,13 @@ const CreateRocket: React.FC<{ onDismiss?: () => void }> = ({ onDismiss }) => {
       label: 'Step 6: Description',
       content: (
         <>
-          <ContainerR>
-            {' '}
-            <ImageC>
-              <img src={preloadedImages['/images/icons/r6.jxr']} alt='Create your rocket' />
-            </ImageC>
-          </ContainerR>
-          <Text>Description</Text>
+          <LabelText>Description</LabelText>
           <InputMarsShot
             ref={inputRefs.description}
             value={description}
             onChange={e => handleChange('description', e.target.value)}
             placeholder='Token Description'
-          />{' '}
+          />
           <Flex justifyContent="center" mt="10px" mb="-20px">
             {name!="" &&
               <Button variant="text" onClick={handleAIDesc}>
@@ -590,31 +578,31 @@ const CreateRocket: React.FC<{ onDismiss?: () => void }> = ({ onDismiss }) => {
       label: 'Step 7: Setup',
       content: (
         <>
-        <Text>Timeframe</Text>
-        <Dropdown ref={inputRefs.timeframe} value={lengthInSeconds} onChange={e => handleChange('timeframe', e.target.value)}>
-          <option value='' disabled>
-          Select TimeFrame
-          </option>
-          <option value='3600'>1 Hour</option>
-          <option value='28800'>8 Hours</option>
-          <option value='86400'>1 Day</option>
-        </Dropdown>
+          <LabelText>Timeframe</LabelText>
+          <Dropdown ref={inputRefs.timeframe} value={lengthInSeconds} onChange={e => handleChange('timeframe', e.target.value)}>
+            <option value='' disabled>
+              Select TimeFrame
+            </option>
+            <option value='3600'>1 Hour</option>
+            <option value='28800'>8 Hours</option>
+            <option value='86400'>1 Day</option>
+          </Dropdown>
 
-        <Text>Minimum to Launch</Text>
-        <Dropdown 
-          ref={inputRefs.minimum} 
-          value={softCap} 
-          onChange={e => handleChange('minimum', e.target.value)}
-        >
-          <option value='' disabled>
-            Select Minimum Raised to Launch
-          </option>
+          <LabelText isSecond>Minimum to Launch</LabelText>
+          <Dropdown 
+            ref={inputRefs.minimum} 
+            value={softCap} 
+            onChange={e => handleChange('minimum', e.target.value)}
+          >
+            <option value='' disabled>
+              Select Minimum Raised to Launch
+            </option>
             {softCapOptions[chainId].map((option, index) => (
               <option key={index} value={option}>
                 {option.toLocaleString()} zkCRO
               </option>
             ))}
-        </Dropdown>
+          </Dropdown>
         </>
       ),
     },
@@ -624,56 +612,64 @@ const CreateRocket: React.FC<{ onDismiss?: () => void }> = ({ onDismiss }) => {
   return (
     <>
       {showCreateModal && (
-        <Modal minWidth='370px' title='Create Your Rocket' overflow='none' onDismiss={handleDismiss}>
-          <Flex flexDirection="column">
-            <Text>{`Fee Required: ${Number(new BigNumber(totalFee().toString()).shiftedBy(-18).toFixed(6)).toLocaleString('en-US', { maximumFractionDigits: 5 })} CRO`}</Text>
-          </Flex>
-          <Container>
-           
-            <GridContainer>{steps[currentStep].content}</GridContainer>
-            <WavyLineContainer>
-            <Button variant="text" onClick={handlePrev} ><ArrowBackIcon /></Button>
-              {steps.map((_, index) => (
-                <>
-                  <ButtonPoint
-                    key={index}
-                    active={index === currentStep}
-                    filled={isStepFilled(index)}
-                    onClick={() => handlePointClick(index)}
-                  >
-                    <ButtonIndex>{index + 1}</ButtonIndex>
-                  </ButtonPoint>
-                  {index !== 6 && <WavyLine valid={isStepFilled(index + 1)} />}
-                </>
-              ))}
-               <Button variant="text" onClick={handleNext}><ArrowForwardIcon /></Button>
-            </WavyLineContainer>
-            <ToggleWrapper>
-              <ContainerRS>
-                <Toggle checked={isSponsored} onChange={() => setIsSponsored(!isSponsored)} scale='sm' />
-                <Text>Sponsor</Text>
-                <QuestionHelper
-                  mr='10px'
-                  text={
+        <Modal 
+          minWidth={isMobile ? "370px" : "570px"}
+          title='Create Your Token' 
+          onDismiss={handleDismiss}
+          headerClassName="headerTop"
+        >
+          <div className="create-rocket-container">
+            <div className="how-it-works-container">
+              <Container>
+                <GridContainer>{steps[currentStep].content}</GridContainer>
+                <WavyLineContainer>
+                  <Button variant="text" onClick={handlePrev} ><ArrowBackIcon /></Button>
+                  {steps.map((_, index) => (
                     <>
-                      <Text>{`Be featured on the "Sponsored Rockets" wall. COST: ${Number(new BigNumber(totalFee().toString()).shiftedBy(-18).toFixed(6)).toLocaleString('en-US', { maximumFractionDigits: 5 })} CRO`}</Text>
+                      <ButtonPoint
+                        key={index}
+                        active={index === currentStep}
+                        filled={isStepFilled(index)}
+                        onClick={() => handlePointClick(index)}
+                      >
+                        <ButtonIndex>{index + 1}</ButtonIndex>
+                      </ButtonPoint>
+                      {index !== 6 && <WavyLine valid={isStepFilled(index + 1)} />}
                     </>
-                  }
-                  ml='4px'
-                />
-              </ContainerRS>
-            </ToggleWrapper>
+                  ))}
+                  <Button variant="text" onClick={handleNext}><ArrowForwardIcon /></Button>
+                </WavyLineContainer>
+                <ToggleWrapper>
+                  <ContainerRS>
+                    <Toggle checked={isSponsored} onChange={() => setIsSponsored(!isSponsored)} scale='sm' />
+                    <Text>Sponsor</Text>
+                    <QuestionHelper
+                      mr='10px'
+                      text={
+                        <>
+                          <Text>{`Be featured on the "Sponsored Tokens" wall. COST: ${Number(new BigNumber(totalFee().toString()).shiftedBy(-18).toFixed(6)).toLocaleString('en-US', { maximumFractionDigits: 5 })} CRO`}</Text>
+                        </>
+                      }
+                      ml='4px'
+                    />
+                  </ContainerRS>
+                </ToggleWrapper>
 
-            <Flex mb='10px' justifyContent='center'>
-              <Button onClick={createTokenClick} disabled={disableBuying}>
-                {
-                  new BigNumber(balance?.toString()).lt(totalFee()) 
-                  ? "Balance Low" 
-                  : "Create Rocket"
-                }
-              </Button>
-            </Flex>
-          </Container>
+                <Flex mb='10px' justifyContent='center'>
+                  <GradientButton onClick={createTokenClick} disabled={disableBuying}>
+                    {
+                      new BigNumber(balance?.toString()).lt(totalFee()) 
+                      ? "Balance Low" 
+                      : "Create Rocket"
+                    }
+                  </GradientButton>
+                </Flex>
+                <Flex justifyContent="center" mt="10px">
+                  <Text>{`Fee Required: ${Number(new BigNumber(totalFee().toString()).shiftedBy(-18).toFixed(6)).toLocaleString('en-US', { maximumFractionDigits: 5 })} CRO`}</Text>
+                </Flex>
+              </Container>
+            </div>
+          </div>
         </Modal>
       )}
       {isModalOpen && <CreateRocketModal onDismiss={handleModalDismiss} launchData={launchData} />}

@@ -18,7 +18,7 @@ const StyledLink = styled(Link)`
   display: flex;
   align-items: center;
   .mobile-icon {
-    width: 32px;
+    width: 120px;
     ${({ theme }) => theme.mediaQueries.nav} {
       display: none;
     }
@@ -30,18 +30,6 @@ const StyledLink = styled(Link)`
       display: block;
     }
   }
-  .right-eye {
-    animation-delay: 20ms;
-  }
-  &:hover {
-    .left-eye,
-    .right-eye {
-      transform-origin: center 60%;
-      animation-name: ${blink};
-      animation-duration: 350ms;
-      animation-iteration-count: 1;
-    }
-  }
 `;
 
 const Logo: React.FC<Props> = ({ isDark, href }) => {
@@ -49,9 +37,9 @@ const Logo: React.FC<Props> = ({ isDark, href }) => {
   const innerLogo = (
     <>
       {isMobile ? (
-        <img src="/images/home/logo.svg" alt="Mobile Logo" className="mobile-icon" style={{ width: `32px` }} />
+        <img src="/images/home/marswap.png" alt="Mobile Logo" className="mobile-icon" />
       ) : (
-        <img src="/images/home/logo.svg" alt="Desktop Logo" className="desktop-icon" style={{ width: `32px`}} />
+        <img src="/images/home/marswap.png" alt="Desktop Logo" className="desktop-icon" />
       )}
     </>
   );
@@ -59,7 +47,7 @@ const Logo: React.FC<Props> = ({ isDark, href }) => {
   return (
     <Flex>
       {isAbsoluteUrl ? (
-        <StyledLink as="a" href={href} aria-label="MarSwap Dex">
+        <StyledLink to={href} aria-label="MarSwap Dex">
           {innerLogo}
         </StyledLink>
       ) : (

@@ -50,7 +50,7 @@ const MenuItem: React.FC<FooterProps> = ({
     
         {!isMobile &&
           <Flex justifyContent="flex-start" alignItems="flex-start" height="100%"> 
-            <StyledImage src="/images/home/CRO3D.png" alt="Cronos Logo" className="desktop-icon" />
+            <span className="poweredBy">Built on Solana</span>
           </Flex>
           
         }

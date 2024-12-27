@@ -42,7 +42,7 @@ const UserMenu = () => {
     disconnect()
   }
 
-  if (!account) return <w3m-button size="sm" />
+  if (!account) return <w3m-button size="md" label="CONNECT WALLET" />
 
   return (
     <>
@@ -54,7 +54,7 @@ const UserMenu = () => {
         </UserMenuItem>
       }
         <UserMenuItem>
-          <w3m-button size="sm" balance='hide'/>
+          <w3m-button size="md" balance='hide' label="CONNECT WALLET" />
         </UserMenuItem>
         <UserMenuDivider />
         <UserMenuItem as="button" onClick={onDisconnect}>

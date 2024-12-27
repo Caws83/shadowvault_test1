@@ -8,7 +8,7 @@ import { ModalProps } from './types'
 
 export const ModalHeader = styled.div<{ background?: string }>`
   align-items: center;
-  background:#0577DA;
+  background:#41d1ff;
   border-bottom: 1px solid ${({ theme }) => theme.colors.cardBorder};
   display: flex;
   padding: 8px 24px;

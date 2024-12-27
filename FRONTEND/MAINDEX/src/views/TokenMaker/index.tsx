@@ -32,6 +32,8 @@ const GridContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 8px;
+  padding: 24px;
+  border-radius: 8px;
 `
 
 const Tile = styled.div`
@@ -64,10 +66,17 @@ const ActionContainer = styled.div`
 const ToggleWrapper = styled.div`
   display: flex;
   align-items: center;
-  margin-left: 10px;
+  width: 100%;
   margin-bottom: 10px;
-  margin-right: 10px;
   background-color: 'white';
+
+  ${({ theme }) => theme.mediaQueries.sm} {
+    justify-content: flex-start;
+  }
+
+  &.presale-toggle {
+    margin-top: 16px;
+  }
 `
 const TileText = styled.div`
   border-radius: 4px;
@@ -83,6 +92,84 @@ const SubContainer = styled.div`
 `
 
 const zeroAddress = '0x0000000000000000000000000000000000000000'
+
+const StyledTitle = styled.h2`
+  font-size: 24px;
+  color: transparent !important;
+  background: linear-gradient(9deg, rgb(255, 255, 255) 0%, rgb(138, 212, 249) 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  margin: 0;
+  padding: 0;
+  font-weight: 600;
+`
+
+const HeaderFlex = styled(Flex)`
+  width: 100%;
+  padding: 24px;
+  border-bottom: 1px solid #3c3f44;
+`
+
+const StyledCardHeader = styled(CardHeader)`
+  background: #1b1b1f;
+  border-bottom: 1px solid #3c3f44;
+  padding: 0;
+`;
+
+const HeaderContainer = styled(Flex)`
+  width: 100%;
+  padding: 24px;
+  background: #1b1b1f;
+  padding-left: 48px;
+`;
+
+const LabelText = styled(Text)`
+  font-size: 17px;
+  color: ${({ theme }) => theme.colors.secondary};
+  margin-bottom: 8px;
+`;
+
+const SettingsText = styled(Text)`
+  padding-bottom: 10px;
+  font-size: 17px;
+  color: ${({ theme }) => theme.colors.secondary};
+`;
+
+const SubtleText = styled(Text)`
+  font-size: 15px;
+  color: ${({ theme }) => theme.colors.textSubtle};
+`;
+
+const GradientButton = styled(Button)`
+  background-image: linear-gradient(9deg, rgb(0, 104, 143) 0%, rgb(138, 212, 249) 100%);
+  opacity: ${({ disabled }) => (disabled ? '0.6' : '1')};
+  color: white;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  &:hover:not(:disabled) {
+    box-shadow: 0 4px 15px rgba(0, 104, 143, 0.3);
+    transform: translateY(-1px);
+  }
+  
+  &:disabled {
+    background-image: linear-gradient(9deg, rgb(0, 104, 143) 0%, rgb(138, 212, 249) 100%);
+    color: white;
+    cursor: not-allowed;
+  }
+  
+  &:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 8px rgba(0, 104, 143, 0.2);
+  }
+`
 
 const TokenMaker: React.FC = () => {
   const { t } = useTranslation()
@@ -509,18 +596,11 @@ const TokenMaker: React.FC = () => {
     <Page>
       {!displaySet ? null : (
         <AppBody>
-          <CardHeader>
-            <Flex flexDirection='row' alignItems='center' justifyContent='flex-end' mr='8px'>
-            <TextHeader>
-              CREATE TOKEN FEE:
-            </TextHeader>
-              {haveContract && (
-                <TextHeader color='primary' fontSize='14px'>{` ${parseFloat(new BigNumber(expertMode ? fee : "0").shiftedBy(-18).toFixed(5))} ${
-                  chain?.nativeCurrency.symbol ?? "CRO"
-                }`}</TextHeader>
-              )}
-            </Flex>
-          </CardHeader>
+          <StyledCardHeader>
+            <HeaderContainer flexDirection="column" alignItems="flex-start" justifyContent="flex-start" style={{ paddingLeft: '32px' }}>
+              <StyledTitle>Create Token</StyledTitle>
+            </HeaderContainer>
+          </StyledCardHeader>
 
           <Wrapper>
             <CustomBodyWrapper>
@@ -531,21 +611,21 @@ const TokenMaker: React.FC = () => {
               >
                 <Tile>
                   <Flex alignItems='flex-start'>
-                    <Text color={noName ? 'textSubtle' : 'textSubtle'}>{t('Token Name:')}</Text>
+                    <LabelText>{t('Token Name')}</LabelText>
                   </Flex>
                   <SearchInput starting={name} onChange={handleChangeQueryName} placeholder='Enter Token Name' />
                 </Tile>
 
                 <Tile>
                   <Flex alignItems='flex-start'>
-                    <Text color={noSym ? 'textSubtle' : 'textSubtle'}>{t('Token Symbol:')}</Text>
+                    <LabelText>{t('Token Symbol')}</LabelText>
                   </Flex>
                   <SearchInput starting={symbol} onChange={handleChangeQuerySymbol} placeholder='Enter Symbol' />
                 </Tile>
 
                 <Tile>
                   <Flex alignItems='flex-start'>
-                    <Text color={noSupply ? 'textSubtle' : 'textSubtle'}>{t('Initial Supply:')}</Text>
+                    <LabelText>{t('Initial Supply')}</LabelText>
                   </Flex>
                   <NumberInput
                     onChange={handleChangeQuerySupply}
@@ -555,167 +635,150 @@ const TokenMaker: React.FC = () => {
                 </Tile>
 
               </GridContainer>
-              <>
-                <Flex mt='30px' mb='20px' alignItems='center' justifyContent='center'>
-                  <Heading color='secondary' scale='md'>
-                    Additional Options
-                  </Heading>
-                </Flex>
 
-                <ToggleWrapper>
-                  <Flex alignItems='flex-start' mt='20px'>
-                    <Toggle checked={expertMode} onChange={() => changeExpertMode()} scale='sm' />
-                    <TextSwitchLabel>Expert Mode</TextSwitchLabel>
-                  </Flex>
-                </ToggleWrapper>
 
-          
 
-                {!expertMode ? null : (
-                  <>
-                    <GridContainer
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      
+              <Flex mt='20px' mb='20px' justifyContent='center'>
+                <TileText>
+                  <SettingsText>Default Settings:</SettingsText>
+                  <Text style={{ paddingBottom: 8 }}>✓ Renounced Ownership</Text>
+                  <Text style={{ paddingBottom: 8 }}>✓ 0% Tax</Text>
+                  <Text style={{ paddingBottom: 16 }}>{`✓ Dex: ${foundDex?.id}`}</Text>
+                  <ToggleWrapper>
+                    <Flex alignItems='center' width="100%">
+                      <Toggle checked={expertMode} onChange={() => changeExpertMode()} scale='sm' />
+                      <TextSwitchLabel style={{ marginLeft: '8px' }}>Enable Expert Mode</TextSwitchLabel>
+                    </Flex>
+                  </ToggleWrapper>
 
-                      <Tile>
-                        <ToggleWrapper>
-                          <Flex mt='20px'>
-                            <Toggle checked={renounced} onChange={() => changedRenounced(!renounced)} scale='sm' />
-                            <TextSwitchLabel>Don't Renounce</TextSwitchLabel>
-                          </Flex>
-                        </ToggleWrapper>
+                  {expertMode && (
+                    <>
+                      <ToggleWrapper>
+                        <Flex alignItems='center' width="100%">
+                          <Toggle checked={renounced} onChange={() => changedRenounced(!renounced)} scale='sm' />
+                          <TextSwitchLabel style={{ marginLeft: '8px' }}>Don't Renounce</TextSwitchLabel>
+                        </Flex>
+                      </ToggleWrapper>
 
-                        {!renounced ? null : (
-                          <Tile>
-                            <Flex alignItems='flex-start' mt='30px'>
-                              <Text color={noOwner ? 'textSubtle' : 'textSubtle'}>{t('Owner Of Token:')}</Text>
-                            </Flex>
-                            <SearchInput onChange={handleChangeQueryOwner} placeholder='Owner' starting={owner} />
-                          </Tile>
-                        )}
-
+                      {renounced && (
                         <Tile>
-                          <ToggleWrapper>
-                            <Flex mt='20px' flexDirection='row'>
-                              <Toggle
-                                checked={taxesEnabled}
-                                onChange={() => changeEnableTaxes(!taxesEnabled)}
-                                scale='sm'
-                              />
-                              <TextSwitchLabel>Taxes</TextSwitchLabel>
-                            </Flex>
-                          </ToggleWrapper>
-                        </Tile>
-                        {!taxesEnabled ? null : (
-                          <>
-                            <Tile>
-                              <ToggleWrapper>
-                                <Flex mt='20px' flexDirection='row'>
-                                  <Toggle checked={useDevFee} onChange={() => changeUseDevFee(!useDevFee)} scale='sm' />
-                                  <TextSwitchLabel>Marketing fee</TextSwitchLabel>
-                                </Flex>
-                              </ToggleWrapper>
-                            </Tile>
-
-                            {useDevFee && (
-                              <>
-                                <SubContainer>
-                                  <Tile>
-                                    <Flex alignItems='flex-start'>
-                                      <Text color={noMWallet ? 'textSubtle' : 'textSubtle'}>
-                                        {t('Marketing Wallet:')}
-                                      </Text>
-                                    </Flex>
-                                    <SearchInput
-                                      onChange={handleChangeQueryMWallet}
-                                      placeholder='Marketing'
-                                      starting={marketingWallet}
-                                    />
-                                  </Tile>
-
-                                  <Tile>
-                                    <Flex alignItems='flex-start'>
-                                      <Text>{t('Marketing Wallet Fee %:')}</Text>
-                                    </Flex>
-                                    <NumberInput
-                                      onChange={handleChangeQueryDevFee}
-                                      placeholder='Enter % for Marketing'
-                                      startingNumber={devFee}
-                                    />
-                                  </Tile>
-                                </SubContainer>
-                              </>
-                            )}
-
-                            <Tile>
-                              <ToggleWrapper>
-                                <Flex mt='0px' flexDirection='row'>
-                                  <Toggle checked={useLiqFee} onChange={() => changeUseLiqFee(!useLiqFee)} scale='sm' />
-                                  <TextSwitchLabel>Liquidity Fee</TextSwitchLabel>
-                                </Flex>
-                              </ToggleWrapper>
-                            </Tile>
-
-                            {useLiqFee && (
-                              <>
-                                <SubContainer>
-                                  <Tile >
-                                    <Flex alignItems='flex-start'>
-                                      <Text>{t('Liquidity Fee %:')}</Text>
-                                    </Flex>
-                                    <NumberInput
-                                      onChange={handleChangeQueryLiqFee}
-                                      placeholder='Enter % for Liquidity'
-                                      startingNumber='0'
-                                    />
-                                  </Tile>
-                                </SubContainer>
-                              </>
-                            )}
-
-                            <Tile>
-                              <ToggleWrapper>
-                                <Flex mt='0px' mb='0px' flexDirection='row'>
-                                  <Toggle checked={useDifDex} onChange={() => changeUseDex(!useDifDex)} scale='sm' />
-                                  <TextSwitchLabel>Use a different DEX</TextSwitchLabel>
-                                </Flex>
-                              </ToggleWrapper>
-                            </Tile>
-
-                            {useDifDex && (
-                              <>
-                                <SubContainer>
-                                  <Tile>
-                                    <Flex alignItems='flex-start'>
-                                      <Text color={noMWallet ? 'textSubtle' : 'textSubtle'}>
-                                        {t('Router Address:')}
-                                      </Text>
-                                    </Flex>
-                                    <SearchInput
-                                      onChange={handleChangRouter}
-                                      placeholder='Router Address'
-                                      starting={router}
-                                    />
-                                  </Tile>
-                                </SubContainer>
-                              </>
-                            )}
-                          </>
-                        )}
-
-                        <ToggleWrapper>
-                          <Flex mt='10px' flexDirection='row'>
-                            <Toggle checked={useBurn} onChange={() => changeUseBurn(!useBurn)} scale='sm' />
-                            <TextSwitchLabel>Burn A Token</TextSwitchLabel>
+                          <Flex alignItems='flex-start' mt='30px'>
+                            <Text color={noOwner ? 'textSubtle' : 'textSubtle'}>{t('Owner Of Token:')}</Text>
                           </Flex>
-                        </ToggleWrapper>
-                      </Tile>
+                          <SearchInput onChange={handleChangeQueryOwner} placeholder='Owner' starting={owner} />
+                        </Tile>
+                      )}
+
+                      <ToggleWrapper>
+                        <Flex alignItems='center' width="100%">
+                          <Toggle checked={taxesEnabled} onChange={() => changeEnableTaxes(!taxesEnabled)} scale='sm' />
+                          <TextSwitchLabel style={{ marginLeft: '8px' }}>Taxes</TextSwitchLabel>
+                        </Flex>
+                      </ToggleWrapper>
+
+                      {taxesEnabled && (
+                        <>
+                          <Tile>
+                            <ToggleWrapper>
+                              <Flex mt='20px' flexDirection='row'>
+                                <Toggle checked={useDevFee} onChange={() => changeUseDevFee(!useDevFee)} scale='sm' />
+                                <TextSwitchLabel>Marketing fee</TextSwitchLabel>
+                              </Flex>
+                            </ToggleWrapper>
+                          </Tile>
+
+                          {useDevFee && (
+                            <>
+                              <SubContainer>
+                                <Tile>
+                                  <Flex alignItems='flex-start'>
+                                    <Text color={noMWallet ? 'textSubtle' : 'textSubtle'}>
+                                      {t('Marketing Wallet:')}
+                                    </Text>
+                                  </Flex>
+                                  <SearchInput
+                                    onChange={handleChangeQueryMWallet}
+                                    placeholder='Marketing'
+                                    starting={marketingWallet}
+                                  />
+                                </Tile>
+
+                                <Tile>
+                                  <Flex alignItems='flex-start'>
+                                    <Text>{t('Marketing Wallet Fee %:')}</Text>
+                                  </Flex>
+                                  <NumberInput
+                                    onChange={handleChangeQueryDevFee}
+                                    placeholder='Enter % for Marketing'
+                                    startingNumber={devFee}
+                                  />
+                                </Tile>
+                              </SubContainer>
+                            </>
+                          )}
+
+                          <Tile>
+                            <ToggleWrapper>
+                              <Flex mt='0px' flexDirection='row'>
+                                <Toggle checked={useLiqFee} onChange={() => changeUseLiqFee(!useLiqFee)} scale='sm' />
+                                <TextSwitchLabel>Liquidity Fee</TextSwitchLabel>
+                              </Flex>
+                            </ToggleWrapper>
+                          </Tile>
+
+                          {useLiqFee && (
+                            <>
+                              <SubContainer>
+                                <Tile>
+                                  <Flex alignItems='flex-start'>
+                                    <Text>{t('Liquidity Fee %:')}</Text>
+                                  </Flex>
+                                  <NumberInput
+                                    onChange={handleChangeQueryLiqFee}
+                                    placeholder='Enter % for Liquidity'
+                                    startingNumber={liqFee}
+                                  />
+                                </Tile>
+                              </SubContainer>
+                            </>
+                          )}
+
+                          <Tile>
+                            <ToggleWrapper>
+                              <Flex mt='0px' mb='0px' flexDirection='row'>
+                                <Toggle checked={useDifDex} onChange={() => changeUseDex(!useDifDex)} scale='sm' />
+                                <TextSwitchLabel>Use a different DEX</TextSwitchLabel>
+                              </Flex>
+                            </ToggleWrapper>
+                          </Tile>
+
+                          {useDifDex && (
+                            <>
+                              <SubContainer>
+                                <Tile>
+                                  <Flex alignItems='flex-start'>
+                                    <Text color={noMWallet ? 'textSubtle' : 'textSubtle'}>
+                                      {t('Router Address:')}
+                                    </Text>
+                                  </Flex>
+                                  <SearchInput
+                                    onChange={handleChangRouter}
+                                    placeholder='Router Address'
+                                    starting={router}
+                                  />
+                                </Tile>
+                              </SubContainer>
+                            </>
+                          )}
+                        </>
+                      )}
+
+                      <ToggleWrapper>
+                        <Flex alignItems='center' width="100%">
+                          <Toggle checked={useBurn} onChange={() => changeUseBurn(!useBurn)} scale='sm' />
+                          <TextSwitchLabel style={{ marginLeft: '8px' }}>Burn A Token</TextSwitchLabel>
+                        </Flex>
+                      </ToggleWrapper>
 
                       {useBurn && (
                         <>
@@ -727,7 +790,7 @@ const TokenMaker: React.FC = () => {
                               <NumberInput
                                 onChange={handleChangeQueryBurnFee}
                                 placeholder='Enter % for Burn Token'
-                                startingNumber='0'
+                                startingNumber={burnFee}
                               />
                             </Tile>
 
@@ -754,32 +817,32 @@ const TokenMaker: React.FC = () => {
                           </SubContainer>
                         </>
                       )}
-                    </GridContainer>
-                  </>
-                )}
-                      <ToggleWrapper>
-                  <Flex alignItems='flex-start' mt='20px'>
-                    <Toggle checked={presale} onChange={() => changePresale()} scale='sm' />
-                    <TextSwitchLabel>Launch presale</TextSwitchLabel>
-                  </Flex>
-                </ToggleWrapper>
-              </>
+                    </>
+                  )}
 
-              {expertMode ? null : (
-                <Flex mt='20px' mb='0px'>
-                  <TileText>
-                    <Text style={{ paddingBottom: 10 }}>Non-expert mode uses the following as defaults:</Text>
-                    <Text>- Renounced </Text>
-                    <Text>- 0% Tax</Text>
-                    <Text>{`- Dex: ${foundDex?.id}`}</Text>
-                  </TileText>
+                  <ToggleWrapper className="presale-toggle">
+                    <Flex alignItems='center' width="100%">
+                      <Toggle checked={presale} onChange={() => changePresale()} scale='sm' />
+                      <TextSwitchLabel style={{ marginLeft: '8px' }}>Launch presale</TextSwitchLabel>
+                    </Flex>
+                  </ToggleWrapper>
+                </TileText>
+              </Flex>
+
+              <Flex mt='20px' mb='20px' justifyContent='center' flexDirection="column" alignItems="center">
+                <Flex flexDirection='row' alignItems='center' justifyContent='center' mb="16px">
+                  <TextHeader>
+                    CREATE TOKEN FEE:
+                  </TextHeader>
+                  {haveContract && (
+                    <TextHeader color='primary' fontSize='14px'>{` ${parseFloat(new BigNumber(expertMode ? fee : "0").shiftedBy(-18).toFixed(5))} ${
+                      chain?.nativeCurrency.symbol ?? "CRO"
+                    }`}</TextHeader>
+                  )}
                 </Flex>
-              )}
-
-              <Flex mt='20px' mb='20px' justifyContent='center'>
-                <Button onClick={createTokenClick} disabled={disableBuying}>
+                <GradientButton onClick={createTokenClick} disabled={disableBuying}>
                   Create Token
-                </Button>
+                </GradientButton>
               </Flex>
               </>
       }

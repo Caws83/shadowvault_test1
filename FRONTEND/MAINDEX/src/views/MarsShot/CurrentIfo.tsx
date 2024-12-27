@@ -27,33 +27,39 @@ const ToggleWrapper = styled.div`
 
 const TableContainer = styled.div`
   width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
   overflow-x: auto;
-  border-radius: 20px;
+  border-radius: 22px;
+
+  @media (max-width: 968px) {
+    padding: 10px;
+  }
 `;
 
 const Table = styled.table`
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0 16px;
   font-size: 16px;
-  border-radius: 20px;
-  padding-top: 20px;
+  border-radius: 22px;
 `;
 
 const TableHead = styled.thead`
-  background-color: #0577DA;
-  color: white;
-  border-radius: 20px;
+  color: #dadad2;
+  font-weight: bold;
 `;
 
 const TableRow = styled.tr``;
 
 const TableHeadCell = styled.th`
-  padding: 10px;
+  padding: 16px;
   text-align: center;
-  background-color: #0577DA;
-  color: white;
+  color: #dadad2;
   border: none;
   font-size: ${isMobile ? '10px' : '12px'};
+  background: transparent;
 `;
 
 const TableBody = styled.tbody``;

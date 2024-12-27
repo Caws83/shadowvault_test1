@@ -1,5 +1,6 @@
 import React from 'react';
 import { Flex, Button, Text, useModal, Link } from 'uikit';
+import { FaTelegram, FaTwitter } from 'react-icons/fa';
 import {
   StyledFooter,
   StyledSocialLinks,
@@ -15,12 +16,19 @@ import { useLocation } from 'react-router-dom';
 
 const StyledImage = styled.img`
   width: 40px;
-  `;
+`;
 
-const FooterLinks  = ({
+const StyledButton = styled(Button)`
+  font-size: 16px;
+  color: #dadad2;
+  svg {
+    font-size: 20px;
+    margin-right: 4px;
+    color: #dadad2;
+  }
+`;
 
-}) => {
-
+const FooterLinks = () => {
   const handleEmailClick = () => {
     window.location.href = 'mailto:team@zk.marswap.exchange';
   };
@@ -34,6 +42,11 @@ const FooterLinks  = ({
   const handleDocs = () => {
     window.open('https://zkdocs.marswap.exchange', '_blank', 'noopener noreferrer');
   };
+  
+  const handleDisclaimer = () => {
+    window.open('https://solforgeai.com/disclaimer/', '_blank', 'noopener noreferrer');
+  };
+
   const [onPresentLegal] = useModal(<Legal />)
   const [onPresentTerms] = useModal(<Terms />)
   const [onPresentPrivacy] = useModal(<Privacy />)
@@ -42,40 +55,26 @@ const FooterLinks  = ({
   const location = useLocation();
 
   return (
-
-      <Flex mr={isMobile ? "" : "32px"} >
-  
-        <Flex justifyContent="center" alignItems="center" flexDirection="row">
-             
-    
-
-     
-          <Button scale="xs" variant="text" onClick={onPresentLegal} >
-            Legal
-          </Button>
-       
-     
-          <Button scale="xs" variant="text" onClick={handleDocs} >
-            Documentation
-          </Button>
-   
-        <Button scale="xs" variant="text" onClick={handleTelegram} >
-              Telegram
-            </Button>
-            <Button scale="xs" variant="text" onClick={handleTwitter} >
-              Twitter/X
-            </Button>  
-          <Button scale="xs" variant="text" onClick={handleEmailClick} >
-            Email
-          </Button>         
-          </Flex>
-
+    <Flex mr={isMobile ? "" : "32px"} >
+      <Flex justifyContent="center" alignItems="center" flexDirection="row">
+        <StyledButton scale="xs" variant="text" onClick={onPresentLegal}>
+          Legal
+        </StyledButton>
+        <StyledButton scale="xs" variant="text" onClick={handleDocs}>
+          Documentation
+        </StyledButton>
+        <StyledButton scale="xs" variant="text" onClick={handleDisclaimer}>
+          Disclaimer
+        </StyledButton>
+        <StyledButton scale="xs" variant="text" onClick={handleTelegram}>
+          <FaTelegram />
+        </StyledButton>
+        <StyledButton scale="xs" variant="text" onClick={handleTwitter}>
+          <FaTwitter />
+        </StyledButton>
       </Flex>
-
+    </Flex>
   );
-  
-
-
-  
 }
+
 export default FooterLinks;

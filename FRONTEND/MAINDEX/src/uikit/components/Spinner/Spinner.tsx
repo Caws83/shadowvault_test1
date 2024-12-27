@@ -32,7 +32,7 @@ const Spinner: React.FC<SpinnerProps> = ({ size = 64 }) => {
         xmlns="http://www.w3.org/2000/svg"
       >
         <image
-          xlinkHref="/images/home/logo.svg"
+          xlinkHref="/images/home/sol-forge-logo.png"
           width={size}
           height={size}
         />

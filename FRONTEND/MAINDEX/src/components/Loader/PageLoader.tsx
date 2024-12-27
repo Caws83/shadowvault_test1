@@ -35,7 +35,7 @@ const PageLoader: React.FC = () => {
       >
         {/* Use the image element to load an external SVG */}
         <image
-          xlinkHref="/images/home/logo.svg" // Path to your SVG image
+          xlinkHref="/images/home/sol-forge-logo.png" // Path to your SVG image
           width="100"
           height="100"
         />

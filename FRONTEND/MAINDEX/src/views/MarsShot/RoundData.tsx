@@ -12,33 +12,43 @@ interface TableRowProps {
 }
 
 const TableRow = styled.tr<TableRowProps>`
+  background: radial-gradient(circle, rgba(144, 205, 240, 0.09) 0%, rgb(27, 27, 31) 100%);
+  border: 1px solid #3c3f44;
+  border-radius: 22px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(129, 192, 231, 0.15);
+    transform: translateY(-2px);
+  }
+
   ${({ highlighted }) =>
     highlighted &&
     css`
-     
+      background: rgba(129, 192, 231, 0.15);
     `}
 `;
 
 const TableCell = styled.td`
-  padding: 10px;
+  padding: 16px;
   text-align: center;
-  background-color: #151315;
-  color: white;
-  vertical-align: middle; /* Center text vertically */
+  color: #dadad2;
+  vertical-align: middle;
   font-size: ${isMobile ? '12px' : '14px'};
-  overflow-wrap: break-word; /* Use overflow-wrap for word wrapping */
+  overflow-wrap: break-word;
   white-space: normal;
-  max-width: 100px; /* Example value, adjust according to your needs */
+  max-width: 100px;
+  background: transparent;
 `;
+
 const TableCellImage = styled.td`
-  padding: 10px;
-    background-color: #151315;
+  padding: 16px;
   text-align: center;
-min-width: 40px;
-  vertical-align: middle; /* Center text vertically */
-
-
+  min-width: 40px;
+  vertical-align: middle;
+  background: transparent;
 `;
+
 const StyledLink = styled.a`  
   text-decoration: none;
   color: inherit;

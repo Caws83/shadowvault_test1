@@ -1,38 +1,68 @@
 import React from 'react'
 import styled from 'styled-components'
-import { ArrowBackIcon, Flex, IconButton } from 'uikit'
+import { Text, Flex, Heading, IconButton, ArrowBackIcon, NotificationDot } from 'uikit'
 import { Link } from 'react-router-dom'
-import { isMobile } from 'components/isMobile'
+import { useExpertModeManager } from 'state/user/hooks'
+import GlobalSettings from 'components/Menu/GlobalSettings'
+import Transactions from 'components/App/Transactions'
 
 interface Props {
-  children?: any
+  title?: string
+  subtitle?: string
+  helper?: string
   backTo?: string
+  noConfig?: boolean
+  children?: React.ReactNode
 }
 
-const AppHeaderContainer = styled(Flex)`
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px;
-  width: 100%;
-  min-height: 50px;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.cardBorder};
-  background: ${({ theme }) => theme.colors.gradients.cardHeader};
+const StyledAppHeader = styled.div`
+  background: #1b1b1f;
+  border-bottom: 1px solid #3c3f44;
+  padding: 24px;
 `
 
-const AppHeader: React.FC<Props> = (props) => {
-  const { backTo, children } = props
+const AppHeader: React.FC<Props> = ({
+  title,
+  subtitle,
+  helper,
+  backTo,
+  noConfig = false,
+  children,
+}) => {
+  const [expertMode] = useExpertModeManager()
 
   return (
-    <AppHeaderContainer>
-      <Flex alignItems="center" mr='16px'>
+    <StyledAppHeader>
+      <Flex alignItems="center" width="100%" style={{ gap: '16px' }}>
         {backTo && (
           <IconButton as={Link} to={backTo}>
-            <ArrowBackIcon width="25px" />
+            <ArrowBackIcon width="32px" />
           </IconButton>
         )}
+        <Flex flex="1" flexDirection="column">
+          {title && (
+            <Heading as="h2" mb="8px">
+              {title}
+            </Heading>
+          )}
+          {subtitle && (
+            <Flex alignItems="center">
+              {helper && <Text mr="8px">{helper}</Text>}
+              <Text>{subtitle}</Text>
+            </Flex>
+          )}
+        </Flex>
+        {children}
+        {!noConfig && (
+          <Flex alignItems="center">
+            <NotificationDot show={expertMode}>
+              <GlobalSettings />
+            </NotificationDot>
+            <Transactions />
+          </Flex>
+        )}
       </Flex>
-      {children} 
-    </AppHeaderContainer>
+    </StyledAppHeader>
   )
 }
 

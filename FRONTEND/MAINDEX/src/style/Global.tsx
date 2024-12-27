@@ -12,10 +12,6 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'DM Sans';
   }
   body {
-    ${({ theme }) => (theme.colors.background.indexOf('gradient') > -1 ? 'background-image' : 'background-color')}: ${({
-      theme,
-    }) => theme.colors.background};
-
     img {
       height: auto;
       max-width: 100%;
@@ -33,6 +29,5 @@ export const SASStyle = createGlobalStyle`
     }
   }
 `
-
 
 export default GlobalStyle

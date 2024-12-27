@@ -4,7 +4,8 @@ import { Box, Flex } from '../Box'
 import SocialLinks from './Components/SocialLinks'
 
 export const StyledFooter = styled(Flex)`
-  background: ${darkColors.backgroundAlt2};
+  background: transparent;
+  margin-top: 100px;
 `
 
 export const StyledList = styled.ul`

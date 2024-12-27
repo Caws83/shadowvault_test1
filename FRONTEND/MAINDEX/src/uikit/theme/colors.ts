@@ -2,7 +2,7 @@ import { Colors } from './types'
 
 export const baseColors = {
   primary: '#ffffff',//'#FFA61D',
-  success: '#0577DA',
+  success: '#41d1ff',
   warning: '#FF8000',
   failure: '#E00808',
 }
@@ -14,11 +14,11 @@ export const additionalColors = {
   silver: '#B2B2B2',
   bronze: '#E7974D',
 }
-// 0577DA
+// 41d1ff
 export const lightColors: Colors = {
   ...baseColors,
   ...additionalColors,
-  secondary: '#0577DA',
+  secondary: '#41d1ff',
   background:  '#000000',
   backgroundAlt: '#151315',
   backgroundAlt2: '#000000',
@@ -33,7 +33,7 @@ export const lightColors: Colors = {
   textSubtle: '#B0B0B0',
   disabled: '#808080',
   gradients: {
-    cardHeader: '#0577DA',
+    cardHeader: '#41d1ff',
     gold: 'linear-gradient(180deg, #FFD800 7%, #FDAB32 100%)',
   },
 }
@@ -41,7 +41,7 @@ export const lightColors: Colors = {
 export const darkColors: Colors = {
   ...baseColors,
   ...additionalColors,
-  secondary: '#0577DA',
+  secondary: '#41d1ff',
   background:  '#000000',
   backgroundAlt: '#151315',
   backgroundAlt2: '#000000',
@@ -56,7 +56,7 @@ export const darkColors: Colors = {
   textSubtle: '#949494',
   disabled: '#808080',
   gradients: {
-    cardHeader: '#0577DA',
+    cardHeader: '#41d1ff',
     gold: 'linear-gradient(180deg, #FFD800 7%, #FDAB32 100%)',
   },
 }

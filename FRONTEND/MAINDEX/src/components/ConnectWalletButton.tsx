@@ -6,7 +6,7 @@ function ConnectWalletButton({ chain }: { chain: number }){
   const { address: account } = useAccount()
   const chainId = chain ?? defaultChainId
   
-  if(!account)  return <w3m-button balance='hide' />
+  if(!account) return <w3m-button balance='hide' label="CONNECT WALLET" />
   return <SwitchToNetwork chainId={chainId}/>
   
 }

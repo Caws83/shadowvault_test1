@@ -57,6 +57,12 @@ const StyledModalBody = styled(ModalBody)`
   padding: 24px;
 `
 
+const StyledModalHeader = styled(ModalHeader)`
+  background: #1b1b1f;
+  border-bottom: 1px solid #3c3f44;
+  padding: 24px;
+`;
+
 interface CurrencySearchModalProps extends InjectedModalProps {
   selectedCurrency?: Currency | null
   onCurrencySelect: (currency: Currency, chainId: number) => void
@@ -108,13 +114,13 @@ export default function CurrencySearchModal({
 
   return (
     <StyledModalContainer>
-      <ModalHeader>
+      <StyledModalHeader>
         <ModalTitle>
           {config[modalView].onBack && <ModalBackButton onBack={config[modalView].onBack} />}
           <Heading>{config[modalView].title}</Heading>
         </ModalTitle>
         <ModalCloseButton onDismiss={onDismiss} />
-      </ModalHeader>
+      </StyledModalHeader>
       <StyledModalBody>
         {modalView === CurrencyModalView.search ? (
           <CurrencySearch

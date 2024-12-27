@@ -33,7 +33,7 @@ createWeb3Modal({
   enableOnramp: true,
   themeMode: 'dark',
   themeVariables: {
-    '--w3m-accent': '#0577DA',
+    '--w3m-accent': '#41d1ff',
     // '--w3m-font-family': 'DM Sans',
     '--w3m-border-radius-master': '2px',
     '--w3m-font-size-master': '8px'

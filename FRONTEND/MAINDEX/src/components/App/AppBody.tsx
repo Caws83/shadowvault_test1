@@ -4,7 +4,7 @@ import { Card } from 'uikit'
 import { isMobile } from 'components/isMobile';
 
 export const BodyWrapper = styled(Card)`
-  width: ${isMobile ? '350px' : '470px'};
+  width: ${isMobile ? '370px' : '570px'};
   z-index: 1;
   background: ${({ theme }) => theme.colors.backgroundAlt};
   border-radius: 20px;
