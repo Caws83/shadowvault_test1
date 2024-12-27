@@ -1,16 +1,16 @@
-![alt text]([http://url/to/img.png](https://i.ibb.co/zxcd6Fk/banner.png))
+ ![Alt text](https://i.ibb.co/zxcd6Fk/banner.png)
 
 # Sol Forge Frontend with cleaned up Backend 
-# Utilizing EVM to SPL
+Utilizing EVM to SPL
 
-# Optimized Contract modifications are found under - GENERALCONTRACTS/MSWAP/contracts with artifacts
-# Deploy optimized contracts with Hardhat
+Optimized Contract modifications are found under - GENERALCONTRACTS/MSWAP/contracts with artifacts
+Deploy optimized contracts with Hardhat
 
-# Install dependencies: npm install
+Install dependencies: npm install
 
-# Run the instance from MAINDEX: npx vite dev --host
+Run the instance from MAINDEX: npx vite dev --host
 
-# ZkDex removed and code cleanup under progress
+ZkDex removed and code cleanup under progress
 
 -------------
 
