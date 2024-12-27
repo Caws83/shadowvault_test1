@@ -1,16 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
-/**
- * @dev Provides information about the current execution context, including the
- * sender of the transaction and its data. While these are generally available
- * via msg.sender and msg.data, they should not be accessed in such a direct
- * manner, since when dealing with meta-transactions the account sending and
- * paying for execution may not be the actual sender (as far as an application
- * is concerned).
- *
- * This contract is only required for intermediate, library-like contracts.
- */
 abstract contract Context {
     function _msgSender() internal view virtual returns (address) {
         return msg.sender;
@@ -21,34 +11,13 @@ abstract contract Context {
     }
 }
 
-// File: @openzeppelin/contracts/access/Ownable.sol
-
-
-// OpenZeppelin Contracts v4.4.1 (access/Ownable.sol)
-
 pragma solidity ^0.8.0;
 
-
-/**
- * @dev Contract module which provides a basic access control mechanism, where
- * there is an account (an owner) that can be granted exclusive access to
- * specific functions.
- *
- * By default, the owner account will be the one that deploys the contract. This
- * can later be changed with {transferOwnership}.
- *
- * This module is used through inheritance. It will make available the modifier
- * `onlyOwner`, which can be applied to your functions to restrict their use to
- * the owner.
- */
 abstract contract Ownable is Context {
     address private _owner;
 
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
 
-    /**
-     * @dev Initializes the contract setting the deployer as the initial owner.
-     */
     constructor() {
         _transferOwnership(_msgSender());
     }
@@ -68,30 +37,15 @@ abstract contract Ownable is Context {
         _;
     }
 
-    /**
-     * @dev Leaves the contract without owner. It will not be possible to call
-     * `onlyOwner` functions anymore. Can only be called by the current owner.
-     *
-     * NOTE: Renouncing ownership will leave the contract without an owner,
-     * thereby removing any functionality that is only available to the owner.
-     */
     function renounceOwnership() public virtual onlyOwner {
         _transferOwnership(address(0));
     }
 
-    /**
-     * @dev Transfers ownership of the contract to a new account (`newOwner`).
-     * Can only be called by the current owner.
-     */
     function transferOwnership(address newOwner) public virtual onlyOwner {
         require(newOwner != address(0), "Ownable: new owner is the zero address");
         _transferOwnership(newOwner);
     }
 
-    /**
-     * @dev Transfers ownership of the contract to a new account (`newOwner`).
-     * Internal function without access restriction.
-     */
     function _transferOwnership(address newOwner) internal virtual {
         address oldOwner = _owner;
         _owner = newOwner;
@@ -99,7 +53,6 @@ abstract contract Ownable is Context {
     }
 }
 
-// helper methods for interacting with ERC20 tokens and sending ETH that do not consistently return true/false
 library TransferHelper {
     function safeApprove(address token, address to, uint value) internal {
         // bytes4(keccak256(bytes('approve(address,uint256)')));
@@ -238,8 +191,8 @@ interface IFactory {
 
     function flatFee() external view returns (uint256);
     function lpInfo() external view returns (address _treasury, uint256 _LPFee, uint256 _marsFee, uint256 _flatFee);
-    function treasury() external view returns (address _treasury);
-
+    function treasury() external view returns (address treasury);
+    
     function getPair(address tokenA, address tokenB) external view returns (address pair);
     function allPairs(uint) external view returns (address pair);
     function allPairsLength() external view returns (uint);
@@ -249,22 +202,8 @@ interface IFactory {
     function INIT_CODE_PAIR_HASH() external view returns (bytes32);
 }
 
-// CAUTION
-// This version of SafeMath should only be used with Solidity 0.8 or later,
-// because it relies on the compiler's built in overflow checks.
-
-/**
- * @dev Wrappers over Solidity's arithmetic operations.
- *
- * NOTE: `SafeMath` is generally not needed starting with Solidity 0.8, since the compiler
- * now has built in overflow checking.
- */
 library SafeMath {
-    /**
-     * @dev Returns the addition of two unsigned integers, with an overflow flag.
-     *
-     * _Available since v3.4._
-     */
+
     function tryAdd(uint256 a, uint256 b) internal pure returns (bool, uint256) {
         unchecked {
             uint256 c = a + b;
@@ -273,11 +212,6 @@ library SafeMath {
         }
     }
 
-    /**
-     * @dev Returns the subtraction of two unsigned integers, with an overflow flag.
-     *
-     * _Available since v3.4._
-     */
     function trySub(uint256 a, uint256 b) internal pure returns (bool, uint256) {
         unchecked {
             if (b > a) return (false, 0);
@@ -285,11 +219,6 @@ library SafeMath {
         }
     }
 
-    /**
-     * @dev Returns the multiplication of two unsigned integers, with an overflow flag.
-     *
-     * _Available since v3.4._
-     */
     function tryMul(uint256 a, uint256 b) internal pure returns (bool, uint256) {
         unchecked {
             // Gas optimization: this is cheaper than requiring 'a' not being zero, but the
@@ -302,11 +231,6 @@ library SafeMath {
         }
     }
 
-    /**
-     * @dev Returns the division of two unsigned integers, with a division by zero flag.
-     *
-     * _Available since v3.4._
-     */
     function tryDiv(uint256 a, uint256 b) internal pure returns (bool, uint256) {
         unchecked {
             if (b == 0) return (false, 0);
@@ -314,11 +238,6 @@ library SafeMath {
         }
     }
 
-    /**
-     * @dev Returns the remainder of dividing two unsigned integers, with a division by zero flag.
-     *
-     * _Available since v3.4._
-     */
     function tryMod(uint256 a, uint256 b) internal pure returns (bool, uint256) {
         unchecked {
             if (b == 0) return (false, 0);
@@ -326,91 +245,26 @@ library SafeMath {
         }
     }
 
-    /**
-     * @dev Returns the addition of two unsigned integers, reverting on
-     * overflow.
-     *
-     * Counterpart to Solidity's `+` operator.
-     *
-     * Requirements:
-     *
-     * - Addition cannot overflow.
-     */
     function add(uint256 a, uint256 b) internal pure returns (uint256) {
         return a + b;
     }
 
-    /**
-     * @dev Returns the subtraction of two unsigned integers, reverting on
-     * overflow (when the result is negative).
-     *
-     * Counterpart to Solidity's `-` operator.
-     *
-     * Requirements:
-     *
-     * - Subtraction cannot overflow.
-     */
     function sub(uint256 a, uint256 b) internal pure returns (uint256) {
         return a - b;
     }
 
-    /**
-     * @dev Returns the multiplication of two unsigned integers, reverting on
-     * overflow.
-     *
-     * Counterpart to Solidity's `*` operator.
-     *
-     * Requirements:
-     *
-     * - Multiplication cannot overflow.
-     */
     function mul(uint256 a, uint256 b) internal pure returns (uint256) {
         return a * b;
     }
 
-    /**
-     * @dev Returns the integer division of two unsigned integers, reverting on
-     * division by zero. The result is rounded towards zero.
-     *
-     * Counterpart to Solidity's `/` operator.
-     *
-     * Requirements:
-     *
-     * - The divisor cannot be zero.
-     */
     function div(uint256 a, uint256 b) internal pure returns (uint256) {
         return a / b;
     }
 
-    /**
-     * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),
-     * reverting when dividing by zero.
-     *
-     * Counterpart to Solidity's `%` operator. This function uses a `revert`
-     * opcode (which leaves remaining gas untouched) while Solidity uses an
-     * invalid opcode to revert (consuming all remaining gas).
-     *
-     * Requirements:
-     *
-     * - The divisor cannot be zero.
-     */
     function mod(uint256 a, uint256 b) internal pure returns (uint256) {
         return a % b;
     }
 
-    /**
-     * @dev Returns the subtraction of two unsigned integers, reverting with custom message on
-     * overflow (when the result is negative).
-     *
-     * CAUTION: This function is deprecated because it requires allocating memory for the error
-     * message unnecessarily. For custom revert reasons use {trySub}.
-     *
-     * Counterpart to Solidity's `-` operator.
-     *
-     * Requirements:
-     *
-     * - Subtraction cannot overflow.
-     */
     function sub(
         uint256 a,
         uint256 b,
@@ -422,18 +276,6 @@ library SafeMath {
         }
     }
 
-    /**
-     * @dev Returns the integer division of two unsigned integers, reverting with custom message on
-     * division by zero. The result is rounded towards zero.
-     *
-     * Counterpart to Solidity's `/` operator. Note: this function uses a
-     * `revert` opcode (which leaves remaining gas untouched) while Solidity
-     * uses an invalid opcode to revert (consuming all remaining gas).
-     *
-     * Requirements:
-     *
-     * - The divisor cannot be zero.
-     */
     function div(
         uint256 a,
         uint256 b,
@@ -445,21 +287,6 @@ library SafeMath {
         }
     }
 
-    /**
-     * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),
-     * reverting with custom message when dividing by zero.
-     *
-     * CAUTION: This function is deprecated because it requires allocating memory for the error
-     * message unnecessarily. For custom revert reasons use {tryMod}.
-     *
-     * Counterpart to Solidity's `%` operator. This function uses a `revert`
-     * opcode (which leaves remaining gas untouched) while Solidity uses an
-     * invalid opcode to revert (consuming all remaining gas).
-     *
-     * Requirements:
-     *
-     * - The divisor cannot be zero.
-     */
     function mod(
         uint256 a,
         uint256 b,
@@ -552,43 +379,43 @@ library ILibrary {
     }
 
     // given an input amount of an asset and pair reserves, returns the maximum output amount of the other asset
-    function getAmountOut(uint amountIn, uint reserveIn, uint reserveOut, uint fee) internal pure returns (uint amountOut) {
+    function getAmountOut(uint amountIn, uint reserveIn, uint reserveOut) internal pure returns (uint amountOut) {
         require(amountIn > 0, 'ILibrary: INSUFFICIENT_INPUT_AMOUNT');
         require(reserveIn > 0 && reserveOut > 0, 'ILibrary: INSUFFICIENT_LIQUIDITY');
-        uint amountInWithFee = amountIn.mul(10000 - fee);
+        uint amountInWithFee = amountIn.mul(9975);
         uint numerator = amountInWithFee.mul(reserveOut);
         uint denominator = reserveIn.mul(10000).add(amountInWithFee);
         amountOut = numerator / denominator;
     }
 
     // given an output amount of an asset and pair reserves, returns a required input amount of the other asset
-    function getAmountIn(uint amountOut, uint reserveIn, uint reserveOut, uint fee) internal pure returns (uint amountIn) {
+    function getAmountIn(uint amountOut, uint reserveIn, uint reserveOut) internal pure returns (uint amountIn) {
         require(amountOut > 0, 'ILibrary: INSUFFICIENT_OUTPUT_AMOUNT');
         require(reserveIn > 0 && reserveOut > 0, 'ILibrary: INSUFFICIENT_LIQUIDITY');
-        uint numerator = reserveIn.mul(amountOut).mul(10000 - fee);
-        uint denominator = reserveOut.sub(amountOut).mul(10000);
+        uint numerator = reserveIn.mul(amountOut).mul(10000);
+        uint denominator = reserveOut.sub(amountOut).mul(9975);
         amountIn = (numerator / denominator).add(1);
     }
 
     // performs chained getAmountOut calculations on any number of pairs
-    function getAmountsOut(address factory, uint amountIn, address[] memory path, uint256 fee) internal view returns (uint[] memory amounts) {
+    function getAmountsOut(address factory, uint amountIn, address[] memory path) internal view returns (uint[] memory amounts) {
         require(path.length >= 2, 'ILibrary: INVALID_PATH');
         amounts = new uint[](path.length);
         amounts[0] = amountIn;
         for (uint i; i < path.length - 1; i++) {
             (uint reserveIn, uint reserveOut) = getReserves(factory, path[i], path[i + 1]);
-            amounts[i + 1] = getAmountOut(amounts[i], reserveIn, reserveOut, fee);
+            amounts[i + 1] = getAmountOut(amounts[i], reserveIn, reserveOut);
         }
     }
 
     // performs chained getAmountIn calculations on any number of pairs
-    function getAmountsIn(address factory, uint amountOut, address[] memory path, uint256 fee) internal view returns (uint[] memory amounts) {
+    function getAmountsIn(address factory, uint amountOut, address[] memory path) internal view returns (uint[] memory amounts) {
         require(path.length >= 2, 'ILibrary: INVALID_PATH');
         amounts = new uint[](path.length);
         amounts[amounts.length - 1] = amountOut;
         for (uint i = path.length - 1; i > 0; i--) {
             (uint reserveIn, uint reserveOut) = getReserves(factory, path[i - 1], path[i]);
-            amounts[i - 1] = getAmountIn(amounts[i], reserveIn, reserveOut, fee);
+            amounts[i - 1] = getAmountIn(amounts[i], reserveIn, reserveOut);
         }
     }
 }
@@ -615,32 +442,27 @@ interface IWETH {
     function withdraw(uint) external;
 }
 
-
 pragma solidity ^0.8.0;
 
-contract MarsRouter is IRouter02, Ownable {
+contract othersRouter is IRouter02, Ownable {
     using SafeMath for uint;
 
     address public immutable override factory;
     address public immutable override WETH;
-
+    address public marsFactory;  // set this
+    
     modifier ensure(uint deadline) {
         require(deadline >= block.timestamp, 'MARS_Router: EXPIRED');
         _;
     }
-    
-    function flatFee() internal view returns (uint256) {
-        return IFactory(factory).flatFee();
-    }
 
-    constructor(address _factory, address _WETH) {
+    constructor(address _factory, address _WETH, address _marsFactory) {
         factory = _factory;
         WETH = _WETH;
+        marsFactory = _marsFactory;
     }
 
-    receive() external payable {
-        assert(msg.sender == WETH); // only accept ETH via fallback from the WETH contract
-    }
+    receive() external payable {}
 
     // **** ADD LIQUIDITY ****
     function _addLiquidity(
@@ -774,24 +596,19 @@ contract MarsRouter is IRouter02, Ownable {
         IWETH(WETH).withdraw(amountETH);
         TransferHelper.safeTransferETH(to, amountETH);
     }
-
-
-    function getFee() internal view returns (uint256) {
-        (,uint256 lpFee, uint256 marsFee,) = IFactory(factory).lpInfo();
-        return lpFee + marsFee;
-    }
-
+   
     // **** SWAP ****
     // requires the initial amount to have already been sent to the first pair
-    function _swap(uint[] memory amounts, address[] memory path, address _to, uint256 fee) internal virtual {
+    function _swap(uint[] memory amounts, address[] memory path, address _to) internal virtual {
         for (uint i; i < path.length - 1; i++) {
             (address input, address output) = (path[i], path[i + 1]);
             (address token0,) = ILibrary.sortTokens(input, output);
             uint amountOut = amounts[i + 1];
             (uint amount0Out, uint amount1Out) = input == token0 ? (uint(0), amountOut) : (amountOut, uint(0));
             address to = i < path.length - 2 ? ILibrary.pairFor(factory, output, path[i + 2]) : _to;
-            IPair(ILibrary.pairFor(factory, input, output)).swap{value: fee}(
-                amount0Out, amount1Out, to, new bytes(0));
+            IPair(ILibrary.pairFor(factory, input, output)).swap(
+                amount0Out, amount1Out, to, new bytes(0)
+            );
         }
     }
     function swapExactTokensForTokens(
@@ -801,17 +618,13 @@ contract MarsRouter is IRouter02, Ownable {
         address to,
         uint deadline
     ) external payable virtual override ensure(deadline) returns (uint[] memory amounts) {
-        uint256 fee;
-        uint256 txfee;
-        bool feeDisabled = msg.value >= flatFee() * (path.length -1);
-        feeDisabled ? txfee = flatFee() : 0;
-        !feeDisabled ? fee = getFee() : 0;
-        amounts = ILibrary.getAmountsOut(factory, amountIn, path, fee);
+        _chargeRouterFee(path);
+        amounts = ILibrary.getAmountsOut(factory, amountIn, path);
         require(amounts[amounts.length - 1] >= amountOutMin, 'MARS_Router: INSUFFICIENT_OUTPUT_AMOUNT');
         TransferHelper.safeTransferFrom(
             path[0], msg.sender, ILibrary.pairFor(factory, path[0], path[1]), amounts[0]
         );
-        _swap(amounts, path, to, txfee);
+        _swap(amounts, path, to);
     }
     function swapTokensForExactTokens(
         uint amountOut,
@@ -820,17 +633,13 @@ contract MarsRouter is IRouter02, Ownable {
         address to,
         uint deadline
     ) external payable virtual override ensure(deadline) returns (uint[] memory amounts) {
-         uint256 fee;
-        uint256 txfee;
-        bool feeDisabled = msg.value >= flatFee() * (path.length -1);
-        feeDisabled ? txfee = flatFee() : 0;
-        !feeDisabled ? fee = getFee() : 0;
-        amounts = ILibrary.getAmountsIn(factory, amountOut, path, fee);
+        _chargeRouterFee(path);
+        amounts = ILibrary.getAmountsIn(factory, amountOut, path);
         require(amounts[0] <= amountInMax, 'MARS_Router: EXCESSIVE_INPUT_AMOUNT');
         TransferHelper.safeTransferFrom(
             path[0], msg.sender, ILibrary.pairFor(factory, path[0], path[1]), amounts[0]
         );
-        _swap(amounts, path, to, txfee);
+        _swap(amounts, path, to);
     }
     function swapExactETHForTokens(uint amountOutMin, address[] calldata path, address to, uint deadline)
         external
@@ -840,20 +649,14 @@ contract MarsRouter is IRouter02, Ownable {
         ensure(deadline)
         returns (uint[] memory amounts)
     {
-        uint256 fee;
-        uint256 txfee;
-        bool feeDisabled = msg.value >= (flatFee() * (path.length -1))*50;
-        feeDisabled ? txfee = flatFee() : 0;
-        !feeDisabled ? fee = getFee() : 0;
-        
         require(path[0] == WETH, 'MARS_Router: INVALID_PATH');
-        amounts = ILibrary.getAmountsOut(factory, msg.value - (txfee * (path.length-1)), path, fee);
+        uint amountIn = msg.value > txFee() * 100 ? msg.value - _chargeRouterFee(path) : msg.value;
+        amounts = ILibrary.getAmountsOut(factory, amountIn, path);
         require(amounts[amounts.length - 1] >= amountOutMin, 'MARS_Router: INSUFFICIENT_OUTPUT_AMOUNT');
         IWETH(WETH).deposit{value: amounts[0]}();
         assert(IWETH(WETH).transfer(ILibrary.pairFor(factory, path[0], path[1]), amounts[0]));
-        _swap(amounts, path, to, txfee);
+        _swap(amounts, path, to);
     }
-    
     function swapTokensForExactETH(uint amountOut, uint amountInMax, address[] calldata path, address to, uint deadline)
         external
         payable
@@ -862,19 +665,16 @@ contract MarsRouter is IRouter02, Ownable {
         ensure(deadline)
         returns (uint[] memory amounts)
     {
-         uint256 fee;
-        uint256 txfee;
-        bool feeDisabled = msg.value >= flatFee() *  (path.length -1);
-        feeDisabled ? txfee = flatFee() : 0;
-        !feeDisabled ? fee = getFee() : 0;
         require(path[path.length - 1] == WETH, 'MARS_Router: INVALID_PATH');
-        amounts = ILibrary.getAmountsIn(factory, amountOut, path, fee);
+        amounts = ILibrary.getAmountsIn(factory, amountOut, path);
+        _chargeRouterFee(path);
         require(amounts[0] <= amountInMax, 'MARS_Router: EXCESSIVE_INPUT_AMOUNT');
         TransferHelper.safeTransferFrom(
             path[0], msg.sender, ILibrary.pairFor(factory, path[0], path[1]), amounts[0]
         );
-        _swap(amounts, path, address(this), txfee);
+        _swap(amounts, path, address(this));
         IWETH(WETH).withdraw(amounts[amounts.length - 1]);
+
         TransferHelper.safeTransferETH(to, amounts[amounts.length - 1]);
     }
     function swapExactTokensForETH(uint amountIn, uint amountOutMin, address[] calldata path, address to, uint deadline)
@@ -885,19 +685,16 @@ contract MarsRouter is IRouter02, Ownable {
         ensure(deadline)
         returns (uint[] memory amounts)
     {
-         uint256 fee;
-        uint256 txfee;
-        bool feeDisabled = msg.value >= flatFee() *  (path.length -1);
-        feeDisabled ? txfee = flatFee() : 0;
-        !feeDisabled ? fee = getFee() : 0;
         require(path[path.length - 1] == WETH, 'MARS_Router: INVALID_PATH');
-        amounts = ILibrary.getAmountsOut(factory, amountIn, path, fee);
-        require(amounts[amounts.length - 1] >= amountOutMin, 'FG: INSUFFICIENT_OUTPUT_AMOUNT');
+        _chargeRouterFee(path);
+        amounts = ILibrary.getAmountsOut(factory, amountIn, path);
+        require(amounts[amounts.length - 1] >= amountOutMin, 'MARS_Router: INSUFFICIENT_OUTPUT_AMOUNT');
         TransferHelper.safeTransferFrom(
             path[0], msg.sender, ILibrary.pairFor(factory, path[0], path[1]), amounts[0]
         );
-        _swap(amounts, path, address(this), txfee);
+        _swap(amounts, path, address(this));
         IWETH(WETH).withdraw(amounts[amounts.length - 1]);
+
         TransferHelper.safeTransferETH(to, amounts[amounts.length - 1]);
     }
     function swapETHForExactTokens(uint amountOut, address[] calldata path, address to, uint deadline)
@@ -908,46 +705,38 @@ contract MarsRouter is IRouter02, Ownable {
         ensure(deadline)
         returns (uint[] memory amounts)
     {
-        uint256 fee;
-        uint256 txfee;
-        bool feeDisabled = msg.value >= (flatFee() *  (path.length -1))*50;
-        feeDisabled ? txfee = flatFee() : 0;
-        !feeDisabled ? fee = getFee() : 0;
         require(path[0] == WETH, 'MARS_Router: INVALID_PATH');
-        amounts = ILibrary.getAmountsIn(factory, amountOut, path, fee);
-        require(amounts[0] <= msg.value - (flatFee() *  (path.length -1)), 'MARS_Router: EXCESSIVE_INPUT_AMOUNT');
+        amounts = ILibrary.getAmountsIn(factory, amountOut, path);
+        uint fee = msg.value > txFee() * 100 ? _chargeRouterFee(path) : 0;
+        amounts[0] = amounts[0] - fee;
+        require(amounts[0] <= msg.value - fee, 'MARS_Router: EXCESSIVE_INPUT_AMOUNT');
         IWETH(WETH).deposit{value: amounts[0]}();
         assert(IWETH(WETH).transfer(ILibrary.pairFor(factory, path[0], path[1]), amounts[0]));
-        _swap(amounts, path, to, txfee);
+        _swap(amounts, path, to);
         // refund dust eth, if any
-        if (msg.value - (flatFee() * path.length-1) > amounts[0]) TransferHelper.safeTransferETH(msg.sender, msg.value - (flatFee()*path.length-1) - amounts[0]);
+        if (msg.value > amounts[0]) TransferHelper.safeTransferETH(msg.sender, msg.value - amounts[0]);
     }
 
     // **** SWAP (supporting fee-on-transfer tokens) ****
     // requires the initial amount to have already been sent to the first pair
-    function _swapSupportingFeeOnTransferTokens(address[] memory path, address _to, uint256 lpfee) internal virtual {
+    function _swapSupportingFeeOnTransferTokens(address[] memory path, address _to) internal virtual {
         for (uint i; i < path.length - 1; i++) {
             (address input, address output) = (path[i], path[i + 1]);
             (address token0,) = ILibrary.sortTokens(input, output);
-            IPair pair =IPair(ILibrary.pairFor(factory, input, output));
+            IPair pair = IPair(ILibrary.pairFor(factory, input, output));
             uint amountInput;
             uint amountOutput;
-            
             { // scope to avoid stack too deep errors
             (uint reserve0, uint reserve1,) = pair.getReserves();
             (uint reserveInput, uint reserveOutput) = input == token0 ? (reserve0, reserve1) : (reserve1, reserve0);
             amountInput = IERC20(input).balanceOf(address(pair)).sub(reserveInput);
-            amountOutput = ILibrary.getAmountOut(amountInput, reserveInput, reserveOutput, lpfee);
+            amountOutput = ILibrary.getAmountOut(amountInput, reserveInput, reserveOutput);
             }
             (uint amount0Out, uint amount1Out) = input == token0 ? (uint(0), amountOutput) : (amountOutput, uint(0));
             address to = i < path.length - 2 ? ILibrary.pairFor(factory, output, path[i + 2]) : _to;
-            uint256 fee = lpfee == 0? flatFee() : 0;
-            pair.swap{value: fee}(amount0Out, amount1Out, to, new bytes(0));
-            
+            pair.swap(amount0Out, amount1Out, to, new bytes(0));
         }
     }
-   
-
     function swapExactTokensForTokensSupportingFeeOnTransferTokens(
         uint amountIn,
         uint amountOutMin,
@@ -955,14 +744,12 @@ contract MarsRouter is IRouter02, Ownable {
         address to,
         uint deadline
     ) external payable virtual override ensure(deadline) {
-        uint256 fee;
-        bool feeDisabled = msg.value >= flatFee() * (path.length -1);
-        !feeDisabled ? fee = getFee() : 0;
+        _chargeRouterFee(path);
         TransferHelper.safeTransferFrom(
             path[0], msg.sender, ILibrary.pairFor(factory, path[0], path[1]), amountIn
         );
         uint balanceBefore = IERC20(path[path.length - 1]).balanceOf(to);
-        _swapSupportingFeeOnTransferTokens(path, to, fee);
+        _swapSupportingFeeOnTransferTokens(path, to);
         require(
             IERC20(path[path.length - 1]).balanceOf(to).sub(balanceBefore) >= amountOutMin,
             'MARS_Router: INSUFFICIENT_OUTPUT_AMOUNT'
@@ -980,18 +767,13 @@ contract MarsRouter is IRouter02, Ownable {
         payable
         ensure(deadline)
     {
-        uint256 fee;
-        uint256 txfee;
-        bool feeDisabled = msg.value >= (flatFee() * (path.length -1))*50;
-        feeDisabled ? txfee = flatFee() : 0;
-        !feeDisabled ? fee = getFee() : 0;
-        
         require(path[0] == WETH, 'MARS_Router: INVALID_PATH');
-        uint amountIn = msg.value - (txfee *  (path.length -1));
+        uint amountIn = msg.value > txFee() * 100 ? msg.value - _chargeRouterFee(path) : msg.value;
         IWETH(WETH).deposit{value: amountIn}();
+
         assert(IWETH(WETH).transfer(ILibrary.pairFor(factory, path[0], path[1]), amountIn));
         uint balanceBefore = IERC20(path[path.length - 1]).balanceOf(to);
-        _swapSupportingFeeOnTransferTokens(path, to, fee);
+        _swapSupportingFeeOnTransferTokens(path, to);
         require(
             IERC20(path[path.length - 1]).balanceOf(to).sub(balanceBefore) >= amountOutMin,
             'MARS_Router: INSUFFICIENT_OUTPUT_AMOUNT'
@@ -1010,18 +792,25 @@ contract MarsRouter is IRouter02, Ownable {
         override
         ensure(deadline)
     {
-        uint256 fee;
-        bool feeDisabled = msg.value >= flatFee() * (path.length -1);
-        !feeDisabled ? fee = getFee() : 0;
         require(path[path.length - 1] == WETH, 'MARS_Router: INVALID_PATH');
+        _chargeRouterFee(path);
         TransferHelper.safeTransferFrom(
             path[0], msg.sender, ILibrary.pairFor(factory, path[0], path[1]), amountIn
         );
-        _swapSupportingFeeOnTransferTokens(path, address(this), fee);
+        _swapSupportingFeeOnTransferTokens(path, address(this));
         uint amountOut = IERC20(WETH).balanceOf(address(this));
         require(amountOut >= amountOutMin, 'MARS_Router: INSUFFICIENT_OUTPUT_AMOUNT');
         IWETH(WETH).withdraw(amountOut);
+
         TransferHelper.safeTransferETH(to, amountOut);
+    }
+
+    // router fee functions
+
+    function _chargeRouterFee(address[] memory path) internal returns (uint TFee) {
+        TFee = txFee() * ( path.length-1 );
+        address treasury = IFactory(marsFactory).treasury();
+        TransferHelper.safeTransferETH(treasury, TFee);    
     }
 
     // **** LIBRARY FUNCTIONS ****
@@ -1031,23 +820,22 @@ contract MarsRouter is IRouter02, Ownable {
 
     function getAmountOut(uint amountIn, uint reserveIn, uint reserveOut)
         public
-        view
+        pure
         virtual
         override
         returns (uint amountOut)
     {
-        
-        return ILibrary.getAmountOut(amountIn, reserveIn, reserveOut, getFee());
+        return ILibrary.getAmountOut(amountIn, reserveIn, reserveOut);
     }
 
     function getAmountIn(uint amountOut, uint reserveIn, uint reserveOut)
         public
-        view
+        pure
         virtual
         override
         returns (uint amountIn)
     {
-        return ILibrary.getAmountIn(amountOut, reserveIn, reserveOut, getFee());
+        return ILibrary.getAmountIn(amountOut, reserveIn, reserveOut);
     }
 
     function getAmountsOut(uint amountIn, address[] memory path)
@@ -1057,7 +845,7 @@ contract MarsRouter is IRouter02, Ownable {
         override
         returns (uint[] memory amounts)
     {
-        return ILibrary.getAmountsOut(factory, amountIn, path, getFee());
+        return ILibrary.getAmountsOut(factory, amountIn, path);
     }
 
     function getAmountsIn(uint amountOut, address[] memory path)
@@ -1067,18 +855,18 @@ contract MarsRouter is IRouter02, Ownable {
         override
         returns (uint[] memory amounts)
     {
-        return ILibrary.getAmountsIn(factory, amountOut, path, getFee());
+        return ILibrary.getAmountsIn(factory, amountOut, path);
     }
 
-            // backup functions to recover tokens and/or BNB
+    function txFee() public view returns (uint256) {
+        return IFactory(marsFactory).flatFee();
+    }
 
-        function withdawlBNB() external onlyOwner {
-            payable(msg.sender).transfer(address(this).balance);
-        }
+    function withdawlBNB() external onlyOwner {
+        payable(msg.sender).transfer(address(this).balance);
+    }
 
-        function withdrawlToken(address _tokenAddress) external onlyOwner {
-            uint256 _tokenAmount = IERC20(_tokenAddress).balanceOf(address(this));
-            IERC20(_tokenAddress).transfer(address(msg.sender), _tokenAmount);
-        }  
-
+    function withdrawlToken(address _tokenAddress) external onlyOwner {
+        IERC20(_tokenAddress).transfer(msg.sender, IERC20(_tokenAddress).balanceOf(address(this)));
+    } 
 }
