@@ -1,23 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { Flex, Link, Button, Text } from 'uikit';
-import { useTranslation } from 'contexts/Localization';
-import { useAccount } from 'wagmi';
-import { isMobile } from 'components/isMobile';
-import { 
-  FaRocket, 
-  FaChartLine, 
-  FaShieldAlt, 
-  FaLock, 
-  FaUserShield 
-} from 'react-icons/fa';
-import { 
-  BsFillLightningFill, 
-  BsCurrencyExchange 
-} from 'react-icons/bs';
+import React from 'react'
+import { Flex, Text } from 'uikit'
+import { FaRocket, FaChartLine, FaUserShield } from 'react-icons/fa'
+import { BsCurrencyExchange } from 'react-icons/bs'
+import { Link } from 'react-router-dom'  // <-- add this
+
+import { useTranslation } from 'contexts/Localization'
+import { useAccount } from 'wagmi'
+import { isMobile } from 'components/isMobile'
 
 const Hero = () => {
-  const { t } = useTranslation();
-  const { address: account } = useAccount();
+  const { t } = useTranslation()
+  const { address: account } = useAccount()
+
+  const handleAskToly = () => {
+    console.log("Ask Toly button clicked")
+
+  }
 
   return (
     <>
@@ -28,9 +26,14 @@ const Hero = () => {
             <Text className="hero-headline" fontSize={isMobile ? '32px' : '48px'} bold>
               Launch Tokens with AI
             </Text>
-            
+
             {/* Subheadline */}
-            <Text className="hero-subheadline" fontSize={isMobile ? '16px' : '20px'} color="#dadad2" maxWidth="600px">
+            <Text
+              className="hero-subheadline"
+              fontSize={isMobile ? '16px' : '20px'}
+              color="#dadad2"
+              maxWidth="600px"
+            >
               AI-powered DEX that makes token launches safer than PumpFun
             </Text>
 
@@ -50,15 +53,23 @@ const Hero = () => {
             {/* Stats or Social Proof */}
             <Flex mt="32px" width="100%" justifyContent="space-between">
               <div className="stat-item">
-                <Text fontSize="24px" bold color="#dadad2">100%</Text>
-                <Text fontSize="14px" color="#dadad2">Fair Launch</Text>
+                <Text fontSize="24px" bold color="#dadad2">
+                  100%
+                </Text>
+                <Text fontSize="14px" color="#dadad2">
+                  Fair Launch
+                </Text>
               </div>
               <div className="stat-item">
-                <Text fontSize="24px" bold>AI-Powered</Text>
+                <Text fontSize="24px" bold>
+                  AI-Powered
+                </Text>
                 <Text fontSize="14px">Security</Text>
               </div>
               <div className="stat-item">
-                <Text fontSize="24px" bold>24/7</Text>
+                <Text fontSize="24px" bold>
+                  24/7
+                </Text>
                 <Text fontSize="14px">AI Support</Text>
               </div>
             </Flex>
@@ -67,23 +78,32 @@ const Hero = () => {
 
         {!isMobile && (
           <div className="action-panel">
-            <button className="quick-action-button hero-cta-button">
-              Quick Token Forge <FaRocket />
-            </button>
-            
-            <button className="quick-action-button hero-cta-button">
-              Trade Now <BsCurrencyExchange />
-            </button>
-            
-            <button className="quick-action-button hero-cta-button">
-              Create Presale <FaChartLine />
-            </button>
-            
-            <button className="quick-action-button hero-cta-button">
+            {/* Quick Token Forge -> /marscreate */}
+            <Link to="/marscreate">
+              <button className="quick-action-button hero-cta-button">
+                Quick Token Forge <FaRocket />
+              </button>
+            </Link>
+
+            <Link to="/swap">
+              <button className="quick-action-button hero-cta-button">
+                Trade Now <BsCurrencyExchange />
+              </button>
+            </Link>
+
+            <Link to="/marsale">
+              <button className="quick-action-button hero-cta-button">
+                Create Presale <FaChartLine />
+              </button>
+            </Link>
+
+            <button
+              className="quick-action-button hero-cta-button"
+              onClick={handleAskToly}
+            >
               Ask Toly <FaUserShield />
             </button>
 
-            {/* Optional: Add some stats or info */}
             <Flex flexDirection="column" mt="24px">
               <Text fontSize="14px" color="textSubtle">
                 Platform Statistics
@@ -105,13 +125,14 @@ const Hero = () => {
         )}
       </div>
     </>
-  );
-};
+  )
+}
 
+// Reusable check icon
 const CheckIcon = () => (
   <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
     <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
   </svg>
-);
+)
 
-export default Hero;
+export default Hero
