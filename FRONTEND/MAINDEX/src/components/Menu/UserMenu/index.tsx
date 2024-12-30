@@ -14,7 +14,6 @@ import { updateFarmHost } from 'state/farms'
 import { useGasTokenManager } from 'state/user/hooks'
 import { getETHER } from 'sdk'
 import { Token } from 'config/constants/types'
-import PMTokenSelector from './payMasterSelectButton'
 
 
 const UserMenu = () => {
@@ -26,16 +25,13 @@ const UserMenu = () => {
   const { isMobile } = useMatchBreakpoints()
   const dispatch = useDispatch<AppDispatch>()
   const ETHER = getETHER(chain?.id) as Token
-  const [payWithPM, setUsePaymaster, payToken, setPaytoken] = useGasTokenManager()
 
 
 
   const onResetDexState = () => {
-    setUserDex(dexs.marsCZK)
-    dispatch(updateFarmHost(hosts.marswap))
+    setUserDex(dexs.forgeTest)
+    dispatch(updateFarmHost(hosts.forgeTest))
     setGasPrice(GAS_PRICE_GWEI.default)
-    setUsePaymaster(false)
-    setPaytoken(ETHER)
   }
 
   const onDisconnect = () => {

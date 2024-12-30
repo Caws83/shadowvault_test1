@@ -13,7 +13,6 @@ import { GAS_PRICE_GWEI } from 'state/user/hooks/helpers'
 import { useDispatch } from 'react-redux'
 import { updateFarmHost } from 'state/farms'
 import { AppDispatch } from 'state'
-import PMTokenSelector from '../UserMenu/payMasterSelectButton'
 
 
 const SettingsModal: React.FC<InjectedModalProps> = ({ onDismiss }) => {
@@ -31,8 +30,8 @@ const SettingsModal: React.FC<InjectedModalProps> = ({ onDismiss }) => {
 
 
   const onResetDexState = () => {
-    setUserDex(dexs.marsCZKTest)
-    dispatch(updateFarmHost(hosts.marswap))
+    setUserDex(dexs.forgeTest)
+    dispatch(updateFarmHost(hosts.forgeTest))
     setGasPrice(GAS_PRICE_GWEI.default)
     setSingleHopOnly(!singleHopOnly)
   }
@@ -55,10 +54,7 @@ const SettingsModal: React.FC<InjectedModalProps> = ({ onDismiss }) => {
           <Text bold textTransform="uppercase" fontSize="12px" color="secondary" mb="24px">
             {t('Swaps & Liquidity')}
           </Text>
-          <Flex flexDirection="row" justifyContent="space-between" mb="24px" >
-            <Text>Gas Token</Text>
-            <PMTokenSelector />
-          </Flex>
+          
           <TransactionSettings />
         </Flex>
        

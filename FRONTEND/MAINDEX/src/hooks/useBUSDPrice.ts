@@ -12,7 +12,7 @@ import BigNumber from 'bignumber.js'
 import { BIG_ZERO } from 'utils/bigNumber'
 import { Address } from 'viem'
 
-const BUSD_CICNET = USDT[ChainId.CROZKT]
+const BUSD_CICNET = USDT[ChainId.NEONDEV]
 const WBONE = getWBONE()
 /**
  * Returns the price in USDT of the input currency
@@ -27,13 +27,13 @@ export default function useBUSDPrice(currency?: Currency): Price | undefined {
         chainId && wrapped && currencyEquals(WBONE[chainId], wrapped) ? undefined : currency,
         chainId ? WBONE[chainId] : undefined,
       ],
-      [wrapped?.equals(BUSD_CICNET) ? undefined : wrapped, chainId === ChainId.CROZKT ? BUSD_CICNET : undefined],
-      [chainId ? WBONE[chainId] : undefined, chainId === ChainId.CROZKT ? BUSD_CICNET : undefined],
+      [wrapped?.equals(BUSD_CICNET) ? undefined : wrapped, chainId === ChainId.NEONDEV ? BUSD_CICNET : undefined],
+      [chainId ? WBONE[chainId] : undefined, chainId === ChainId.NEONDEV ? BUSD_CICNET : undefined],
     ],
     [chainId, currency, wrapped],
   )
   const [[ethPairState, ethPair], [busdPairState, busdPair], [busdEthPairState, busdEthPair]] = usePairs(
-    dexs.marsCZKTest,
+    dexs.forgeTest,
     tokenPairs,
   )
 

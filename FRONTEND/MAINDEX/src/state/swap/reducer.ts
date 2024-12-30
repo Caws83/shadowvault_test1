@@ -27,7 +27,7 @@ const initialState: SwapState = {
     currencyId: '',
   },
   recipient: null,
-  dex: dexs.marsCZKTest,
+  dex: dexs.forgeTest,
 }
 
 export default createReducer<SwapState>(initialState, (builder) =>

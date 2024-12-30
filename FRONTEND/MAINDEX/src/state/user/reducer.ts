@@ -73,7 +73,7 @@ const initialState: UserState = {
   isDark: false,
   userFarmStakedOnly: FarmStakedOnly.ON_FINISHED,
   gasPrice: GAS_PRICE_GWEI.default,
-  dex: dexs.marsCZK,
+  dex: dexs.forgeTest,
   zap: false,
   gasToken: JSON.parse(localStorage.getItem('gasToken') || '{}'),
   usePaymaster: JSON.parse(localStorage.getItem('usePaymaster') || '{}')

@@ -4,14 +4,15 @@ import { FarmConfig } from '../types'
 import hosts from '../hosts'
 import { dexs } from '../dex'
 import { createPublicClient, http } from 'viem'
-import { CronosZKTest } from '../chains'
+import { NeonDevNet } from '../chains'
+import { neonDevnet } from 'viem/chains'
 
 
-const removeFarmsPIDS = [1,2]
+const removeFarmsPIDS = []
 
   const lockers = async () => {
     const publicClient = createPublicClient({ 
-      chain: CronosZKTest,
+      chain: neonDevnet,
       transport: http()
     })
 
@@ -19,7 +20,7 @@ const removeFarmsPIDS = [1,2]
   try {
     const start = 100000
     const host = hosts.marstest
-    const dex = dexs.marsCZKTest
+    const dex = dexs.forgeTest
     const chef = getAddress(host.masterChef, 282)
     const info = await publicClient.readContract({address: getInfoChefaddress(282), abi: infoChefAbi, functionName: "getFarmInfo", args: [chef]})
 

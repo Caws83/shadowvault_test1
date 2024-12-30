@@ -420,7 +420,7 @@ function Analytics () {
                   setH="320px"
                   setW="100%"
                   show={false}
-                  dex={dexs.marsCZKTest}
+                  dex={dexs.forgeTest}
                 />
               </BorderContainer>
             ))}
