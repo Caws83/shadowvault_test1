@@ -375,7 +375,7 @@ const EasyStakeModal: React.FC<EasyStakeModalProps> = ({
       minWidth="346px"
       title={isRemovingStake ? t('Unstake') : t('Stake in Pool')}
       onDismiss={handleDismiss}
-      headerBackground={(theme as any).colors.gradients.cardHeader}
+      headerClassName="headerTop"
     >
       {!stakingToken.baseAddress && (
         <Flex justifyContent="center" alignItems="center">
@@ -497,6 +497,7 @@ const EasyStakeModal: React.FC<EasyStakeModalProps> = ({
                     disabled={requestedApproval || new BigNumber(stakeAmount).eq(0) || !hasBalance} 
                     onClick={handleApprove} 
                     variant="primary"
+                    className="stake-btn"
                   >
                     {t('Enable')}
                   </Button>

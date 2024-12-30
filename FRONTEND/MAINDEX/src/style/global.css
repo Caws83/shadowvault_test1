@@ -999,7 +999,7 @@ w3m-button button:active {
   color: white !important;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-bottom: 10px;
+  margin-bottom: 10px !important;
 }
 
 .action-panel .hero-cta-button:last-child {
@@ -1111,6 +1111,14 @@ w3m-button button:active {
 .create-button:active {
   transform: translateY(1px);
   box-shadow: 0 2px 8px rgba(0, 104, 143, 0.2);
+}
+
+/* Stake button styling */
+.stake-btn {
+  background: linear-gradient(9deg, rgb(0, 104, 143) 0%, rgb(138, 212, 249) 100%) !important;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+  border-radius: 8px !important;
+  color: white !important;
 }
 
 /* How it Works button styling */
@@ -1405,4 +1413,29 @@ div[role="dialog"] > div > div:first-child h2 {
   border-radius: 20px;
   animation: rotate 4s linear infinite;
   z-index: -1;
+}
+
+/* Farm Card Header Styles */
+.farm-card-header {
+  background: rgba(20, 20, 22, 0.95);
+  border-bottom: 1px solid #3c3f44;
+  padding: 16px;
+}
+
+.farm-card-header svg {
+  margin-right: 4px;
+}
+
+.farm-gradient-heading {
+  color: transparent !important;
+  background: linear-gradient(9deg, rgb(255, 255, 255) 0%, rgb(138, 212, 249) 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  font-size: 24px !important;
+  font-weight: 600 !important;
+  line-height: 1.6 !important;
+  padding: 4px 0 !important;
+}
+.farm-card {
+  background-image: radial-gradient(circle, rgba(144, 205, 240, 0.09) 0%, rgb(27, 27, 31) 100%);
 }

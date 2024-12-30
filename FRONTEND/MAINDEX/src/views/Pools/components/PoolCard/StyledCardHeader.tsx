@@ -9,8 +9,20 @@ import CakeVaultTokenPairImage from '../CakeVaultCard/CakeVaultTokenPairImage'
 import { usePublicClient } from 'wagmi'
 
 const Wrapper = styled(CardHeader)`
-  background: ${({ theme }) => theme.colors.gradients['cardHeader']};
+  background: rgba(20, 20, 22, 0.95);
+  border-bottom: 1px solid #3c3f44;
   border-radius: ${({ theme }) => `${theme.radii.card} ${theme.radii.card} 0 0`};
+`
+
+const GradientText = styled(Text)`
+  color: transparent !important;
+  background: linear-gradient(9deg, rgb(255, 255, 255) 0%, rgb(138, 212, 249) 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  font-size: 24px !important;
+  font-weight: 600 !important;
+  line-height: 1.6 !important;
+  padding: 4px 0 !important;
 `
 
 const StyledCardHeader: React.FC<{
@@ -49,24 +61,22 @@ const StyledCardHeader: React.FC<{
   }
 
   return (
-    <Wrapper >
-
+    <Wrapper>
       <Flex alignItems="center" justifyContent="space-between">
         <Flex flexDirection="column">
-          <Text fontSize="18px" color="text">
+          <GradientText>
             {getSubHeading()}
-          </Text>
-         
+          </GradientText>
         </Flex>
         {isAutoVault ? (
-          <CakeVaultTokenPairImage width={64} height={64} />
+          <CakeVaultTokenPairImage width={45} height={45} />
         ) : isCakePool ? (
           <TokenImage 
             token={earningToken}
             host={pool.host}
             chainId={pool.chainId}
-            width={64}
-            height={64}
+            width={45}
+            height={45}
           />
          ) : (
           <TokenPairImage
@@ -74,8 +84,8 @@ const StyledCardHeader: React.FC<{
             host={pool.host}
             chainId={pool.chainId}
             secondaryToken={stakingToken}
-            width={64}
-            height={64}
+            width={45}
+            height={45}
           />
         )}
       </Flex>

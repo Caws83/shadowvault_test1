@@ -24,6 +24,8 @@ export interface FarmWithStakedValue extends Farm {
 
 const StyledCard = styled(Card)`
   align-self: baseline;
+  background: rgba(129, 192, 231, 0.1);
+  border-radius: 20px;
 `
 
 const FarmCardInnerContainer = styled(Flex)`
@@ -76,7 +78,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ farm, displayApr, removed, cakePric
 
 
   return (
-    <StyledCard isActive={isPromotedFarm} style={{width: 360}}>
+    <StyledCard isActive={isPromotedFarm} style={{width: 360}} className="farm-card">
      
         <CardHeading
           lpLabel={lpLabel}

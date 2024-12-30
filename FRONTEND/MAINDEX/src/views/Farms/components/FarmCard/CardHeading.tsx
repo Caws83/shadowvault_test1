@@ -19,13 +19,8 @@ export interface ExpandableSectionProps {
 }
 
 const Wrapper = styled(Flex)`
-  background: ${({ theme }) => theme.colors.gradients['cardHeader']};
   border-radius: ${({ theme }) => `${theme.radii.card} ${theme.radii.card} 0 0`};
   justify-content: space-around;
-  padding: 16px;
-  svg {
-    margin-right: 4px;
-  }
 `
 
 const CardHeading: React.FC<ExpandableSectionProps> = ({ lpLabel, token, quoteToken, host }) => {
@@ -92,7 +87,7 @@ const CardHeading: React.FC<ExpandableSectionProps> = ({ lpLabel, token, quoteTo
   
 
   return (
-    <Wrapper justifyContent="space-between" alignItems="center" mb="12px">
+    <Wrapper justifyContent="space-between" alignItems="center" mb="12px" className="farm-card-header">
       <TokenPairImage
         variant="inverted"
         primaryToken={token}
@@ -106,7 +101,7 @@ const CardHeading: React.FC<ExpandableSectionProps> = ({ lpLabel, token, quoteTo
         <Text fontSize="18px" color="secondary">
           {client.chain.name.toUpperCase()}
         </Text>
-        <Heading>{lpLabel?.split(' ')[0]}</Heading>
+        <Heading className="farm-gradient-heading">{lpLabel?.split(' ')[0]}</Heading>
         <Text fontSize="10px">{host.dex.id}</Text>
         {showTimer && (
           <Text fontSize="12px" color="primary">
