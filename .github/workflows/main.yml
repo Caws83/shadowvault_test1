@@ -27,12 +27,18 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'   
-      - name: Install Packages
-        run: npm install
+      
+      - name: Navigate to FrontEnd/MainDex and Install Packages
+        run: |
+          cd FRONTEND/MAINDEX
+          npm install
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}    
+      
       - name: Build Project
-        run: npm run build
+        run: |
+          cd FRONTEND/MAINDEX
+          npm run build
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }} 
 
@@ -44,6 +50,6 @@ jobs:
           password: ${{ secrets.RSYNC_PASSPHRASE }}
           protocol: ftps
           port: 21
-          local-dir: ./dist/
+          local-dir: ./FRONTEND/MAINDEX/dist/
           server-dir: /testing.solforgeia.com/
-          state-name: /testingSiteSF.json	
+          state-name: /testingSiteSF.json
