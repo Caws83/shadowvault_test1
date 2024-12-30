@@ -9,11 +9,7 @@ import { BigintIsh, MINIMUM_LIQUIDITY, ZERO, ONE, FIVE, FactoryInfo, FEES_DENOMI
 import { sqrt, parseBigintIsh } from '../utils'
 import { InsufficientReservesError, InsufficientInputAmountError } from '../errors'
 import { Token } from './token'
-import { utils } from "zksync-ethers";
 
-// for KZ 0xCF431E1cc02760C80621984c8820302680cC05FD
-const EMPTY_INPU_HASH = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
-const ZKSYNC_PREFIX = '0x2020dba91b30cc0006188af794c2fb30dd8520db7e2c088b7fc7c103c00ca494' // keccak256('zksyncCreate2')
 
 let PAIR_ADDRESS_CACHE: { [factoryAddres: string]: { [token0Address: string]: { [token1Address: string]: string } } } =
   {}
@@ -27,7 +23,6 @@ export class Pair {
   public static getAddress(tokenA: Token, tokenB: Token, dex: FactoryInfo): string {
     const check = tokenA.sortsBefore(tokenB)
     const tokens = check ? [tokenA, tokenB] : [tokenB, tokenA] // does safety checks
-    if(dex.name !== "MARSWAP"){
     if (PAIR_ADDRESS_CACHE?.[dex.factory]?.[tokens[0].address]?.[tokens[1].address] === undefined) {
       PAIR_ADDRESS_CACHE = {
         ...PAIR_ADDRESS_CACHE,
@@ -44,24 +39,7 @@ export class Pair {
       }
     }
     return PAIR_ADDRESS_CACHE[dex.factory][tokens[0].address][tokens[1].address]
-  } else {
-   
-    const salt2 = keccak256(['bytes'], [pack(['address', 'address'], [tokens[0].address, tokens[1].address])])
-    const calc_address2 = utils.create2Address(dex.factory, dex.codeHash , salt2, '0x')
 
-    if (PAIR_ADDRESS_CACHE?.[dex.factory]?.[tokens[0].address]?.[tokens[1].address] === undefined) {
-      PAIR_ADDRESS_CACHE = {
-        ...PAIR_ADDRESS_CACHE,
-        [dex.factory]: {
-          [tokens[0].address]: {
-            ...PAIR_ADDRESS_CACHE?.[dex.factory]?.[tokens[0].address],
-            [tokens[1].address]: calc_address2,
-          },
-        },
-      }
-    }
-    return PAIR_ADDRESS_CACHE[dex.factory][tokens[0].address][tokens[1].address]
-  }
   }
 
   public constructor(tokenAmountA: TokenAmount, tokenAmountB: TokenAmount, dex: FactoryInfo) {

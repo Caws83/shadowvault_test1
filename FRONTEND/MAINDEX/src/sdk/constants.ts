@@ -4,8 +4,7 @@ import JSBI from 'jsbi'
 export type BigintIsh = JSBI | bigint | string
 
 export enum ChainId {
-  CROZKT = 282,
-  CRO = 388,
+  NEONDEV = 245022926,
 }
 
 export interface FactoryInfo {

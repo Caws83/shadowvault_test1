@@ -1,48 +1,27 @@
-import { chainConfig, ChainEIP712 } from 'viem/zksync'
+import { defineChain } from 'viem'
 
-export const CronosZKTest = {
-  ...chainConfig,
-  id: 282,
-  name: 'zk Testnet',
+export const NeonDevNet = defineChain({
+  id: 245022926,
+  name: 'Neon Devnet',
+  network: 'NeonDev',
   nativeCurrency: {
     decimals: 18,
-    name: 'zkTCRO',
-    symbol: 'zkTCRO',
+    name: 'TNEON',
+    symbol: 'TNEON',
   },
   rpcUrls: {
-    public: { http: ['https://testnet.zkevm.cronos.org/'] },
-    default: { http: ['https://testnet.zkevm.cronos.org/'] },
+     public: { http: ['https://neon-evm-devnet.rpc.thirdweb.com/'] },
+    default: { http: ['https://neon-evm-devnet.rpc.thirdweb.com/'] },
+    // public: { http: ['https://devnet.neonevm.org/'] },
+    // default: { http: ['https://devnet.neonevm.org/'] },
   },
   blockExplorers: {
-    etherscan: { name: 'CroZK Scan', url: 'https://explorer.zkevm.cronos.org/testnet' },
-    default: { name: 'CroZK Scan', url: 'https://explorer.zkevm.cronos.org/testnet' },
+    etherscan: { name: 'Neon Scan', url: 'https://devnet.neonscan.org/' },
+    default: { name: 'Neon Scan', url: 'https://devnet.neonscan.org/' },
   },
-} as ChainEIP712
+})
 
-export const CronosZK = {
-  ...chainConfig,
-  id: 388,
-  name: 'Cronos ZK',
-  nativeCurrency: {
-    decimals: 18,
-    name: 'zkCRO',
-    symbol: 'zkCRO',
-  },
-  rpcUrls: {
-    public: { http: ['https://mainnet.zkevm.cronos.org/'] },
-    default: { http: ['https://mainnet.zkevm.cronos.org/'] },
-  },
-  blockExplorers: {
-    etherscan: { name: 'CroZK Scan', url: 'https://explorer.zkevm.cronos.org' },
-    default: { name: 'CroZK Scan', url: 'https://explorer.zkevm.cronos.org' },
-  },
-  contracts: {
-    multicall3: {
-      address: '0x06f4487D7C4a5983d2660DB965Cc6d2565E4cfaA',
-      blockCreated: 20000,
-    },
-  },
-} as ChainEIP712
 
-export const defaultChain = CronosZK
+
+export const defaultChain = NeonDevNet
 export const defaultChainId = defaultChain.id
