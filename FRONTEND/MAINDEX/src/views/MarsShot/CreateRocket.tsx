@@ -488,7 +488,7 @@ const CreateRocket: React.FC<{ onDismiss?: () => void }> = ({ onDismiss }) => {
       label: 'Step 1: Name',
       content: (
         <>
-          <LabelText>Name</LabelText>
+          <LabelText>Token Name</LabelText>
           <InputMarsShot
             ref={inputRefs.name}
             value={name}
@@ -507,7 +507,7 @@ const CreateRocket: React.FC<{ onDismiss?: () => void }> = ({ onDismiss }) => {
             ref={inputRefs.symbol}
             value={symbol}
             onChange={e => handleChange('symbol', e.target.value)}
-            placeholder='Token Symbol'
+            placeholder='Token Symbol ex: BTC, ETH, XRP, PEPE'
           />
         </>
       ),

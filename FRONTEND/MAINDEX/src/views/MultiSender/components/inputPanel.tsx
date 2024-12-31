@@ -42,7 +42,7 @@ const InputPanel: React.FC<InputPanelProps> = ({ onProcessInput }) => {
         style={{
           borderRadius: '20px',
           padding: isMobile ? "10px" : "20px",
-          backgroundColor: theme.colors.backgroundAlt2,
+          backgroundColor: '#161616',
           color: theme.colors.primary,
           fontSize: isMobile ? "8px" : "12px",
           maxWidth: isMobile ? "280px" : "350px",
