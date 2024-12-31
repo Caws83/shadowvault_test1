@@ -489,7 +489,7 @@ function formatTimeLeft(endEpoch) {
             <CardHeader className="CardHeader">
               <Item>
                 <GiThorHammer size={30} color="#41d1ff" />
-                <TextT className="top-tokens-title">Top Flash Forge</TextT>
+                <TextT className="top-tokens-title">Top Tokens</TextT>
               </Item>
             </CardHeader>
             {!topLiveIfo ? <TextNo>There is currently no active tokens.</TextNo> :

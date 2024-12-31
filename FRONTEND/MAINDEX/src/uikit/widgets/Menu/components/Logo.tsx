@@ -24,7 +24,7 @@ const StyledLink = styled(Link)`
     }
   }
   .desktop-icon {
-    width: 160px;
+    width: 200px;
     display: none;
     ${({ theme }) => theme.mediaQueries.nav} {
       display: block;
@@ -37,9 +37,9 @@ const Logo: React.FC<Props> = ({ isDark, href }) => {
   const innerLogo = (
     <>
       {isMobile ? (
-        <img src="/images/home/marswap.png" alt="Mobile Logo" className="mobile-icon" />
+        <img src="/images/home/sol-forge-ai-logo.png" alt="Sol Forge AI" className="mobile-icon" />
       ) : (
-        <img src="/images/home/marswap.png" alt="Desktop Logo" className="desktop-icon" />
+        <img src="/images/home/sol-forge-ai-logo.png" alt="Sol Forge AI" className="desktop-icon" />
       )}
     </>
   );

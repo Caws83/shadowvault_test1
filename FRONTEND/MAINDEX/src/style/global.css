@@ -1045,6 +1045,15 @@ w3m-button button:active {
   padding: 4px 0;
 }
 
+.forge-heading h4 {
+  color: #dadad2;
+  font-size: 17px;
+  font-weight: normal;
+  line-height: 1.6em;
+}
+.forge-heading h4 a {
+  color: #41d1ff;
+}
 /* Mobile responsive styles */
 @media (max-width: 768px) {
   .forge-heading h3 {

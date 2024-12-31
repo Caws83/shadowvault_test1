@@ -1,6 +1,7 @@
 import React from 'react'
 import { Flex, Text } from 'uikit'
-import { FaRocket, FaChartLine, FaUserShield } from 'react-icons/fa'
+import { FaChartLine, FaUserShield } from 'react-icons/fa'
+import { GiThorHammer } from 'react-icons/gi'
 import { BsCurrencyExchange } from 'react-icons/bs'
 import { Link } from 'react-router-dom'  // <-- add this
 
@@ -79,9 +80,9 @@ const Hero = () => {
         {!isMobile && (
           <div className="action-panel">
             {/* Quick Token Forge -> /marscreate */}
-            <Link to="/marscreate">
+            <Link to="/marshot">
               <button className="quick-action-button hero-cta-button">
-                Quick Token Forge <FaRocket />
+                Create Token <GiThorHammer style={{ width: '30px', height: '30px' }} />
               </button>
             </Link>
 

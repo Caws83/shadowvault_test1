@@ -28,20 +28,8 @@ const config: (t: ContextApi['t']) => ConfigMenuItemsType[] = (t) => [
     hideSubNav: true,
     items: [
       {
-        label: t('Flash Forge'),
-        href: '/marshot',
-      },
-      {
         label: t('Create Token'),
-        href: '/marscreate',
-      },
-      {
-        label: t('Presale'),
-        href: '/marsale',
-      },
-      {
-        label: t('Quick Airdrop'),
-        href: '/marsend',
+        href: '/marshot',
       },
       {
         label: t('Pools'),
@@ -51,7 +39,18 @@ const config: (t: ContextApi['t']) => ConfigMenuItemsType[] = (t) => [
         label: t('Stake'),
         href: '/marstake',
       },
-
+      {
+        label: t('Presale'),
+        href: '/marsale',
+      },
+      {
+        label: t('SOL Foundry'),
+        href: '/marscreate',
+      },
+      {
+        label: t('Quick Airdrop'),
+        href: '/marsend',
+      },
     ],
   },
 
