@@ -81,7 +81,7 @@ const Hero = () => {
           <div className="action-panel">
             {/* Quick Token Forge -> /marscreate */}
             <Link to="/marshot">
-              <button className="quick-action-button hero-cta-button">
+              <button className="quick-action-button hero-cta-button btnBorderAnim">
                 Create Token <GiThorHammer style={{ width: '30px', height: '30px' }} />
               </button>
             </Link>

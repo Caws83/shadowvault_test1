@@ -308,6 +308,19 @@ w3m-button button:active {
 .hero-cta-button:hover svg {
   transform: scale(1.1);
 }
+.action-panel a .btnBorderAnim {
+  position: relative;
+  margin-bottom: 30px!important;
+}
+.btnBorderAnim:before {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  background: linear-gradient(var(--angle), #00f2fe, #0068cc);
+  border-radius: 9px;
+  animation: rotate 4s linear infinite;
+  z-index: -1;
+}
 
 /* Phone Image Enhancement */
 .hero-phone-image {
