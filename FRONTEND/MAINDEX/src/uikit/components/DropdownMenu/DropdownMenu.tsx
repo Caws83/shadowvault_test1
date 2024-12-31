@@ -22,6 +22,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
   activeItem = '',
   items = [],
   openMenuTimeout = 0,
+  className = '',
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false)
@@ -133,6 +134,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
           {...attributes.popper}
           $isBottomNav={isBottomNav}
           $isOpen={isOpen && ((isBottomNav && showItemsOnMobile) || !isBottomNav)}
+          className="solForgeSub"
         >
           {items.map(
             ({ type = DropdownMenuItemType.INTERNAL_LINK, label, href = '/', status, ...itemProps }, index) => {

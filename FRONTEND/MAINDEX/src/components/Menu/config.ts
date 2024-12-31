@@ -44,7 +44,7 @@ const config: (t: ContextApi['t']) => ConfigMenuItemsType[] = (t) => [
         href: '/marsale',
       },
       {
-        label: t('SOL Foundry'),
+        label: t('Foundry'),
         href: '/marscreate',
       },
       {

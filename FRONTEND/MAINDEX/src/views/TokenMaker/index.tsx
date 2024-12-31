@@ -602,7 +602,6 @@ const TokenMaker: React.FC = () => {
             <h4>
               Ownership &nbsp;&nbsp;|&nbsp;&nbsp; Tax &nbsp;&nbsp;|&nbsp;&nbsp; Burn &nbsp;&nbsp;|&nbsp;&nbsp; Presale
             </h4>
-            <h4>Use  <a href="#/marshot"><GiThorHammer size={26} style={{ verticalAlign: 'middle', marginRight: '4px' }} />Flash Forge</a> to create a PumpFun-style token.</h4>
           </div>
 
           <AppBody>
@@ -916,6 +915,10 @@ const TokenMaker: React.FC = () => {
               </CustomBodyWrapper>
             </Wrapper>
           </AppBody>
+
+          <div className="forge-heading" style={{ marginTop: '24px' }}>
+            <h4>Use  <a href="#/marshot"><GiThorHammer size={26} style={{ verticalAlign: 'middle', marginRight: '4px' }} />Flash Forge</a> to create a PumpFun-style token.</h4>
+          </div>
         </>
       )}
     </Page>
