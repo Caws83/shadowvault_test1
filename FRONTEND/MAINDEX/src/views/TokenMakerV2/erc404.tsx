@@ -29,6 +29,7 @@ import artifact from 'config/abi/tokens/MarswapERC404.json'
 import { eip712WalletActions } from 'viem/zksync'
 import { upload } from "thirdweb/storage";
 import { createThirdwebClient } from "thirdweb";
+import { defaultChainId } from 'config/constants/chains'
 
 
 const Tile = styled.a`
@@ -75,13 +76,7 @@ const ActionContainer = styled.div`
   }
 `
 const fees = {
-  97: "10000",
-  109: "400000000000000000000",
-  56: "750000000000000000",
-  25: "2500000000000000000000",
-  1: "70000000000000000",
-  8453: "70000000000000000",
-  282: "100000"
+  defaultChainId: "1000000"
 }
 
 

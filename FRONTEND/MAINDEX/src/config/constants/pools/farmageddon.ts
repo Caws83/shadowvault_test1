@@ -7,7 +7,7 @@ import { PoolCategory, PoolConfig } from '../types'
 // start with a 1
 
 const farmageddonPools: PoolConfig[] = [
-  
+  /*
   {
     sousId: 0,
     pid: 0,
@@ -24,22 +24,7 @@ const farmageddonPools: PoolConfig[] = [
     dex: dexs.marsCZK,
     chainId: 388,
   },
-  {
-    sousId: 1,
-    pid: 0,
-    stakingToken: tokens.clrmrs,
-    earningToken: tokens.clrmrs,
-    contractAddress: {
-      282: '0xC64D5bbf42e584Ec8ba9D681560147c2EC0C2212',
-    },
-    poolCategory: PoolCategory.SINGLE,
-    harvest: true,
-    sortOrder: 2,
-    isFinished: false,
-    host: hosts.marstest,
-    dex: dexs.marsCZKTest,
-    chainId: 282,
-  },
+ 
   
 /*
   // Regular pools below

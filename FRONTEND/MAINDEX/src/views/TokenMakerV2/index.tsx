@@ -11,22 +11,10 @@ import NftR from './NFTRandom'
 
 
 export const apis = {
-  97: 'https://api-testnet.bscscan.com/api',
-  282: 'https://explorer.zkevm.cronos.org/testnet/api',
-  56: 'https://api.bscscan.com/api',
-  109: 'https://www.shibariumscan.io/api',
-  1: 'https://api.etherscan.io/api',
-  25: "https://explorer-api.cronos.org/mainnet/api/v1",
-  8453: "https://api.basescan.org/api",
+  defaultChainId: "https://api-testnet.bscscan.com/api"
 }
 export const keys = {
-  97: 'J6JA2Z7XRGWT24Z3ZF9J3H2AUGEAEAH9FG',
-  56: 'J6JA2Z7XRGWT24Z3ZF9J3H2AUGEAEAH9FG',
-  109: '48b7254b-37c2-41cd-993a-ed912771c8e3',
-  1: 'N9SXTYRYIA4JHEFGERJVBAF3EU3817GE9D',
-  8453: "29MYWZ472YRSEM4MRGKYPDT3EF9EM4KJ1E",
-  25: "pUTlJeZjtZm7E4dUDDshzJMQKjdJZvJp",
-  282: "",
+  defaultChainId: ""
 }
 
 const TokenMaker: React.FC = () => {

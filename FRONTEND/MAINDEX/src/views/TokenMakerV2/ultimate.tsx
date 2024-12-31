@@ -33,6 +33,7 @@ import { ethers } from 'ethers'
 import { apis, keys } from '.'
 import { useGetWcicPrice } from 'hooks/useBUSDPrice'
 import artifact from 'config/abi/tokens/UltimateToken.json'
+import { defaultChainId } from 'config/constants/chains'
 
 
 const Tile = styled.a`
@@ -88,13 +89,7 @@ const ToggleWrapper = styled.div`
   }
 `
 const fees = {
-  97: "10000",
-  109: "200000000000000000000",
-  56: "500000000000000000",
-  25: "1000000000000000000000",
-  1: "50000000000000000",
-  8453: "50000000000000000",
-  282: "100000"
+  defaultChainId: "100000"
 }
 
 

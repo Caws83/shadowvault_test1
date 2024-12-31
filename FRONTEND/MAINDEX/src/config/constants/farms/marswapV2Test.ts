@@ -19,10 +19,10 @@ const removeFarmsPIDS = []
  
   try {
     const start = 100000
-    const host = hosts.marstest
+    const host = hosts.forgeTest
     const dex = dexs.forgeTest
-    const chef = getAddress(host.masterChef, 282)
-    const info = await publicClient.readContract({address: getInfoChefaddress(282), abi: infoChefAbi, functionName: "getFarmInfo", args: [chef]})
+    const chef = getAddress(host.masterChef, 245022926)
+    const info = await publicClient.readContract({address: getInfoChefaddress(245022926), abi: infoChefAbi, functionName: "getFarmInfo", args: [chef]})
 
 
     const FarmInfo: FarmConfig[] = []
@@ -45,13 +45,13 @@ const removeFarmsPIDS = []
           pid: i,
           lpSymbol: `${info[3][i]}-${info[7][i]}`,
           lpAddresses: {
-            282: `${info[0][i]}`,
+            245022926: `${info[0][i]}`,
           },
           token: {
             symbol: `${info[3][i]}`,
             name: `${info[2][i]}`,
             address: {
-              282: `${info[1][i]}`,
+              245022926: `${info[1][i]}`,
             },
             decimals: Number(info[4][i]),
             projectLink: 'https://marswap.exchange/',
@@ -60,7 +60,7 @@ const removeFarmsPIDS = []
             symbol: `${info[7][i]}`,
             name: `${info[6][i]}`,
             address: {
-              282: `${info[5][i]}`,
+              245022926: `${info[5][i]}`,
             },
             decimals: Number(info[8][i]),
             projectLink: 'https://marswap.exchange/',
@@ -68,7 +68,7 @@ const removeFarmsPIDS = []
           host,
           dex,
           isVisible: true,
-          chainId: 282,
+          chainId: 245022926,
         })
       }
     }}
