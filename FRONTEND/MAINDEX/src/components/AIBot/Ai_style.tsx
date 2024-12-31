@@ -121,15 +121,16 @@ const useChatStyles = () => {
   };
 
   const botBubbleStyle: CSSProperties = {
-    backgroundColor: theme.colors.secondary,
-    color: theme.colors.primary,
+    backgroundColor: 'rgba(129, 192, 231, 0.1)',
+    color: '#dadad2',
     padding: '12px',
-    fontSize: '12px',
+    fontSize: '16px',
     borderRadius: '10px',
     marginLeft: 'auto',
-    fontFamily: 'Roboto, Arial, sans-serif', // Updated font family
+    fontFamily: 'Roboto, Arial, sans-serif',
     lineHeight: '1.5',
     whiteSpace: 'pre-line',
+    maxWidth: '80%',
   };
 
   return { 
