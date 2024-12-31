@@ -33,6 +33,40 @@ const CustomBodyWrapper = styled.div`
   display: flex;
 `
 
+const StyledCardHeader = styled(CardHeader)`
+  background: rgba(20, 20, 22, 0.95);
+  border-bottom: 1px solid #3c3f44;
+  padding: 0;
+`;
+
+const HeaderContainer = styled(Flex)`
+  width: 100%;
+  padding: 24px;
+  padding-right: 32px;
+`;
+
+const StyledTitle = styled.h2`
+  font-size: 24px;
+  color: transparent !important;
+  background: linear-gradient(9deg, rgb(255, 255, 255) 0%, rgb(138, 212, 249) 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  margin: 0;
+  padding: 0;
+  font-weight: 600;
+`
+
+const StyledWrapper = styled(Wrapper)`
+  background-image: radial-gradient(circle, rgba(144, 205, 240, 0.09) 0%, rgb(27, 27, 31) 100%);
+  padding: 24px;
+`;
+
+const LabelText = styled(Text)`
+  font-size: 17px;
+  color: ${({ theme }) => theme.colors.secondary};
+  margin-bottom: 8px;
+`;
+
 const Ifos = () => {
   const { t } = useTranslation()
   const params = useParams()
@@ -121,24 +155,27 @@ const Ifos = () => {
     <Page style={{ paddingTop: 60 }}>
       <BorderContainer>
         <AppBody>
-          <CardHeader>
-            <Flex flexDirection='row' alignItems='center' justifyContent='flex-end' mr='8px'>
-              <TextHeader>
-                PRESALE FEE:{' '}
-              </TextHeader>
-              <TextHeader color='primary' fontSize='10px'>{`${parseFloat(new BigNumber(fee).shiftedBy(-18).toFixed(5))} ${
-                chain?.nativeCurrency.symbol ?? 'CRO'
-              }`}</TextHeader>
-            </Flex>
-          </CardHeader>
+          <StyledCardHeader>
+            <HeaderContainer flexDirection='row' alignItems='center' justifyContent='space-between' style={{ paddingLeft: '32px' }}>
+              <StyledTitle>Create Presale</StyledTitle>
+              <Flex flexDirection='row' alignItems='center'>
+                <TextHeader>
+                  PRESALE FEE:{' '}
+                </TextHeader>
+                <TextHeader color='primary' fontSize='10px'>{`${parseFloat(new BigNumber(fee).shiftedBy(-18).toFixed(5))} ${
+                  chain?.nativeCurrency.symbol ?? 'CRO'
+                }`}</TextHeader>
+              </Flex>
+            </HeaderContainer>
+          </StyledCardHeader>
 
-          <Wrapper>
+          <StyledWrapper>
             <CustomBodyWrapper>
               <Flex flexDirection='column' style={{ maxWidth: 340 }}>
                 {haveContract ? (
                   <>
                     <Flex>
-                      <Text color='textSubtle'>{t('Token Address:')}</Text>
+                      <LabelText>{t('Token Address:')}</LabelText>
                     </Flex>
                     
                     <SearchInput onChange={handleChangeQueryToken} placeholder='Enter Token Address:' starting={`${tokenAddress}`} />
@@ -159,7 +196,7 @@ const Ifos = () => {
                 )}
               </Flex>
             </CustomBodyWrapper>
-          </Wrapper>
+          </StyledWrapper>
         </AppBody>
       </BorderContainer>
     </Page>

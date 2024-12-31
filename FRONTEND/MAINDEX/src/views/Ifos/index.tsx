@@ -6,9 +6,15 @@ import CurrentIfo from './CurrentIfo'
 import PastIfo from './PastIfo'
 import CreateIfo from './CreateIfo'
 import Page from 'views/Page'
+import styled from 'styled-components'
 
-
-
+const StyledButtonMenu = styled(ButtonMenu)`
+  button {
+    font-size: 22px;
+    padding: 16px 24px;
+    min-width: 120px;
+  }
+`;
 
 const Ifos = () => {
   const { t } = useTranslation()
@@ -18,7 +24,7 @@ const Ifos = () => {
     if (path.includes('/marsale/create')) return 0
     if (path.includes('/marsale/live')) return 1
     if (path.includes('/marsale/history')) return 2
-    return 1  // Default to "Live"
+    return 0  // Default to "Create"
   }
 
   const activeIndex = getActiveIndex(location.pathname)
@@ -27,7 +33,7 @@ const Ifos = () => {
     <Page>
       
       <Flex justifyContent='center' alignItems='center'>
-        <ButtonMenu activeIndex={activeIndex} scale='sm' variant='subtle'>
+        <StyledButtonMenu activeIndex={activeIndex} variant='subtle'>
           <ButtonMenuItem as={Link} to='/marsale/create'>
             {t('Create')}
           </ButtonMenuItem>
@@ -37,11 +43,11 @@ const Ifos = () => {
           <ButtonMenuItem as={Link} to='/marsale/history'>
             {t('Finalized')}
           </ButtonMenuItem>
-        </ButtonMenu>
+        </StyledButtonMenu>
       </Flex>
 
       <Routes>
-        <Route path='/' element={<CurrentIfo />} />
+        <Route path='/' element={<CreateIfo />} />
         <Route path='create' element={<CreateIfo />} />
         <Route path='live' element={<CurrentIfo />} />
         <Route path='history' element={<PastIfo />} />
