@@ -50,6 +50,6 @@ jobs:
           password: ftplogin1562
           protocol: ftps
           port: 21
-          local-dir: ./dist/
+          local-dir: ./FRONTEND/MAINDEX/dist/
           server-dir: /testing.marswap.exchange/
           state-name: /testingSite.json	
