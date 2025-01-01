@@ -10,7 +10,7 @@ import { isMobile } from 'components/isMobile';
 import Terms from './Components/Terms'
 import Privacy from './Components/Privacy'
 import Disclaimer from './Components/Disclaimer'
-import Legal from './Components/Legal';
+// import Legal from './Components/Legal';
 import { styled } from 'styled-components';
 import { useLocation } from 'react-router-dom';
 
@@ -47,7 +47,7 @@ const FooterLinks = () => {
     window.open('https://solforgeai.com/disclaimer/', '_blank', 'noopener noreferrer');
   };
 
-  const [onPresentLegal] = useModal(<Legal />)
+  // const [onPresentLegal] = useModal(<Legal />)
   const [onPresentTerms] = useModal(<Terms />)
   const [onPresentPrivacy] = useModal(<Privacy />)
   const [onPresentDisclaimer] = useModal(<Disclaimer />)
@@ -57,9 +57,9 @@ const FooterLinks = () => {
   return (
     <Flex mr={isMobile ? "" : "32px"} >
       <Flex justifyContent="center" alignItems="center" flexDirection="row">
-        <StyledButton scale="xs" variant="text" onClick={onPresentLegal}>
+        {/* <StyledButton scale="xs" variant="text" onClick={onPresentLegal}>
           Legal
-        </StyledButton>
+        </StyledButton> */}
         <StyledButton scale="xs" variant="text" onClick={handleDocs}>
           Documentation
         </StyledButton>

@@ -7,7 +7,6 @@ import CreateSale from './NewSaleCard'
 
 const StyledHero = styled.div`
   background-repeat: repeat-x;
-  background-image: ${`url('/images/dexs/MARSWAP.png')`};
 `
 
 const Hero = () => {

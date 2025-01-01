@@ -28,34 +28,29 @@ const config: (t: ContextApi['t']) => ConfigMenuItemsType[] = (t) => [
     hideSubNav: true,
     items: [
       {
-        label: t('MARSCREATE'),
-        href: '/marscreate',
-      },
-      {
-        label: t('MARSALE'),
-        href: '/marsale',
-      },
-      {
-        label: t('MARSHOT'),
+        label: t('Create Token'),
         href: '/marshot',
       },
       {
-        label: t('MARSPIN'),
-        href: '/marspin',
-      },
-      {
-        label: t('MARSEND'),
-        href: '/marsend',
-      },
-      {
-        label: t('MARS POOLS'),
+        label: t('Pools'),
         href: '/marspools',
       },
       {
-        label: t('MARSTAKE'),
+        label: t('Stake'),
         href: '/marstake',
       },
-
+      {
+        label: t('Presale'),
+        href: '/marsale',
+      },
+      {
+        label: t('Foundry'),
+        href: '/marscreate',
+      },
+      {
+        label: t('Quick Airdrop'),
+        href: '/marsend',
+      },
     ],
   },
 

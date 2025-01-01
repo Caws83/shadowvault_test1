@@ -117,7 +117,7 @@ const ChatbotModal: React.FC<{ isActive: boolean }> = ({ isActive }) => {
 
   const [messages, setMessages] = useState<Message[]>([
     {
-      text: `Welcome! I'm Ian, your friendly AI assistant. \n\n
+      text: `Welcome! I'm Tolly, your friendly AI assistant. \n\n
             You can ask me anything you want related to Marswap.  \n 
             start you sentance with the following commands:\n
             CREATE: this will create tokens. ex: create token named MARSWAP with 3% tax,\n
@@ -135,6 +135,18 @@ const ChatbotModal: React.FC<{ isActive: boolean }> = ({ isActive }) => {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const chatContainerRef = useRef<HTMLDivElement>(null)
   const styles = useChatStyles()
+
+  const headerStyle = {
+    ...styles.modalHeaderStyle,
+    background: 'rgba(20, 20, 22, 0.95)',
+    borderBottom: '1px solid #3c3f44',
+  }
+
+  const headerTitleStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+  }
 
   const handleSendMessage = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target
@@ -572,8 +584,19 @@ const createRocket = async (inputCommand) => {
         }}
       >
         <div style={styles.modalContentStyle}>
-          <div style={styles.modalHeaderStyle}>
-            <h2 style={{ margin: 0 }}>ASK IAN BOT</h2>
+          <div style={headerStyle}>
+            <div style={headerTitleStyle}>
+              <img 
+                src="/images/home/toly.png" 
+                alt="Tolly" 
+                style={{ 
+                  width: '40px', 
+                  height: '40px',
+                  objectFit: 'contain'
+                }} 
+              />
+              <h2 style={{ margin: 0 }} className="farm-gradient-heading">Tolly, your AI Assistant</h2>
+            </div>
             <button style={styles.closeButtonStyle} onClick={handleCloseModal}>
               X
             </button>

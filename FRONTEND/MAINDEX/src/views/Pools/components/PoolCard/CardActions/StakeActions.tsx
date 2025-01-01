@@ -116,6 +116,7 @@ const StakeAction: React.FC<StakeActionsProps> = ({
         disabled={isFinished}
         onClick={onPresentStake}
         width="100%"
+        className="stake-btn"
       >
         {t('Stake')}
       </Button>

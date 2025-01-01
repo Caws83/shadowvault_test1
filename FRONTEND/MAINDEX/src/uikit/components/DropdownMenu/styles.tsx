@@ -38,6 +38,14 @@ export const DropdownMenuItem = styled.button<StyledDropdownMenuItemProps & { $i
     opacity: 0.85;
     transform: translateY(1px);
   }
+
+  ${({ $isActive }) =>
+    $isActive &&
+    `
+      background-image: linear-gradient(9deg, rgb(0, 104, 143) 0%, rgb(138, 212, 249) 100%);
+      color: white;
+      border-radius: 0px !important;
+    `}
 `
 
 export const StyledDropdownMenuItemContainer = styled.div`

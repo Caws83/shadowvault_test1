@@ -12,7 +12,13 @@ const MenuItems: React.FC<MenuItemsProps> = ({ items = [], activeItem, activeSub
         const statusColor = menuItems?.find((menuItem) => menuItem.status !== undefined)?.status?.color
         const isActive = activeItem === href
         return (
-          <DropdownMenu key={label} items={menuItems} py={1} activeItem={activeSubItem}>
+          <DropdownMenu 
+            key={label} 
+            items={menuItems} 
+            py={1} 
+            activeItem={activeSubItem}
+            className={label === 'Tools' ? 'solForgeMenu' : ''}
+          >
             <MenuItem href={href} isActive={isActive} statusColor={statusColor}>
               {label || <IconComponent iconName={icon} color={isActive ? 'secondary' : 'textSubtle'} />}
             </MenuItem>
