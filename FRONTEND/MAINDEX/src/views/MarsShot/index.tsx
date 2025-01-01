@@ -310,7 +310,7 @@ const MarsShot: React.FC = () => {
   const location = useLocation();
 
   const chainId = chain?.id ?? defaultChainId
-  const decimalsToShow = chainId === 282 ? 4 : 0
+  const decimalsToShow = chainId === 245022926 ? 4 : 0
 
   const hashParams = new URL(window.location.href).hash.split('?')[1]
   const urlParams = new URLSearchParams(hashParams)

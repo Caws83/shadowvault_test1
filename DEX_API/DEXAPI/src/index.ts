@@ -1095,7 +1095,7 @@ const GLOBAL_CONFIG: GlobalConfig = {
   PRIVATE_KEY: process.env.PKEY ?? "",
   MAXRANDOM: 30000000000,
   CHAINS: {
-    [282]: {
+    [245022926]: {
       TOKEN:"0xD640668a3D7194968b98553028BB36313B985Ead",
       ROUTER: "0xf532f287fE994e68281324C2e07426E2Fe7C7578",
       MARSHOT: "0xa7c0EFA392e324503EE86Ec9bD7861cB9a76A1A9",
@@ -1115,26 +1115,6 @@ const GLOBAL_CONFIG: GlobalConfig = {
         [5000, 10000000]     // Match 10: 50% earnings, up to 100000 CRO ($10,000)
       ],
     },
-    [388]: {
-      TOKEN:"0x447A1296AB0b8470d90a74bb90d36Aff9B3a2EbA",
-      ROUTER: "0xdF5D7a26d0Da5636eF60CcFe493C13A1c0F37B9B",
-      MARSHOT: "0x1B103CaA4A089a621E447018dee53e254113da7B",
-      RPC: "https://mainnet.zkevm.cronos.org/",
-      JACKPOT: 8000, // 80%
-      WINNINGS: [
-        [0, 0],            // Match 0: 0% earnings, up to 0 CRO
-        [10, 2000],          // Match 1: 0.1% earnings, up to 20 CRO ($2)
-        [25, 20000],         // Match 2: 0.25% earnings, up to 200 CRO ($20)
-        [100, 100000],       // Match 3: 1% earnings, up to 1000 CRO ($100)
-        [250, 200000],       // Match 4: 2.5% earnings, up to 2000 CRO ($200)
-        [500, 400000],      // Match 5: 5% earnings, up to 4000 CRO ($400)
-        [1000, 800000],      // Match 6: 10% earnings, up to 8000 CRO ($800)
-        [2000, 1600000],     // Match 7: 20% earnings, up to 16000 CRO ($1,600)
-        [3000, 3200000],     // Match 8: 30% earnings, up to 32000 CRO ($3,200)
-        [4000, 6400000],     // Match 9: 40% earnings, up to 64000 CRO ($6,400)
-        [5000, 10000000]     // Match 10: 50% earnings, up to 100000 CRO ($10,000)
-      ],
-    }
   }
 };
 
@@ -1437,13 +1417,13 @@ app.get('/api/giveTest', async (req: Request, res: Response) => {
   }
 
  // Check if the user exists in spinAmounts, if not create a new entry
- if (!spinAmounts[userAddress] || !spinAmounts[userAddress][282]) {
-  const isValid = createSpinAmountEntry(userAddress, 282, 999);
+ if (!spinAmounts[userAddress] || !spinAmounts[userAddress][245022926]) {
+  const isValid = createSpinAmountEntry(userAddress, 245022926, 999);
   if (!isValid) {
     return res.status(400).json({ error: 'Invalid Address' });
   }
 }  else {
-  spinAmounts[userAddress][282].spins += 999;
+  spinAmounts[userAddress][245022926].spins += 999;
 }
 
   return res.status(200).json('test spins given');

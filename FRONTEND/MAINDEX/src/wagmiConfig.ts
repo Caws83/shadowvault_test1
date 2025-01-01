@@ -1,17 +1,16 @@
 import { createWeb3Modal } from '@web3modal/wagmi/react'
 import { defaultWagmiConfig } from '@web3modal/wagmi/react/config'
-import { shibarium, bscTestnet, mainnet, cronos, bsc, base } from 'viem/chains';
-import { CronosZKTest, CronosZK } from 'config/constants/chains'
+import { NeonDevNet } from 'config/constants/chains'
 import { BASE_URL } from 'config';
 
 
 export const projectId = '2b6111ec844e3cd755c1792dfacc8533'
 
-const chains = [CronosZK, CronosZKTest] as const
+const chains = [NeonDevNet] as const
 
 const metadata = {
-  name: 'MARSWAP',
-  description: 'MarSwap Dex',
+  name: 'FORGE',
+  description: 'FORGE Dex',
   url: `${BASE_URL}`,
   icons: ['https://avatars.githubusercontent.com/u/37784886'],
 }
@@ -23,7 +22,6 @@ export const config = defaultWagmiConfig({
 })
 
 const chainImages = {
- 388: 'images/chains/cronos.png',
 }
 
 

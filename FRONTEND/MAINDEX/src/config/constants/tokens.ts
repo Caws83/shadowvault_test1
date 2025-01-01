@@ -9,8 +9,7 @@ export const WETH: { [chainId: number]: Token } = {
 */
 
 export const USDT: { [chainId: number]: Token } = {
-  [ChainId.CROZKT]: new Token(ChainId.CROZKT, '0x3e6f8fbcC20a4F470D232cEA9d44C8Df5d2a3c83', 18, 'vUSD', 'vUSD'),
-  [ChainId.CRO]: new Token(ChainId.CRO, '0x5b91e29Ae5A71d9052620Acb813d5aC25eC7a4A2', 18, 'vUSD', 'vUSD') // vUSD
+  [ChainId.NEONDEV]: new Token(ChainId.NEONDEV, '0xAA24A5A5E273EFAa64a960B28de6E27B87FfDFfc', 18, 'USDt', 'USDt'),
 }
 
 
@@ -18,23 +17,11 @@ export const USDT: { [chainId: number]: Token } = {
 const tokens = {
 
 // CRONOS 
-wcro: {
-  symbol: 'WCRO',
-  name: 'Wrapped zkCRO',
+wneon: {
+  symbol: 'WNEON',
+  name: 'Wrapped NEON',
   address: {
-    282: '0x73Fd77Fb26192a3FE4f5EFb9EBa5BB5f6Cf96742',
-    388: '0xC1bF55EE54E16229d9b369a5502Bfe5fC9F20b6d',
-  },
-  decimals: 18,
-  projectLink: `${BASE_URL}`,
-},
-
-zkclmrs: {
-  symbol: 'zkCLMRS',
-  name: 'Crolon Mars',
-  address: {
-    388: '0x447A1296AB0b8470d90a74bb90d36Aff9B3a2EbA',
-    282: "0xD640668a3D7194968b98553028BB36313B985Ead",
+    245022926: '0x11adC2d986E334137b9ad0a0F290771F31e9517F',
   },
   decimals: 18,
   projectLink: `${BASE_URL}`,
@@ -44,52 +31,28 @@ zkclmrs: {
     symbol: 'WETH',
     name: 'Wrapped Ether',
     address: {
-      282: "0x4200000000000000000000000000000000000006",
-      388: '0x898b3560affd6d955b1574d87ee09e46669c60ea',
+      245022926: "0x90306D9492eB658e47A64Ef834e76c81A0242598",
     },
     decimals: 18,
     projectLink: 'https://www.shib.io',
   },
+  usdt: {
+    symbol: "USDt",
+    name: "USD Tether",
+    address: {
+      245022926: "0xAA24A5A5E273EFAa64a960B28de6E27B87FfDFfc",
+    },
+    decimals: 18,
+    projectLink: "https://"
+  },
  
-
-  vusd: {
-    symbol: 'vUSD',
-    name: 'Veno USD',
-    address: {
-      282: "0x3e6f8fbcC20a4F470D232cEA9d44C8Df5d2a3c83",
-      388: '0x5b91e29Ae5A71d9052620Acb813d5aC25eC7a4A2',
-    },
-    decimals: 18,
-    projectLink: `${BASE_URL}`,
-  },
-  veth: {
-    symbol: 'vETH',
-    name: 'Veno ETH',
-    address: {
-      388: '0x271602A97027ee1dd03b1E6e5dB153eB659A80b1',
-    },
-    decimals: 18,
-    projectLink: `${BASE_URL}`,
-  },
-
- // testnet
-  clrmrs: {
-    symbol: 'zkTCLMRS',
-    name: 'Crolon Mars',
-    address: {
-      282: "0xD640668a3D7194968b98553028BB36313B985Ead",
-    },
-    decimals: 18,
-    projectLink: `${BASE_URL}`,
-  },
-
 
   // just for chart knowledge
   usdForChat: {
     symbol: 'USD',
     name: 'USD',
     address: {
-      282: "",
+      245022926: "",
     },
     decimals: 18,
     projectLink: `${BASE_URL}`,
@@ -98,8 +61,7 @@ zkclmrs: {
     symbol: 'NATIVE',
     name: 'native',
     address: {
-      282: "0x73Fd77Fb26192a3FE4f5EFb9EBa5BB5f6Cf96742",
-      388: '0xC1bF55EE54E16229d9b369a5502Bfe5fC9F20b6d',
+      245022926: "0x11adC2d986E334137b9ad0a0F290771F31e9517F",
     },
     decimals: 18,
     projectLink: `${BASE_URL}`,

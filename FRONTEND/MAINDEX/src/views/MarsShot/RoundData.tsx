@@ -119,7 +119,7 @@ const RoundData: React.FC<info> = ({ item, userData, state, account, index, chai
   const handleAvatarClick = () => {
       infoModal();
   };
-  const decimalsToShow = chainId === 282 ? 4 : 0
+  const decimalsToShow = chainId === 245022926 ? 4 : 0
   const [infoModal] = useModal(<RoundInfo roundData={item} userData={userData} account={account}  />);
 
   return (

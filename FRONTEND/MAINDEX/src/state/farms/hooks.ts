@@ -106,7 +106,7 @@ export const usePollCoreFarmData = () => {
 
       dispatch(setNewData(noAccountFarmConfig))
 
-      const frtTVLFarms = farms.filter((farm) => farm.host.payoutToken.symbol === tokens.zkclmrs.symbol)
+      const frtTVLFarms = farms.filter((farm) => farm.host.payoutToken.symbol === tokens.wneon.symbol)
       frtTVLFarms.forEach((farm) => baseFarms.push(farm.id))
       dispatch(fetchFarmsPublicDataAsync(baseFarms))
     }
@@ -123,17 +123,17 @@ export function useFarmHostManager(isLocker?: boolean): [Host, (userHost: Host) 
   const dispatch = useDispatch<AppDispatch>()
   const { chain } = useAccount()
   const chainId = chain?.id ?? defaultChainId
-  const isTestnet = chainId === 282
+  const isTestnet = chainId === 245022926
   let userHost = useFarmHost()
 
   if (isLocker && userHost === undefined) {
-    if(!isTestnet) userHost = hosts.marswap
-    else userHost = hosts.marstest
+    if(!isTestnet) userHost = hosts.forgeTest
+    else userHost = hosts.forgeTest
     
     dispatch(updateFarmHost(userHost))
   } else if(userHost === undefined){
-    if(!isTestnet) userHost = hosts.marswap
-    else userHost = hosts.marstest
+    if(!isTestnet) userHost = hosts.forgeTest
+    else userHost = hosts.forgeTest
     dispatch(updateFarmHost(userHost))
   }
 
@@ -178,7 +178,7 @@ export const useFarmUser = (id) => {
 export const fetchTokenBalances = async (account: string, token: Token, chainId: number): Promise<string> => {
 
   if (account !== null && account !== undefined && account !== '') {
-    if ((chainId === 282 && token.symbol !== 'WCRO' )||chainId === 388 && token.symbol !== 'WCRO' ) {
+    if (chainId === defaultChainId && token.symbol !== 'WCRO' ) {
       const balance = await readContract(config, {
         address: getAddress(token.address, chainId),
         abi: ERC20_ABI,

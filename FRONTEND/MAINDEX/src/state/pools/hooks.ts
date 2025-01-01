@@ -80,7 +80,7 @@ export function usePoolsHostManager(): [Host, (userHost: Host) => void] {
   const dispatch = useDispatch<AppDispatch>()
   const { chain } = useAccount()
   const chainId = chain?.id ?? defaultChainId
-  const isTestnet = chainId === 282
+  const isTestnet = chainId === 245022926
 
   let userHost = usePoolsHost()
 

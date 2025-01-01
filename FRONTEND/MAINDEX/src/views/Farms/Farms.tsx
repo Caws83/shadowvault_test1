@@ -128,7 +128,7 @@ const Farms: React.FC<{ isLocker: boolean }> = ({ isLocker }) => {
   const [userHost, setFarmHost] = useFarmHostManager(isLocker)
   const { chain } = useAccount()
   const chainId = chain?.id ?? defaultChainId
-  const isTestnet = chainId === 282
+  const isTestnet = chainId === 245022926
   const { data: farmsLP, userDataLoaded } = useFarms()
   const { isDark } = useTheme()
   // const cakePrice = usePriceCakeBusd()
@@ -172,7 +172,7 @@ const Farms: React.FC<{ isLocker: boolean }> = ({ isLocker }) => {
       let isAdded = false
       // if reg farm page and is a locker farm
       if(!isLocker && farm1.host.isLocker) isAdded = true
-      if(!isTestnet && farm1.host.chainId === 282) isAdded = true
+      if(!isTestnet && farm1.host.chainId === 245022926) isAdded = true
       // if locker page and is a reg farm
       if(isLocker && !farm1.host.isLocker) isAdded = true
       tempHostOptions.forEach((check) => {
@@ -213,7 +213,7 @@ const Farms: React.FC<{ isLocker: boolean }> = ({ isLocker }) => {
   const activeFarms = farmsLP.filter(
     (farm) =>
       farm.host === userHost &&
-      (isTestnet || farm.host.chainId !== 282) && // Show all if testnet, otherwise exclude chainId 282
+      (isTestnet || farm.host.chainId !== 245022926) && // Show all if testnet, otherwise exclude chainId 245022926
       farm.isVisible &&
       (farm.host.isLocker ? true : farm.multiplier !== '0X') &&
       !isArchivedPid(farm.pid),
@@ -222,7 +222,7 @@ const Farms: React.FC<{ isLocker: boolean }> = ({ isLocker }) => {
   const inactiveFarms = farmsLP.filter(
     (farm) =>
       farm.host === userHost &&
-      (isTestnet || farm.host.chainId !== 282) && // Show all if testnet, otherwise exclude chainId 282
+      (isTestnet || farm.host.chainId !== 245022926) && // Show all if testnet, otherwise exclude chainId 245022926
       farm.isVisible &&
       ((farm.host.isLocker && (!farm.isLocked || new BigNumber(farm.unLockTime.toString()).lt(Date.now() / 1000))) ||
         (!farm.host.isLocker && farm.multiplier === '0X')) &&

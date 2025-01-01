@@ -185,7 +185,6 @@ const Pools: React.FC<PoolsProps> = (isWidget) => {
     const tempHostOptions = []
     pools.forEach((pool1) => {
       let isAdded = false
-      if(chain && chain.id !== 282 && pool1.chainId === 282) isAdded = true
       tempHostOptions.forEach((check) => {
         if (check === pool1.host ) {
           isAdded = true
@@ -368,7 +367,7 @@ const Pools: React.FC<PoolsProps> = (isWidget) => {
 
   }
 
-  if(chain?.id !== 282) chosenPools = chosenPools.filter((p) => p.chainId !== 282)
+  if(chain?.id !== 245022926) chosenPools = chosenPools.filter((p) => p.chainId !== 245022926)
   
 
   if(!showAllChains && chain) chosenPools = chosenPools.filter((c) => c.chainId === chain.id)

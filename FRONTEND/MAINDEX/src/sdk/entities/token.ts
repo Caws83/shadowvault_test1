@@ -60,19 +60,12 @@ export function currencyEquals(currencyA: Currency, currencyB: Currency): boolea
 }
 
 export const REALWBONE = {
-  [ChainId.CROZKT]: new Token(
-    ChainId.CROZKT,
-    '0x73Fd77Fb26192a3FE4f5EFb9EBa5BB5f6Cf96742',
+  [ChainId.NEONDEV]: new Token(
+    ChainId.NEONDEV,
+    '0x11adC2d986E334137b9ad0a0F290771F31e9517F',
     18,
-    'WzkTCRO',
-    'Wrapped zkTCRO',
-  ),
-  [ChainId.CRO]: new Token(
-    ChainId.CRO,
-    '0xC1bF55EE54E16229d9b369a5502Bfe5fC9F20b6d',
-    18,
-    'wzCRO',
-    'Wrapped zkCRO',
+    'WNEONT',
+    'Wrapped NEON Dev',
   ),
 }
 

@@ -16,7 +16,7 @@ const Ifo = () => {
 
       const fetchedList = await ifosConfig()
       const activeIfoList = fetchedList.filter(
-        ifo => !ifo.isActive && (chain?.id !== 282 ? ifo.dex.chainId !== 282 : true),
+        ifo => !ifo.isActive && (chain?.id !== 245022926 ? ifo.dex.chainId !== 245022926 : true),
       )
       setActiveIfo(activeIfoList)
     }

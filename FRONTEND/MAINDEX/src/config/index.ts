@@ -8,8 +8,7 @@ export const shardConfig = {
 }
 
 export const BASE_BSC_SCAN_URLS = {
-  282: 'https://explorer.zkevm.cronos.org/testnet',
-  388: 'https://explorer.zkevm.cronos.org'
+  245022926: 'https://devnet.neonscan.org/',
 }
 
 export const API_URL = 'https://api.marswap.exchange'

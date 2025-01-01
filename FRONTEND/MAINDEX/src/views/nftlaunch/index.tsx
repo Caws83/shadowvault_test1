@@ -94,10 +94,10 @@ const NftLaunch: React.FC = () => {
   const nftlaunchs = showFinishedLaunchs ? nftFinishedLaunchs : nftLiveLaunchs;
   let filteredLaunches;
   
-  if (chain?.id !== 97 && chain?.id !== 282) {
-    filteredLaunches = nftlaunchs.filter(pool => pool.chainId !== 97 && pool.chainId !== 282)
+  if (chain?.id !== 97 && chain?.id !== 245022926) {
+    filteredLaunches = nftlaunchs.filter(pool => pool.chainId !== 97 && pool.chainId !== 245022926)
     
-  } else if (chain?.id === 97 || chain?.id === 282) {
+  } else if (chain?.id === 97 || chain?.id === 245022926) {
     filteredLaunches = nftlaunchs
   } 
 

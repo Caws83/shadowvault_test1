@@ -88,8 +88,7 @@ const PMTokenSelector = () => {
   const ETHER = getETHER(chainId) as Token
   const [payWithPM, setUsePaymaster, payToken, setPaytoken] = useGasTokenManager()
   const payTokenOptions = {
-    282: [getETHER(282) as Token, tokens.zkclmrs, tokens.veth, tokens.vusd],
-    388: [getETHER(388) as Token, tokens.zkclmrs, tokens.veth, tokens.vusd],
+    245022926: [getETHER(282) as Token],
   }
   const startIndex = payTokenOptions[chainId].findIndex(token => token.symbol === payToken.symbol)
   const options = payTokenOptions[chainId]
@@ -145,7 +144,7 @@ const PMTokenSelector = () => {
           <Flex flexDirection="row" style={{ width: '100%' }}>
             <TokenImage
               token={options[selectedOptionIndex]}
-              host={hosts.marswap}
+              host={hosts.forgeTest}
               width={24}
               height={24}
               style={{ marginRight: '6px' }}
@@ -164,7 +163,7 @@ const PMTokenSelector = () => {
                 <Flex>
                   <TokenImage
                     token={option}
-                    host={hosts.marswap}
+                    host={hosts.forgeTest}
                     width={24}
                     height={24}
                     style={{ marginRight: '6px' }}

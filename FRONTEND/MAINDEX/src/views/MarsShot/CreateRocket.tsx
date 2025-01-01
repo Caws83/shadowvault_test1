@@ -200,8 +200,7 @@ const CreateRocket: React.FC<{ onDismiss?: () => void }> = ({ onDismiss }) => {
   const { toastSuccess, toastError } = useToast()
   const [launchData, setLData] = useState('')
   const softCapOptions = {
-    282: ['0.1', '0.5', '1'],
-    388: ['10000', '50000', '100000']
+    245022926: ['0.1', '0.5', '1'],
   }
   const [ softCap, setSoftCap ] = useState(Number(softCapOptions[chainId][0]))
 

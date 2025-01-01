@@ -67,7 +67,7 @@ export default function Pool() {
   const { address: account, chain, chainId } = useAccount()
   const { t } = useTranslation()
  
-  const [dex, setDex] = useState<Dex>(dexs.marsCZK)
+  const [dex, setDex] = useState<Dex>(dexs.forgeTest)
   const showConnectButton = !account || chainId !== dex.chainId
   
   const getDex = () => {

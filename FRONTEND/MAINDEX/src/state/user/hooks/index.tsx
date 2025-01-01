@@ -243,11 +243,11 @@ export function useUserDex(): [Dex, (newDex: Dex) => void] {
   const dispatch = useDispatch<AppDispatch>()
   let userDex = useSelector<AppState, AppState['user']['dex']>((state) => state.user.dex)
   if(userDex === undefined) {
-    dispatch(updateDex({ dex: dexs.marsCZK }))
+    dispatch(updateDex({ dex: dexs.forgeTest }))
   }
   const actualUserDex = dexList.find((d) => d.id === userDex.id)
   if (userDex === undefined || actualUserDex === undefined) {
-    userDex = dexs.marsCZK
+    userDex = dexs.forgeTest
     dispatch(updateDex({ dex: userDex }))
   } else if (userDex !== actualUserDex) {
     userDex = actualUserDex

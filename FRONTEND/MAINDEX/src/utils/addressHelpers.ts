@@ -36,8 +36,7 @@ export const getCompostAddress = (chain_Id?: number) => {
 }
 
 export const getWrappedAddress = (chainId: number) => {
-  if(chainId === 282) return getAddress(tokens.wcro.address, 282)
-  if(chainId === 388) return getAddress(tokens.wcro.address, 388)
+  if(chainId === 245022926) return getAddress(tokens.wneon.address, 245022926)
 
 }
 

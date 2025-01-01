@@ -34,7 +34,7 @@ const Ifo = () => {
   useEffect(() => {
     const fetchPoolsData = async () => {
       const fetchedList = await ifosConfig();
-      const activeIfoList = fetchedList.filter((ifo) => ifo.isActive && (chain?.id !== 282 ? ifo.dex.chainId !== 282 : true));
+      const activeIfoList = fetchedList.filter((ifo) => ifo.isActive && (chain?.id !== 245022926 ? ifo.dex.chainId !== 245022926 : true));
       setActiveIfo(activeIfoList);
     };
 

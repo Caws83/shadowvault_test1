@@ -68,7 +68,7 @@ const DexSelector: React.FunctionComponent<DexSelectorProps> = (props) => {
         (dexFilter) =>
           dexFilter.allowTrade === true &&
           dexFilter.chainId === dex?.chainId &&
-          (chain?.id !== 282 ? dexFilter.chainId !== 282 : true)
+          (chain?.id !== 245022926 ? dexFilter.chainId !== 245022926 : true)
       )
       .map((dexInfo) => {
         if (dexInfo.id === dex?.id && count !== selectedId) {
@@ -95,7 +95,7 @@ const DexSelector: React.FunctionComponent<DexSelectorProps> = (props) => {
 
   const chainOptions = useMemo(() => {
     return Object.values(chains)
-      .filter((chainFilter) => (chainFilter.id === 282 ? chainFilter.id === chain?.id : true))
+      .filter((chainFilter) => (chainFilter.id === 245022926 ? chainFilter.id === chain?.id : true))
       .map((chainFilter, index) => {
         // Check if the current chain is the selected chain and update the selectedChainId
         if (chainFilter.id === dex.chainId) {

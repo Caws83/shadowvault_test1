@@ -1,7 +1,7 @@
 import getListingv3 from './ifos/getIFOsV3'
 
 
-const v3chains = [282, 388]
+const v3chains = [245022926]
 
 
 const ifos = async () => {

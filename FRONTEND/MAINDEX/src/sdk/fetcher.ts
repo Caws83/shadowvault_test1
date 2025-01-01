@@ -10,7 +10,7 @@ import { ChainId, FactoryInfo } from './constants'
 import { Token } from './entities/token'
 
 let TOKEN_DECIMALS_CACHE: { [chainId: number]: { [address: string]: number } } = {
-  [ChainId.CRO]: {
+  [ChainId.NEONDEV]: {
     '0x5CdDC17F39222B6C9ED3D27E09C297DaA55EB17E': 9, // DGD
   },
 }

@@ -16,8 +16,7 @@ const PMTokenSelector = () => {
   const [payWithPM, setUsePaymaster, payToken, setPaytoken] = useGasTokenManager()
 
   const payTokenOptions = {
-    282: [getETHER(282) as Token, tokens.zkclmrs, tokens.veth, tokens.vusd],
-    388: [getETHER(388) as Token, tokens.zkclmrs, tokens.veth, tokens.vusd],
+    245022926: [getETHER(245022926) as Token],
 }
   const startIndex = payTokenOptions[chainId].findIndex(token => token.symbol === payToken.symbol)
 

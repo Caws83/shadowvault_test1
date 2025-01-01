@@ -52,8 +52,7 @@ export type TokenAddressMap = Readonly<{
  * An empty result, useful as a default.
  */
 const EMPTY_LIST: TokenAddressMap = {
-  [ChainId.CROZKT]: {},
-  [ChainId.CRO]: {},
+  [ChainId.NEONDEV]: {},
 }
 
 
@@ -124,8 +123,7 @@ export function useAllLists(): {
 
 function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
   return {
-    [ChainId.CROZKT]: { ...map1[ChainId.CROZKT], ...map2[ChainId.CROZKT] },
-    [ChainId.CRO]: { ...map1[ChainId.CRO], ...map2[ChainId.CRO] },
+    [ChainId.NEONDEV]: { ...map1[ChainId.NEONDEV], ...map2[ChainId.NEONDEV] },
   }
 }
 

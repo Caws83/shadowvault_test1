@@ -31,7 +31,7 @@ export class Currency {
    * Create an instance of `Currency` with default values.
    */
   public static createDefault(): Currency {
-    return new Currency(18, 'zkCRO', 'zkCRO');
+    return new Currency(18, 'NEON', 'NEON');
   }
 }
 

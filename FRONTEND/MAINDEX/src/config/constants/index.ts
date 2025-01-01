@@ -10,19 +10,17 @@ export type ChainTokenList = {
 
 // used to construct intermediary pairs for trading 
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
-  [ChainId.CROZKT]: [REALWBONE[ChainId.CROZKT]],
-  [ChainId.CRO]: [REALWBONE[ChainId.CRO]],
+  [ChainId.NEONDEV]: [REALWBONE[ChainId.NEONDEV]],
 }
 
-export const EASY_TOKENS: Token[] = [REALWBONE[ChainId.CRO]]
+export const EASY_TOKENS: Token[] = [REALWBONE[ChainId.NEONDEV]]
 
 /**
  * Addittional bases for specific tokens
  * @example { [WBTC.address]: [renBTC], [renBTC.address]: [WBTC] }
  */
 export const ADDITIONAL_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
-  [ChainId.CROZKT]: {},
-  [ChainId.CRO]: {},
+  [ChainId.NEONDEV]: {},
 }
 
 /**
@@ -31,20 +29,17 @@ export const ADDITIONAL_BASES: { [chainId in ChainId]?: { [tokenAddress: string]
  * @example [AMPL.address]: [DAI, WBONE[ChainId.SHIBNET]]
  */
 export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
-  [ChainId.CROZKT]: {},
-  [ChainId.CRO]: {},
+  [ChainId.NEONDEV]: {},
 }
 
 // used for display in the default list when adding liquidity
 export const SUGGESTED_BASES: ChainTokenList = {
-  [ChainId.CROZKT]: [REALWBONE[ChainId.CROZKT]],
-  [ChainId.CRO]: [REALWBONE[ChainId.CRO]],
+  [ChainId.NEONDEV]: [REALWBONE[ChainId.NEONDEV]],
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
-  [ChainId.CROZKT]: [REALWBONE[ChainId.CROZKT]],
-  [ChainId.CRO]: [REALWBONE[ChainId.CRO]],
+  [ChainId.NEONDEV]: [REALWBONE[ChainId.NEONDEV]],
 }
 
 export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {

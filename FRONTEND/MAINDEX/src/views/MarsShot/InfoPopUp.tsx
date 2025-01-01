@@ -136,7 +136,7 @@ const chainId = chain?.id ?? defaultChainId
     return urlPattern.test(logo);
   };
 
-  const decimalsToShow = chainId === 282 ? 4 : 0
+  const decimalsToShow = chainId === 245022926 ? 4 : 0
 
   return (
     <Modal minWidth="370px" style={{ fontSize: "14px" }} title="Token Info" onDismiss={handleDismiss} >
