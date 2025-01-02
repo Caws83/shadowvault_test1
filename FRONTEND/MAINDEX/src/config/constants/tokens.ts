@@ -42,7 +42,7 @@ wneon: {
     address: {
       245022926: "0x6eEf939FC6e2B3F440dCbB72Ea81Cd63B5a519A5",
     },
-    decimals: 18,
+    decimals: 6,
     projectLink: "https://"
   },
  
@@ -54,7 +54,7 @@ wneon: {
     address: {
       245022926: "",
     },
-    decimals: 18,
+    decimals: 6,
     projectLink: `${BASE_URL}`,
   },
   wNative: {
