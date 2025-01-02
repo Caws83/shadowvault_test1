@@ -28,7 +28,7 @@ const config: (t: ContextApi['t']) => ConfigMenuItemsType[] = (t) => [
     hideSubNav: true,
     items: [
       {
-        label: t('Create Token'),
+        label: t('Foundry'),
         href: '/marshot',
       },
       {
@@ -44,7 +44,7 @@ const config: (t: ContextApi['t']) => ConfigMenuItemsType[] = (t) => [
         href: '/marsale',
       },
       {
-        label: t('Foundry'),
+        label: t('Create Token'),
         href: '/marscreate',
       },
       {
