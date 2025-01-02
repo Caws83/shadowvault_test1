@@ -9,7 +9,7 @@ export const WETH: { [chainId: number]: Token } = {
 */
 
 export const USDT: { [chainId: number]: Token } = {
-  [ChainId.NEONDEV]: new Token(ChainId.NEONDEV, '0xAA24A5A5E273EFAa64a960B28de6E27B87FfDFfc', 18, 'USDt', 'USDt'),
+  [ChainId.NEONDEV]: new Token(ChainId.NEONDEV, '0x6eEf939FC6e2B3F440dCbB72Ea81Cd63B5a519A5', 18, 'USDt', 'USDt'),
 }
 
 
@@ -40,7 +40,7 @@ wneon: {
     symbol: "USDt",
     name: "USD Tether",
     address: {
-      245022926: "0xAA24A5A5E273EFAa64a960B28de6E27B87FfDFfc",
+      245022926: "0x6eEf939FC6e2B3F440dCbB72Ea81Cd63B5a519A5",
     },
     decimals: 18,
     projectLink: "https://"
