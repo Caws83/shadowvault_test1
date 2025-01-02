@@ -11,15 +11,15 @@ import { defaultChainId } from 'config/constants/chains'
 
 // edit these as we go ( currently testnet ones )
 const pairAddresses = [
-  "0x7d95e8039df1551f8c3c7512e3931abd002bcec9",
-  "0xf186109de062bdea3d5c62efe7798836e92bdd1a",
-  "0x35b4cdab7e6bba1ad1ca217bea1fadfc84c90ca2",
+ // "0x7d95e8039df1551f8c3c7512e3931abd002bcec9",
+ // "0xf186109de062bdea3d5c62efe7798836e92bdd1a",
+ // "0x35b4cdab7e6bba1ad1ca217bea1fadfc84c90ca2",
   
 ]
 const names = [
-  "vUSD/zkCRO",
-  "vETH/vUSD",
-  "zkCLMRS/zkCRO"
+ //  "vUSD/zkCRO",
+//  "vETH/vUSD",
+//  "zkCLMRS/zkCRO"
 ]
 
 

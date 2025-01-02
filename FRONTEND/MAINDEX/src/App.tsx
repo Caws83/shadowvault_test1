@@ -67,7 +67,7 @@ BigNumber.config({
 const App: React.FC = () => {
   usePollBlockNumber()
   // useFetchProfile();
-  usePollCoreFarmData();
+  // usePollCoreFarmData();
   // useGetNftPools();
   // useFetchNftPublicPoolsDataByHost(hosts.farmageddon)
 
