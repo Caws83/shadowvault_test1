@@ -1,12 +1,12 @@
 import { createWeb3Modal } from '@web3modal/wagmi/react'
 import { defaultWagmiConfig } from '@web3modal/wagmi/react/config'
-import { NeonDevNet } from 'config/constants/chains'
+import { BscMainnet, BscTestnet, Sepolia, NeonDevNet } from 'config/constants/chains'
 import { BASE_URL } from 'config';
 
 
 export const projectId = '2b6111ec844e3cd755c1792dfacc8533'
 
-const chains = [NeonDevNet] as const
+const chains = [BscMainnet, BscTestnet, Sepolia, NeonDevNet] as const
 
 const metadata = {
   name: 'FORGE',

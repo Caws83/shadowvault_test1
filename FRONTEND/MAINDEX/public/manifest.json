@@ -1,12 +1,12 @@
 {
-  "short_name": "MarSwap",
-  "name": "MarSwap",
-  "description": "Why SWAP on EARTH when you can SWAP on MARS!",
-  "homepage_url": "https://zk.marswap.exchange/",
+  "short_name": "ShadowVault",
+  "name": "ShadowVault Protocol",
+  "description": "Trade in Shadows. Leverage Fearless. Privacy-centric DEX with AI-driven leverage trading.",
+  "homepage_url": "https://shadowvault.protocol/",
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#1FC7D4",
-  "background_color": "#ffffff",
+  "theme_color": "#DC143C",
+  "background_color": "#000000",
   "orientation": "portrait",
   "icons": [
     {

@@ -134,7 +134,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
           {...attributes.popper}
           $isBottomNav={isBottomNav}
           $isOpen={isOpen && ((isBottomNav && showItemsOnMobile) || !isBottomNav)}
-          className="solForgeSub"
+          className="shadowVaultSub"
         >
           {items.map(
             ({ type = DropdownMenuItemType.INTERNAL_LINK, label, href = '/', status, ...itemProps }, index) => {

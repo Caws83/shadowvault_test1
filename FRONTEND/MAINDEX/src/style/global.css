@@ -17,7 +17,7 @@ body::before {
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at 50% 0%, rgba(52, 152, 219, 0.15) 0%, rgba(52, 152, 219, 0) 50%);
+  background: radial-gradient(circle at 50% 0%, rgba(220, 20, 60, 0.15) 0%, rgba(220, 20, 60, 0) 50%);
   pointer-events: none;
   z-index: 0;
 }
@@ -57,7 +57,7 @@ nav, .navbar, header, [role="navigation"] {
     transition: .3s linear !important;
     transition-property: color, background-color, padding, border, box-shadow !important;
     border-radius: 8px !important;
-    background-image: linear-gradient(9deg, rgb(0, 104, 143) 0%, rgb(138, 212, 249) 100%) !important;
+    background-image: linear-gradient(9deg, rgb(220, 20, 60) 0%, rgb(139, 0, 0) 100%) !important;
     cursor: pointer !important;
     color: white !important;
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1) !important;
@@ -69,7 +69,7 @@ button:hover,
 [class*="button"]:hover,
 [type="button"]:hover,
 [type="submit"]:hover {
-  box-shadow: 0 4px 15px rgba(0, 104, 143, 0.3) !important;
+  box-shadow: 0 4px 15px rgba(220, 20, 60, 0.3) !important;
   transform: translateY(-1px) !important;
 }
 
@@ -80,25 +80,25 @@ button:active,
 [type="button"]:active,
 [type="submit"]:active {
   transform: translateY(1px) !important;
-  box-shadow: 0 2px 8px rgba(0, 104, 143, 0.2) !important;
+  box-shadow: 0 2px 8px rgba(220, 20, 60, 0.2) !important;
 } 
 
 /* Web3Modal Button styling */
 :root {
-  --wui-color-accent-100: linear-gradient(9deg, rgb(0, 104, 143) 0%, rgb(138, 212, 249) 100%) !important;
+  --wui-color-accent-100: linear-gradient(9deg, rgb(220, 20, 60) 0%, rgb(139, 0, 0) 100%) !important;
   --wui-color-gray-glass-010: rgba(0, 0, 0, .05) !important;
   --wui-border-radius-m: 8px !important;
   --wui-spacing-xs: 0.625em !important;
 }
 
 w3m-button {
-  --w3m-accent-color: rgb(0, 104, 143) !important;
-  --w3m-accent-fill-color: rgb(0, 104, 143) !important;
+  --w3m-accent-color: rgb(220, 20, 60) !important;
+  --w3m-accent-fill-color: rgb(220, 20, 60) !important;
 }
 
 /* Override the button styles directly */
 w3m-button button {
-  background: linear-gradient(9deg, rgb(0, 104, 143) 0%, rgb(138, 212, 249) 100%) !important;
+  background: linear-gradient(9deg, rgb(220, 20, 60) 0%, rgb(139, 0, 0) 100%) !important;
   border: 1px solid rgba(0, 0, 0, .05) !important;
   font-size: 1em !important;
   line-height: 1.35 !important;
@@ -109,22 +109,22 @@ w3m-button button {
 }
 
 w3m-button button:hover {
-  box-shadow: 0 4px 15px rgba(0, 104, 143, 0.3) !important;
+  box-shadow: 0 4px 15px rgba(220, 20, 60, 0.3) !important;
   transform: translateY(-1px) !important;
 }
 
 w3m-button button:active {
   transform: translateY(1px) !important;
-  box-shadow: 0 2px 8px rgba(0, 104, 143, 0.2) !important;
+  box-shadow: 0 2px 8px rgba(220, 20, 60, 0.2) !important;
 } 
 
 .connectBtn {
-  --w3m-accent-color: rgb(0, 104, 143) !important;
-  --w3m-accent-fill-color: rgb(0, 104, 143) !important;
+  --w3m-accent-color: rgb(220, 20, 60) !important;
+  --w3m-accent-fill-color: rgb(220, 20, 60) !important;
 }
 
 .connectBtn button {
-  background: linear-gradient(9deg, rgb(0, 104, 143) 0%, rgb(138, 212, 249) 100%) !important;
+  background: linear-gradient(9deg, rgb(220, 20, 60) 0%, rgb(139, 0, 0) 100%) !important;
   border: 1px solid rgba(0, 0, 0, .05) !important;
   font-size: 1em !important;
   line-height: 1.35 !important;
@@ -135,13 +135,13 @@ w3m-button button:active {
 }
 
 .connectBtn button:hover {
-  box-shadow: 0 4px 15px rgba(0, 104, 143, 0.3) !important;
+  box-shadow: 0 4px 15px rgba(220, 20, 60, 0.3) !important;
   transform: translateY(-1px) !important;
 }
 
 .connectBtn button:active {
   transform: translateY(1px) !important;
-  box-shadow: 0 2px 8px rgba(0, 104, 143, 0.2) !important;
+  box-shadow: 0 2px 8px rgba(220, 20, 60, 0.2) !important;
 } 
 
 .ai-chat-button {
@@ -150,20 +150,20 @@ w3m-button button:active {
   gap: 8px;
   padding: 8px 12px;
   border-radius: 20px;
-  background: rgba(65, 209, 255, 0.1);
-  border: 1px solid rgba(65, 209, 255, 0.2);
+  background: rgba(220, 20, 60, 0.1);
+  border: 1px solid rgba(220, 20, 60, 0.2);
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .ai-chat-button:hover {
-  background: rgba(65, 209, 255, 0.2);
+  background: rgba(220, 20, 60, 0.2);
   transform: translateY(-1px);
 }
 
 .ai-chat-label {
   font-size: 14px;
-  color: #41d1ff;
+  color: #DC143C;
   font-weight: 500;
 }
 
@@ -174,9 +174,9 @@ w3m-button button:active {
   display: flex;
   align-items: center;
   padding: 12px 24px;
-  background: linear-gradient(135deg, #41d1ff 0%, #bd34fe 100%);
+  background: linear-gradient(135deg, #DC143C 0%, #8B0000 100%);
   border-radius: 50px;
-  box-shadow: 0 4px 15px rgba(65, 209, 255, 0.3);
+  box-shadow: 0 4px 15px rgba(220, 20, 60, 0.3);
   cursor: pointer;
   transition: all 0.3s ease;
   z-index: 1000;
@@ -184,7 +184,7 @@ w3m-button button:active {
 
 .ai-assistant-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(65, 209, 255, 0.4);
+  box-shadow: 0 6px 20px rgba(220, 20, 60, 0.4);
 }
 
 .ai-assistant-icon {
@@ -200,13 +200,13 @@ w3m-button button:active {
 /* Optional pulse animation */
 @keyframes pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(65, 209, 255, 0.4);
+    box-shadow: 0 0 0 0 rgba(220, 20, 60, 0.4);
   }
   70% {
-    box-shadow: 0 0 0 10px rgba(65, 209, 255, 0);
+    box-shadow: 0 0 0 10px rgba(220, 20, 60, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(65, 209, 255, 0);
+    box-shadow: 0 0 0 0 rgba(220, 20, 60, 0);
   }
 }
 
@@ -215,19 +215,19 @@ w3m-button button:active {
 }
 
 /* sub menu */
-.solForgeSub {
+.shadowVaultSub {
   padding: 0 !important;
 }
-.solForgeSub div a:hover {
+.shadowVaultSub div a:hover {
   border-radius: 0px !important;
-  background-image: linear-gradient(9deg, rgb(0, 104, 143) 0%, rgb(138, 212, 249) 100%);
+  background-image: linear-gradient(9deg, rgb(220, 20, 60) 0%, rgb(139, 0, 0) 100%);
   color: white;
 }
 
 
 /* Hero Section Enhancements */
 .hero-headline {
-  background: linear-gradient(9deg, rgb(255, 255, 255) 0%, rgb(138, 212, 249) 100%);
+  background: linear-gradient(9deg, rgb(255, 255, 255) 0%, rgb(220, 20, 60) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -251,7 +251,7 @@ w3m-button button:active {
   display: flex;
   padding: 4px 8px;
   border-radius: 4px;
-  background: rgba(129, 192, 231, 0.1);
+  background: rgba(220, 20, 60, 0.1);
   white-space: nowrap;
   position: relative;
   cursor: help;
@@ -275,7 +275,7 @@ w3m-button button:active {
   align-items: center;
   padding: 12px 24px !important;
   font-size: 1.1em !important;
-  background-image: linear-gradient(9deg, rgb(0, 104, 143) 0%, rgb(138, 212, 249) 100%) !important;
+  background-image: linear-gradient(9deg, rgb(220, 20, 60) 0%, rgb(139, 0, 0) 100%) !important;
   border: 1px solid rgba(0, 0, 0, 0.05) !important;
   border-radius: 8px !important;
   color: white !important;
@@ -289,13 +289,13 @@ w3m-button button:active {
 }
 
 .hero-cta-button:hover {
-  box-shadow: 0 4px 15px rgba(0, 104, 143, 0.3) !important;
+  box-shadow: 0 4px 15px rgba(220, 20, 60, 0.3) !important;
   transform: translateY(-1px) !important;
 }
 
 .hero-cta-button:active {
   transform: translateY(1px) !important;
-  box-shadow: 0 2px 8px rgba(0, 104, 143, 0.2) !important;
+  box-shadow: 0 2px 8px rgba(220, 20, 60, 0.2) !important;
 }
 
 .hero-cta-button svg {
@@ -316,7 +316,7 @@ w3m-button button:active {
   content: '';
   position: absolute;
   inset: -5px;
-  background: linear-gradient(var(--angle), #00f2fe, #0068cc);
+  background: linear-gradient(var(--angle), #DC143C, #8B0000);
   border-radius: 9px;
   animation: rotate 4s linear infinite;
   z-index: -1;
@@ -373,7 +373,7 @@ w3m-button button:active {
   align-items: center;
   gap: 8px;
   padding: 8px 16px;
-  background: rgba(129, 192, 231, 0.1);
+  background: rgba(220, 20, 60, 0.1);
   border: 1px solid rgba(129, 192, 231, 0.2);
   border-radius: 8px;
   color: #dadad2;
@@ -382,13 +382,13 @@ w3m-button button:active {
 }
 
 .quick-action-button svg {
-  color: #81c0e7;
+  color: #DC143C;
   transition: all 0.2s ease;
 }
 
 .quick-action-button:hover {
-  background: rgba(129, 192, 231, 0.15);
-  border-color: rgba(129, 192, 231, 0.3);
+  background: rgba(220, 20, 60, 0.15);
+  border-color: rgba(220, 20, 60, 0.3);
 }
 
 .quick-action-button:hover svg {
@@ -446,7 +446,7 @@ w3m-button button:active {
 }
 
 .social-icon {
-  color: #81c0e7;
+  color: #DC143C;
   font-size: 14px;
   opacity: 0.8;
   transition: opacity 0.2s;
@@ -461,8 +461,8 @@ w3m-button button:active {
   border-radius: 4px;
   font-size: 14px;
   font-weight: 500;
-  color: #81c0e7;
-  background: rgba(129, 192, 231, 0.1);
+  color: #DC143C;
+  background: rgba(220, 20, 60, 0.1);
   display: flex;
   align-items: center;
   margin-top: 8px;
@@ -533,8 +533,8 @@ w3m-button button:active {
   border-radius: 4px;
   font-size: 11px;
   font-weight: 500;
-  color: #81c0e7;
-  background: rgba(129, 192, 231, 0.1);
+  color: #DC143C;
+  background: rgba(220, 20, 60, 0.1);
   display: flex;
   align-items: center;
 }
@@ -587,7 +587,7 @@ w3m-button button:active {
 }
 
 .social-icon {
-  color: #81c0e7;
+  color: #DC143C;
   font-size: 14px;
   opacity: 0.8;
   transition: opacity 0.2s;
@@ -646,7 +646,7 @@ w3m-button button:active {
 }
 
 .filter-button:hover {
-  border-color: #81c0e7;
+  border-color: #DC143C;
 }
 
 .progress-bar-container {
@@ -660,7 +660,7 @@ w3m-button button:active {
 .progress-bar {
   height: 100%;
   border-radius: 2px;
-  background: linear-gradient(9deg, rgb(0, 104, 143) 0%, rgb(138, 212, 249) 100%);
+  background: linear-gradient(9deg, rgb(220, 20, 60) 0%, rgb(139, 0, 0) 100%);
 }
 
 .time-container {
@@ -785,11 +785,11 @@ w3m-button button:active {
 .progress-bar {
   height: 100%;
   border-radius: 2px;
-  background: linear-gradient(9deg, rgb(0, 104, 143) 0%, rgb(138, 212, 249) 100%);
+  background: linear-gradient(9deg, rgb(220, 20, 60) 0%, rgb(139, 0, 0) 100%);
 }
 
 .progress-percentage {
-  color: #81c0e7;
+  color: #DC143C;
   font-size: 12px;
   min-width: 40px;
   text-align: right;
@@ -811,7 +811,7 @@ w3m-button button:active {
   display: flex;
   align-items: center;
   gap: 6px;
-  background: rgba(129, 192, 231, 0.1);
+  background: rgba(220, 20, 60, 0.1);
 }
 
 .stat-item svg,
@@ -840,7 +840,7 @@ w3m-button button:active {
 }
 
 .stat-box {
-  background: rgba(129, 192, 231, 0.1);
+  background: rgba(220, 20, 60, 0.1);
   padding: 8px;
   border-radius: 4px;
   width: 100%;
@@ -858,7 +858,7 @@ w3m-button button:active {
 }
 
 .stat-box Text:first-child {
-  color: #81c0e7;
+  color: #DC143C;
   font-size: 14px;
   font-weight: 500;
   margin-bottom: 4px;
@@ -976,7 +976,7 @@ w3m-button button:active {
 }
 
 .feature-item svg {
-  color: #81c0e7;
+  color: #DC143C;
   width: 20px;
   height: 20px;
 }
@@ -988,7 +988,7 @@ w3m-button button:active {
   padding: 32px;
   border-radius: 22px;
   border: 1px solid #3c3f44;
-  background-image: radial-gradient(circle, rgba(144, 205, 240, 0.09) 0%, rgb(27, 27, 31) 100%);
+  background-image: radial-gradient(circle, rgba(220, 20, 60, 0.09) 0%, rgb(27, 27, 31) 100%);
   width: 35%;
   min-width: 300px;
   max-width: 400px;
@@ -1004,7 +1004,7 @@ w3m-button button:active {
   border-radius: 22px;
   border: 1px solid #3c3f44;
   padding: 6%;
-  background-image: radial-gradient(circle, rgba(144, 205, 240, 0.09) 0%, rgb(27, 27, 31) 100%);
+  background-image: radial-gradient(circle, rgba(220, 20, 60, 0.09) 0%, rgb(27, 27, 31) 100%);
   margin-bottom: 35px;
   text-align: center;
 }
@@ -1017,7 +1017,7 @@ w3m-button button:active {
   align-items: center;
   padding: 12px 24px !important;
   font-size: 1.1em !important;
-  background-image: linear-gradient(9deg, rgb(0, 104, 143) 0%, rgb(138, 212, 249) 100%) !important;
+  background-image: linear-gradient(9deg, rgb(220, 20, 60) 0%, rgb(139, 0, 0) 100%) !important;
   border: 1px solid rgba(0, 0, 0, 0.05) !important;
   border-radius: 8px !important;
   color: white !important;
@@ -1039,7 +1039,7 @@ w3m-button button:active {
   display: flex;
   align-items: center;
   gap: 6px;
-  background: rgba(129, 192, 231, 0.1);
+  background: rgba(220, 20, 60, 0.1);
   white-space: nowrap;
   position: relative;
   cursor: help;
@@ -1056,12 +1056,12 @@ w3m-button button:active {
 }
 
 .forge-heading h3 {
-  color: #41d1ff;
+  color: #DC143C;
   font-size: 32px;
   font-weight: 600;
   line-height: 1.4;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  background: linear-gradient(9deg, rgb(255, 255, 255) 0%, rgb(138, 212, 249) 100%);
+  background: linear-gradient(9deg, rgb(255, 255, 255) 0%, rgb(220, 20, 60) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1076,7 +1076,7 @@ w3m-button button:active {
   line-height: 1.6em;
 }
 .forge-heading h4 a {
-  color: #41d1ff;
+  color: #DC143C;
 }
 /* Mobile responsive styles */
 @media (max-width: 768px) {
@@ -1101,7 +1101,7 @@ w3m-button button:active {
   margin: 0;
   padding: 4px 0;
   line-height: 1.8;
-  background: linear-gradient(9deg, rgb(255, 255, 255) 0%, rgb(138, 212, 249) 100%);
+  background: linear-gradient(9deg, rgb(255, 255, 255) 0%, rgb(220, 20, 60) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -1148,7 +1148,7 @@ w3m-button button:active {
 
 /* Stake button styling */
 .stake-btn {
-  background: linear-gradient(9deg, rgb(0, 104, 143) 0%, rgb(138, 212, 249) 100%) !important;
+  background: linear-gradient(9deg, rgb(220, 20, 60) 0%, rgb(139, 0, 0) 100%) !important;
   border: 1px solid rgba(0, 0, 0, 0.05) !important;
   border-radius: 8px !important;
   color: white !important;
@@ -1161,28 +1161,28 @@ w3m-button button:active {
   gap: 12px;
   padding: 12px 24px;
   background: transparent;
-  border: 1px solid #41d1ff;
+  border: 1px solid #DC143C;
   border-radius: 8px;
-  color: #41d1ff;
+  color: #DC143C;
   font-size: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .how-it-works-button svg {
-  color: #41d1ff;
+  color: #DC143C;
   font-size: 20px;
 }
 
 .how-it-works-button:hover {
-  box-shadow: 0 4px 15px rgba(65, 209, 255, 0.2);
+  box-shadow: 0 4px 15px rgba(220, 20, 60, 0.2);
   transform: translateY(-1px);
-  background: rgba(65, 209, 255, 0.05);
+  background: rgba(220, 20, 60, 0.05);
 }
 
 .how-it-works-button:active {
   transform: translateY(1px);
-  box-shadow: 0 2px 8px rgba(65, 209, 255, 0.1);
+  box-shadow: 0 2px 8px rgba(220, 20, 60, 0.1);
 }
 
 /* How It Works Modal Styles */
@@ -1203,7 +1203,7 @@ w3m-button button:active {
   gap: 16px;
   width: 100%;
   padding: 20px;
-  background-image: radial-gradient(circle, rgba(144, 205, 240, 0.09) 0%, rgb(27, 27, 31) 100%);
+  background-image: radial-gradient(circle, rgba(220, 20, 60, 0.09) 0%, rgb(27, 27, 31) 100%);
   border: 1px solid #3c3f44;
   border-radius: 12px;
   transition: all 0.3s ease;
@@ -1226,7 +1226,7 @@ w3m-button button:active {
 .step-icon-wrapper svg {
   width: 40px;
   height: 40px;
-  color: #61cdfe !important;
+  color: #DC143C !important;
 }
 
 
@@ -1238,11 +1238,11 @@ w3m-button button:active {
 .sponsor-section {
   margin-top: 20px;
   padding-top: 16px;
-  border-top: 1px solid rgba(129, 192, 231, 0.2);
+  border-top: 1px solid rgba(220, 20, 60, 0.2);
 }
 
 .sponsor-title {
-  color: #41d1ff;
+  color: #DC143C;
   font-size: 16px;
   font-weight: 500;
   margin: 0 0 8px 0;
@@ -1286,7 +1286,7 @@ w3m-button button:active {
     line-height: 1.4;
   }
 .step-title {
-  color: #41d1ff;
+  color: #DC143C;
   font-size: 20px;
   font-weight: 600;
   margin: 0 0 8px 0;
@@ -1300,14 +1300,14 @@ w3m-button button:active {
 }
 
 .oneHourTag {
-    color: #41d1ff;
+    color: #DC143C;
     font-weight: 600;
 }
 
 .costs-container {
   width: 100%;
   padding: 20px;
-  background-image: radial-gradient(circle, rgba(144, 205, 240, 0.09) 0%, rgb(27, 27, 31) 100%);
+  background-image: radial-gradient(circle, rgba(220, 20, 60, 0.09) 0%, rgb(27, 27, 31) 100%);
   border: 1px solid #3c3f44;
   border-radius: 12px;
   margin-top: 16px;
@@ -1318,7 +1318,7 @@ w3m-button button:active {
 }
 
 .costs-title {
-  color: #41d1ff;
+  color: #DC143C;
   font-size: 18px;
   font-weight: 600;
   margin: 0 0 16px 0;
@@ -1349,7 +1349,7 @@ w3m-button button:active {
 
 /* Modal Header Styling */
 .modal-header {
-  background: linear-gradient(9deg, rgb(0, 104, 143) 0%, rgb(138, 212, 249) 100%);
+  background: linear-gradient(9deg, rgb(220, 20, 60) 0%, rgb(139, 0, 0) 100%);
   padding: 16px 24px;
   border-radius: 12px 12px 0 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -1375,7 +1375,7 @@ div[role="dialog"] > div > div:first-child {
 .modal-root > div > div > div:first-child h2,
 div[role="dialog"] > div > div:first-child h2 {
   color: transparent !important;
-  background: linear-gradient(9deg, rgb(255, 255, 255) 0%, rgb(138, 212, 249) 100%) !important;
+  background: linear-gradient(9deg, rgb(255, 255, 255) 0%, rgb(220, 20, 60) 100%) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   font-size: 24px !important;
@@ -1390,7 +1390,7 @@ div[role="dialog"] > div > div:first-child h2 {
 
 .headerTop h2 {
   color: transparent !important;
-  background: linear-gradient(9deg, rgb(255, 255, 255) 0%, rgb(138, 212, 249) 100%) !important;
+  background: linear-gradient(9deg, rgb(255, 255, 255) 0%, rgb(220, 20, 60) 100%) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   font-size: 24px !important;
@@ -1409,7 +1409,7 @@ div[role="dialog"] > div > div:first-child h2 {
 
 .top-tokens-title {
   color: transparent !important;
-  background: linear-gradient(9deg, rgb(255, 255, 255) 0%, rgb(138, 212, 249) 100%) !important;
+  background: linear-gradient(9deg, rgb(255, 255, 255) 0%, rgb(220, 20, 60) 100%) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   font-size: 20px !important;
@@ -1442,7 +1442,7 @@ div[role="dialog"] > div > div:first-child h2 {
   content: '';
   position: absolute;
   inset: -4px;
-  background: linear-gradient(var(--angle), #151515, #41d1ff);
+  background: linear-gradient(var(--angle), #151515, #DC143C);
   border-radius: 20px;
   animation: rotate 4s linear infinite;
   z-index: -1;
@@ -1461,7 +1461,7 @@ div[role="dialog"] > div > div:first-child h2 {
 
 .farm-gradient-heading {
   color: transparent !important;
-  background: linear-gradient(9deg, rgb(255, 255, 255) 0%, rgb(138, 212, 249) 100%) !important;
+  background: linear-gradient(9deg, rgb(255, 255, 255) 0%, rgb(220, 20, 60) 100%) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   font-size: 24px !important;
@@ -1470,5 +1470,5 @@ div[role="dialog"] > div > div:first-child h2 {
   padding: 4px 0 !important;
 }
 .farm-card {
-  background-image: radial-gradient(circle, rgba(144, 205, 240, 0.09) 0%, rgb(27, 27, 31) 100%);
+  background-image: radial-gradient(circle, rgba(220, 20, 60, 0.09) 0%, rgb(27, 27, 31) 100%);
 }

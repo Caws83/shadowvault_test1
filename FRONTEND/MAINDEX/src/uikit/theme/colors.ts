@@ -1,10 +1,10 @@
 import { Colors } from './types'
 
 export const baseColors = {
-  primary: '#ffffff',//'#FFA61D',
-  success: '#41d1ff',
-  warning: '#FF8000',
-  failure: '#E00808',
+  primary: '#DC143C', // Crimson red - Sith Lord aesthetic
+  success: '#00FF41', // Bright green for success
+  warning: '#FF6B00', // Orange-red warning
+  failure: '#DC143C', // Crimson red for failures
 }
 
 export const additionalColors = {
@@ -18,46 +18,46 @@ export const additionalColors = {
 export const lightColors: Colors = {
   ...baseColors,
   ...additionalColors,
-  secondary: '#41d1ff',
-  background:  '#000000',
-  backgroundAlt: '#151315',
-  backgroundAlt2: '#000000',
-  cardBorder: '#4D4C4E',
+  secondary: '#DC143C', // Crimson red accent
+  background:  '#000000', // Pure black background
+  backgroundAlt: '#0A0A0A', // Slightly lighter black
+  backgroundAlt2: '#1A0000', // Dark red-tinted black
+  cardBorder: '#DC143C', // Red borders with glow effect
   contrast: '#FFFFFF',
-  dropdown:  '#000000', //'linear-gradient(to bottom right, #1e1d20 0%, #000000 100%)',
-  invertedContrast: '#303030',
-  input: '#303030',
-  tertiary: '#595959',
-  text: '#D5D5D5',
-  textDisabled: '#5F5F5F',
-  textSubtle: '#85cfef',
-  disabled: '#808080',
+  dropdown:  '#0A0A0A', // Dark dropdown
+  invertedContrast: '#1A1A1A',
+  input: '#1A0000', // Dark red-tinted input
+  tertiary: '#4A0000', // Dark red tertiary
+  text: '#FFFFFF', // White text
+  textDisabled: '#4A0000',
+  textSubtle: '#DC143C', // Red subtle text
+  disabled: '#2A0000',
   gradients: {
-    cardHeader: '#41d1ff',
-    gold: 'linear-gradient(180deg, #FFD800 7%, #FDAB32 100%)',
+    cardHeader: 'linear-gradient(135deg, #DC143C 0%, #8B0000 100%)', // Red gradient
+    gold: 'linear-gradient(180deg, #DC143C 7%, #8B0000 100%)',
   },
 }
 
 export const darkColors: Colors = {
   ...baseColors,
   ...additionalColors,
-  secondary: '#41d1ff',
-  background:  '#000000',
-  backgroundAlt: '#151315',
-  backgroundAlt2: '#000000',
-  cardBorder: '#4D4C4E',
+  secondary: '#DC143C', // Crimson red accent
+  background:  '#000000', // Pure black background
+  backgroundAlt: '#0A0A0A', // Slightly lighter black
+  backgroundAlt2: '#1A0000', // Dark red-tinted black
+  cardBorder: '#DC143C', // Red borders with glow effect
   contrast: '#FFFFFF',
-  dropdown:  '#000000', //'linear-gradient(to bottom right, #1e1d20 0%, #000000 100%)',
-  invertedContrast: '#303030',
-  input: '#303030',
-  tertiary: '#595959',
-  text: '#cccccc',
-  textDisabled: '#8a8a8a',
-  textSubtle: '#949494',
-  disabled: '#808080',
+  dropdown:  '#0A0A0A', // Dark dropdown
+  invertedContrast: '#1A1A1A',
+  input: '#1A0000', // Dark red-tinted input
+  tertiary: '#4A0000', // Dark red tertiary
+  text: '#FFFFFF', // White text
+  textDisabled: '#4A0000',
+  textSubtle: '#DC143C', // Red subtle text
+  disabled: '#2A0000',
   gradients: {
-    cardHeader: '#41d1ff',
-    gold: 'linear-gradient(180deg, #FFD800 7%, #FDAB32 100%)',
+    cardHeader: 'linear-gradient(135deg, #DC143C 0%, #8B0000 100%)', // Red gradient
+    gold: 'linear-gradient(180deg, #DC143C 7%, #8B0000 100%)',
   },
 }
 

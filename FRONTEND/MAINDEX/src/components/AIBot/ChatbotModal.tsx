@@ -117,13 +117,14 @@ const ChatbotModal: React.FC<{ isActive: boolean }> = ({ isActive }) => {
 
   const [messages, setMessages] = useState<Message[]>([
     {
-      text: `Welcome! I'm Tolly, your friendly AI assistant. \n\n
-            You can ask me anything you want related to Marswap.  \n 
-            start you sentance with the following commands:\n
-            CREATE: this will create tokens. ex: create token named MARSWAP with 3% tax,\n
-            ZAP: this will add liquidity using ZAP. ec: zap 0x18324..ef88 with 100cro\n
-            BUY: this will buy said token ex: buy 0x2432ff..9fcc with 100cro\n
-            PRESALE: this will start a presale or create a token and a presale in 1 go.\n
+      text: `Welcome! I'm your AI Agent for ShadowVault Protocol. \n\n
+            You can ask me anything about trading, leverage positions, privacy features, or the platform.  \n 
+            Start your sentence with the following commands:\n
+            TRADE: Execute a swap or trade. ex: trade 100 USDC for ETH\n
+            LEVERAGE: Open a leveraged position. ex: leverage 10x long ETH\n
+            PRIVACY: Enable privacy mode for your trades\n
+            AI SIGNAL: Get AI trading signals for a token pair\n
+            PRESALE: Create or participate in a presale\n
             ex: presale and token named Pizza Pop with 3% tax\n\n
             More documentation to follow\n
             If you would like further information, just ask, or let us know in telegram what you would like me to be able to do for you.`,
@@ -193,7 +194,7 @@ const ChatbotModal: React.FC<{ isActive: boolean }> = ({ isActive }) => {
       setMessages(prevMessages => {
         const updatedMessages = [...prevMessages]
         updatedMessages[updatedMessages.length - 1] = {
-          text: 'Ian is confused. Please try and ask me another question.',
+          text: 'AI Agent is processing. Please try asking another question.',
           sender: 'bot',
           command: '',
           url: '',
@@ -588,14 +589,14 @@ const createRocket = async (inputCommand) => {
             <div style={headerTitleStyle}>
               <img 
                 src="/images/home/toly.png" 
-                alt="Tolly" 
+                alt="AI Agent" 
                 style={{ 
                   width: '40px', 
                   height: '40px',
                   objectFit: 'contain'
                 }} 
               />
-              <h2 style={{ margin: 0 }} className="farm-gradient-heading">Tolly, your AI Assistant</h2>
+              <h2 style={{ margin: 0 }} className="farm-gradient-heading">AI Agent - ShadowVault Protocol</h2>
             </div>
             <button style={styles.closeButtonStyle} onClick={handleCloseModal}>
               X

@@ -110,7 +110,7 @@ const WavyLine = styled.div<{ valid: boolean }>`
 const ButtonPoint = styled.div<{ active: boolean; filled: boolean }>`
   width: 32px;
   height: 32px;
-  background: ${({ active, filled }) => (active ? '#41d1ff' : filled ? '#12c446' : 'white')};
+  background: ${({ active, filled }) => (active ? '#DC143C' : filled ? '#12c446' : 'white')};
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -140,7 +140,7 @@ const ContainerRS = styled.div`
 
 const LabelText = styled(Text)`
   font-size: 20px;
-  color: #41d1ff;
+  color: #DC143C;
   text-align: center;
   width: 100%;
   margin-bottom: 8px;
@@ -148,7 +148,7 @@ const LabelText = styled(Text)`
 `
 
 const GradientButton = styled(Button)`
-  background-image: linear-gradient(9deg, rgb(0, 104, 143) 0%, rgb(138, 212, 249) 100%);
+  background-image: linear-gradient(9deg, rgb(220, 20, 60) 0%, rgb(139, 0, 0) 100%);
   opacity: ${({ disabled }) => (disabled ? '0.6' : '1')};
   color: white;
   border: 1px solid rgba(0, 0, 0, 0.05);
@@ -162,12 +162,12 @@ const GradientButton = styled(Button)`
   gap: 8px;
   
   &:hover:not(:disabled) {
-    box-shadow: 0 4px 15px rgba(0, 104, 143, 0.3);
+    box-shadow: 0 4px 15px rgba(220, 20, 60, 0.3);
     transform: translateY(-1px);
   }
   
   &:disabled {
-    background-image: linear-gradient(9deg, rgb(0, 104, 143) 0%, rgb(138, 212, 249) 100%);
+    background-image: linear-gradient(9deg, rgb(220, 20, 60) 0%, rgb(139, 0, 0) 100%);
     color: white;
     cursor: not-allowed;
   }

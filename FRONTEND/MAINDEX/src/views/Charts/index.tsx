@@ -33,11 +33,15 @@ const Chart: React.FC<ChartProps> = (props) => {
 
   const chainId = dex.chainId
   const chainName = () => {
-    if(chainId === 109) return "shibarium"
-    if(chainId === 1) return "ether"
-    if(chainId === 25) return "cronos"
-    if(chainId === 56) return "bnb"
-    if(chainId === 8543) return "base"
+    if (chainId === 56 || chainId === 97) return "bsc"
+    if (chainId === 109) return "shibarium"
+    if (chainId === 1) return "ether"
+    if (chainId === 11155111) return "sepolia"
+    if (chainId === 25) return "cronos"
+    if (chainId === 56) return "bnb"
+    if (chainId === 8453) return "base"
+    if (chainId === 245022926) return "neon"
+    return undefined
   }
 
   // get pair address
@@ -50,38 +54,40 @@ const Chart: React.FC<ChartProps> = (props) => {
       for (const currentDex of dexList) {
         if (currentDex.chainId === chainId) {
           const currentDexFactory = getAddress(currentDex.factory, chainId);
-  
+          const abi = currentDex.dexABI ?? farmFactoryAbi;
+
           if (native !== token) {
-            const p = await readContract(config, {
-              abi: farmFactoryAbi,
-              address: currentDexFactory,
-              functionName: "getPair",
-              args: [token as Address, native],
-              chainId,
-            }) 
-  
-            if (p !== zeroAddress) {
-              setPair(p);
-              break; // Exit the loop if a non-zero address is found
-            }
+            try {
+              const p = await readContract(config, {
+                abi: abi as any,
+                address: currentDexFactory,
+                functionName: "getPair",
+                args: [token as Address, native],
+                chainId,
+              })
+              if (p !== zeroAddress) {
+                setPair(p);
+                break;
+              }
+            } catch {}
           } else {
-            const p = await readContract(config, {
-              abi: farmFactoryAbi,
-              address: currentDexFactory,
-              functionName: "getPair",
-              args: [token as Address, usd],
-              chainId,
-            })
-  
-            if (p !== zeroAddress) {
-              setPair(p);
-              break; // Exit the loop if a non-zero address is found
-            }
+            try {
+              const p = await readContract(config, {
+                abi: abi as any,
+                address: currentDexFactory,
+                functionName: "getPair",
+                args: [token as Address, usd],
+                chainId,
+              })
+              if (p !== zeroAddress) {
+                setPair(p);
+                break;
+              }
+            } catch {}
           }
         }
       }
     }
-  
     go();
   }, [token, chainId, native, usd, dexList]);
   

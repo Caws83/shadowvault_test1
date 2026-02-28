@@ -5,7 +5,7 @@ import { CurrencyAmount, JSBI, Token, Trade } from 'sdk'
 import { Button, Text, Box, useModal, Flex, Card, CardHeader, TextHeader } from 'uikit'
 import { useIsTransactionUnsupported } from 'hooks/Trades'
 import { useTranslation } from 'contexts/Localization'
-import { getAddress } from 'utils/addressHelpers'
+import { getAddress, getWrappedAddress } from 'utils/addressHelpers'
 import { Dex } from 'config/constants/types'
 // import GraphIndex, { showGraph } from 'views/graphs'
 import { dexs, dexList } from 'config/constants/dex'
@@ -21,7 +21,6 @@ import { ArrowWrapper, Wrapper } from './components/styleds'
 import ImportTokenWarningModal from './components/ImportTokenWarningModal'
 import ProgressSteps from './components/ProgressSteps'
 import { AppBody } from '../../components/App'
-import ConnectWalletButton from '../../components/ConnectWalletButton'
 import { INITIAL_ALLOWED_SLIPPAGE } from '../../config/constants'
 import { useCurrency, useAllTokens } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
@@ -49,7 +48,14 @@ import FormattedPriceImpact from './components/FormattedPriceImpact'
 import PMTokenSelector from 'components/Menu/UserMenu/payMasterSelectButton'
 import { usePaymaster } from 'hooks/usePaymaster'
 import PayMasterPreview from 'components/Menu/UserMenu/payMasterPreview'
-import { MdSwapVerticalCircle } from "react-icons/md";
+import { MdSwapVerticalCircle } from "react-icons/md"
+import LeverageModeSelector from './components/LeverageModeSelector'
+import LiveChartSection from './components/LiveChartSection'
+import TradeModeDropdown, { TradeMode } from './components/TradeModeDropdown'
+import ChainSelector from './components/ChainSelector'
+import OrderBook from './components/OrderBook'
+import BitgetTradePanel from './components/BitgetTradePanel'
+import { LeverageMode } from 'features/ai-agent/types'
 
 const Label = styled(Text)`
   font-size: 14px;
@@ -74,7 +80,7 @@ const HeaderContainer = styled(Flex)`
 `;
 
 const StyledButton = styled(Button)`
-  background-image: linear-gradient(9deg, rgb(0, 104, 143) 0%, rgb(138, 212, 249) 100%);
+  background-image: linear-gradient(9deg, rgb(220, 20, 60) 0%, rgb(139, 0, 0) 100%);
   color: white;
 `
 
@@ -82,9 +88,10 @@ const AnimatedBorderBox = styled.div`
   position: relative;
   border-radius: 24px;
   padding: 4px;
-  background: linear-gradient(90deg, #0c1b33, #41d1ff, #0c1b33);
+  background: linear-gradient(90deg, #000000, #DC143C, #8B0000, #DC143C, #000000);
   background-size: 200% 100%;
   animation: gradient 4s linear infinite;
+  box-shadow: 0 0 20px rgba(220, 20, 60, 0.3);
 
   @keyframes gradient {
     0% {
@@ -96,12 +103,119 @@ const AnimatedBorderBox = styled.div`
   }
 `
 
+const SwapPageLayout = styled.div`
+  display: flex;
+  width: 100%;
+  max-width: 1600px;
+  gap: 12px;
+  min-height: 600px;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  @media (max-width: 1200px) {
+    flex-direction: column;
+  }
+`
+
+const ChartPane = styled.div`
+  flex: 1;
+  min-width: 500px;
+  background: #0d0d0d;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: 968px) {
+    min-width: 100%;
+    min-height: 400px;
+  }
+`
+
+const OrderBookPane = styled.div`
+  width: 300px;
+  min-width: 260px;
+
+  @media (max-width: 1200px) {
+    width: 100%;
+    min-width: 100%;
+  }
+`
+
+const TradePane = styled.div`
+  width: 380px;
+  min-width: 340px;
+
+  @media (max-width: 968px) {
+    width: 100%;
+    min-width: 100%;
+  }
+`
+
+const ChartSection = styled.div`
+  width: 100%;
+  flex: 1;
+  min-height: 380px;
+`
+
+const ChartHeader = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: ${({ theme }) => theme.colors.text};
+  font-size: 14px;
+`
+
+const SwapBody = styled.div`
+  width: 100%;
+  max-width: 1400px;
+  z-index: 1;
+  background: transparent;
+  overflow: hidden;
+`
+
+const HeaderRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  padding: 12px 16px;
+  background: #1a1a1a;
+  border-radius: 10px;
+  margin-bottom: 12px;
+
+  > * {
+    flex-shrink: 0;
+  }
+`
+
+const FeeBadge = styled.span`
+  padding: 8px 14px;
+  background: rgba(220, 20, 60, 0.15);
+  border-radius: 8px;
+  font-size: 13px;
+  color: #DC143C;
+  white-space: nowrap;
+`
+
 export default function Swap () {
   const { t } = useTranslation()
   const { chain } = useAccount()
   const [dex, setDex] = useUserDex()
   const [amountInp, setAmountInp] = useState<string | null>(null)
   const [autoAI, setAutoAI] = useState<boolean>(false)
+  const [tradeMode, setTradeMode] = useState<TradeMode>('PUBLIC')
+  const [leverageMode, setLeverageMode] = useState<LeverageMode>(LeverageMode.SAFE)
+  const [orderType, setOrderType] = useState<'limit' | 'market'>('market')
+  const [marginMode, setMarginMode] = useState<'isolated' | 'cross'>('isolated')
+  const [leverage, setLeverage] = useState(10)
+  const [tradeModeUI, setTradeModeUI] = useState<'open' | 'close'>('open')
+  const [limitPrice, setLimitPrice] = useState('')
   
 
   useEffect(() => {
@@ -520,23 +634,66 @@ export default function Swap () {
       setDex(newDex)
     }
   }
+
+  const handleChainSelect = (chainId: number) => {
+    const dexForChain = dexList.find((d) => d.chainId === chainId)
+    if (dexForChain) handleDexChange(dexForChain)
+  }
+  const inputCurrency = currencies[Field.INPUT]
+  const inputTokenAddress = inputCurrency
+    ? (inputCurrency.symbol === publicClient?.chain?.nativeCurrency.symbol
+        ? getWrappedAddress(localDex.chainId)
+        : (inputCurrency as Token).address)
+    : undefined
+  const inputSymbol = inputCurrency?.symbol ?? ''
+  const outputSymbol = currencies[Field.OUTPUT]?.symbol ?? ''
+  const pairLabel = `${inputSymbol}/${outputSymbol}`.replace('//', '/') || '—'
+  const midPrice = trade?.executionPrice ? trade.executionPrice.toSignificant(6) : '0'
+
+  const handleBBO = () => setLimitPrice(midPrice)
+
   return (
     <Page>
-      <AnimatedBorderBox>
-        <AppBody>
-          <StyledCardHeader>
-            <HeaderContainer flexDirection='row' alignItems='center' justifyContent='space-between' style={{ paddingLeft: '32px' }}>
-              <PMTokenSelector />
-              <Flex>
-                <TextHeader>SWAP FLAT FEE: </TextHeader>
-                <TextHeader color='primary'>{` ${parseFloat(
-                  new BigNumber(FLAT_FEE).shiftedBy(-18).toFixed(5),
-                )} ${publicClient?.chain?.nativeCurrency.symbol}`}</TextHeader>
-              </Flex>
-            </HeaderContainer>
-          </StyledCardHeader>
+      <SwapBody>
+        <HeaderRow>
+          <ChainSelector currentChainId={localDex.chainId} onChainChange={handleChainSelect} />
+          <PMTokenSelector />
+          <TradeModeDropdown value={tradeMode} onChange={setTradeMode} />
+          <FeeBadge>
+            Fee: {parseFloat(new BigNumber(FLAT_FEE).shiftedBy(-18).toFixed(5))} {publicClient?.chain?.nativeCurrency?.symbol ?? 'ETH'}
+          </FeeBadge>
+        </HeaderRow>
 
-          <Wrapper>
+        <SwapPageLayout>
+        <ChartPane>
+          <ChartSection>
+            <LiveChartSection tokenAddress={inputTokenAddress} symbol={inputSymbol || 'BNB'} dex={localDex} height="420px" />
+          </ChartSection>
+        </ChartPane>
+
+        <OrderBookPane>
+          <OrderBook midPrice={midPrice} pairLabel={pairLabel} />
+        </OrderBookPane>
+
+        <TradePane>
+        <BitgetTradePanel
+          orderType={orderType}
+          onOrderTypeChange={setOrderType}
+          marginMode={marginMode}
+          onMarginModeChange={setMarginMode}
+          leverage={leverage}
+          onLeverageChange={setLeverage}
+          mode={tradeModeUI}
+          onModeChange={setTradeModeUI}
+          price={limitPrice}
+          onPriceChange={setLimitPrice}
+          quantity={typedValue}
+          onQuantityChange={(v) => onUserInput(Field.INPUT, v)}
+          midPrice={midPrice}
+          onBBO={handleBBO}
+        >
+          <AnimatedBorderBox>
+          <Wrapper style={{ padding: '16px' }}>
             <AutoColumn>
               <CurrencyInputPanel
                 chainId={localDex.chainId}
@@ -568,7 +725,7 @@ export default function Swap () {
               <AutoColumn justify='center'>
                 <AutoRow justify='center' style={{}} mb='0rem'>
                   <ArrowWrapper clickable>
-                    <MdSwapVerticalCircle size={32} color="#41d1ff" style={{ cursor: 'pointer' }} onClick={() => {
+                    <MdSwapVerticalCircle size={32} color="#DC143C" style={{ cursor: 'pointer' }} onClick={() => {
                       onSwitchTokens()
                     }} />
                   </ArrowWrapper>
@@ -616,9 +773,9 @@ export default function Swap () {
           
           
               {showConnectButton ? (
-                <Flex justifyContent='center' alignItems='center'>
-                  <ConnectWalletButton chain={localDex.chainId} />
-                </Flex>
+                <Text color="textSubtle" fontSize="14px">
+                  {t('Connect your wallet above to trade')}
+                </Text>
               ) : swapIsUnsupported ? (
                 <Button disabled mb='4px'>
                   {t('Unsupported Asset')}
@@ -659,9 +816,17 @@ export default function Swap () {
 
              
             </Flex>
+
+            <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+              <Text fontSize="12px" color="textSubtle" mb="8px">Leverage: {leverage}x • {marginMode}</Text>
+              <LeverageModeSelector selectedMode={leverageMode} onModeChange={setLeverageMode} />
+            </div>
           </Wrapper>
-        </AppBody>
-      </AnimatedBorderBox>
+          </AnimatedBorderBox>
+        </BitgetTradePanel>
+        </TradePane>
+      </SwapPageLayout>
+      </SwapBody>
     </Page>
   )
 }

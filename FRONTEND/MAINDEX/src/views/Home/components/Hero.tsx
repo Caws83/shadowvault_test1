@@ -50,25 +50,23 @@ const Hero = () => {
           <Flex m="8px" height="100%" alignItems="center" justifyContent="space-between" flexDirection="column" style={{ textAlign: 'center' }}>
             <img src="/images/home/logoWithText.svg" alt="Desktop Logo" className="desktop-icon" style={{ width: `240px` }} />
 
-            <Text style={{ textShadow: '3px 3px 6px black' }} fontSize={isMobile ? "28px" : "32px"} color="text" mb="18px">
-              Why SWAP on Earth when you can SWAP on MARS!
+            <Text style={{ textShadow: '0 0 10px #DC143C, 3px 3px 6px black' }} fontSize={isMobile ? "28px" : "32px"} color="text" mb="18px" bold>
+              Trade in Shadows. Leverage Fearless.
             </Text>
 
-            <Text style={{ textShadow: '3px 3px 6px black' }} fontSize={isMobile ? "24px" : "28px"} color="secondary" mb="18px">
-              Test our full potential on the SHIBARIUM Chain.
+            <Text style={{ textShadow: '0 0 8px #DC143C, 3px 3px 6px black' }} fontSize={isMobile ? "24px" : "28px"} color="secondary" mb="18px">
+              ShadowVault Protocol - Uniswap's Private Shadow with AI Superpowers
             </Text>
 
-            <Text style={{ textShadow: '3px 3px 6px black' }} bold fontSize={isMobile ? "14px" : "22px"} mb="18px">
-              MARSWAP THE GATEWAY TO SHIBARIUM!
-
-              
-              </Text>
-              <Text style={{ textShadow: '3px 3px 6px black' }} bold fontSize={isMobile ? "14px" : "22px"} mb="18px">
-              THE FIRST EVER DEX USING A FLAT FEE ACROSS MULTIPLE CHAINS!
+            <Text style={{ textShadow: '0 0 6px #DC143C, 3px 3px 6px black' }} bold fontSize={isMobile ? "14px" : "22px"} mb="18px">
+              ZERO-KNOWLEDGE PRIVACY
+            </Text>
+              <Text style={{ textShadow: '0 0 6px #DC143C, 3px 3px 6px black' }} bold fontSize={isMobile ? "14px" : "22px"} mb="18px">
+              UNISWAP LIQUIDITY | AI AGENT POWER
               </Text>
 
             <Text style={{ textShadow: '3px 3px 6px black' }} fontSize={isMobile ? "14px" : "18px"} mb="18px">
-              We specialize in tailor-made solutions for DeFi projects, complemented by user-friendly self-service options.
+              Trade assets pseudonymously with zero-knowledge proofs. Tap into Uniswap's vast liquidity pools. Deploy optional AI agent for leveraged positions - Safe Mode (5-10x) or Full Psycho (100x).
             </Text>
 
           

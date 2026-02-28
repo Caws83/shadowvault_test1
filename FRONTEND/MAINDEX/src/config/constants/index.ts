@@ -10,35 +10,47 @@ export type ChainTokenList = {
 
 // used to construct intermediary pairs for trading 
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
+  [ChainId.BSC]: [REALWBONE[ChainId.BSC]],
+  [ChainId.BSC_TESTNET]: [REALWBONE[ChainId.BSC_TESTNET]],
+  [ChainId.SEPOLIA]: [REALWBONE[ChainId.SEPOLIA]],
   [ChainId.NEONDEV]: [REALWBONE[ChainId.NEONDEV]],
 }
 
-export const EASY_TOKENS: Token[] = [REALWBONE[ChainId.NEONDEV]]
+export const EASY_TOKENS: Token[] = [
+  REALWBONE[ChainId.BSC],
+  REALWBONE[ChainId.BSC_TESTNET],
+  REALWBONE[ChainId.SEPOLIA],
+  REALWBONE[ChainId.NEONDEV],
+]
 
 /**
- * Addittional bases for specific tokens
- * @example { [WBTC.address]: [renBTC], [renBTC.address]: [WBTC] }
+ * Additional bases for specific tokens
  */
 export const ADDITIONAL_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
+  [ChainId.BSC]: {},
+  [ChainId.BSC_TESTNET]: {},
+  [ChainId.SEPOLIA]: {},
   [ChainId.NEONDEV]: {},
 }
 
-/**
- * Some tokens can only be swapped via certain pairs, so we override the list of bases that are considered for these
- * tokens.
- * @example [AMPL.address]: [DAI, WBONE[ChainId.SHIBNET]]
- */
 export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
+  [ChainId.BSC]: {},
+  [ChainId.BSC_TESTNET]: {},
+  [ChainId.SEPOLIA]: {},
   [ChainId.NEONDEV]: {},
 }
 
-// used for display in the default list when adding liquidity
 export const SUGGESTED_BASES: ChainTokenList = {
+  [ChainId.BSC]: [REALWBONE[ChainId.BSC]],
+  [ChainId.BSC_TESTNET]: [REALWBONE[ChainId.BSC_TESTNET]],
+  [ChainId.SEPOLIA]: [REALWBONE[ChainId.SEPOLIA]],
   [ChainId.NEONDEV]: [REALWBONE[ChainId.NEONDEV]],
 }
 
-// used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
+  [ChainId.BSC]: [REALWBONE[ChainId.BSC]],
+  [ChainId.BSC_TESTNET]: [REALWBONE[ChainId.BSC_TESTNET]],
+  [ChainId.SEPOLIA]: [REALWBONE[ChainId.SEPOLIA]],
   [ChainId.NEONDEV]: [REALWBONE[ChainId.NEONDEV]],
 }
 

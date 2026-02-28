@@ -1,7 +1,40 @@
- ![Alt text](https://i.ibb.co/zxcd6Fk/banner.png)
+# ShadowVault Protocol
 
-# Sol Forge Frontend with cleaned up Backend 
-Utilizing EVM to SPL
+**Trade in Shadows. Leverage Fearless.**
+
+A privacy-centric decentralized exchange (DEX) with AI-driven leverage trading, zero-knowledge privacy, and Uniswap liquidity integration.
+
+## 🚀 Quick Start
+
+See `QUICK_START.md` for 3-step setup, or `LOCAL_SETUP_GUIDE.md` for detailed instructions.
+
+```bash
+cd FRONTEND/MAINDEX
+npm install
+npm run start
+```
+
+## Core Features
+
+- 🔒 **Zero-Knowledge Privacy** - Trade assets pseudonymously with zero-knowledge proofs
+- 💧 **Uniswap Liquidity** - Deep liquidity from Uniswap V3 pools
+- 🤖 **AI Trading Agent** - Optional AI agent for leveraged positions
+  - **Safe Mode**: 5-10x leverage with automated risk controls
+  - **Full Psycho Mode**: Up to 100x leverage (high risk, high reward)
+- 🪙 **$SHDV Token** - Native token for governance, fee discounts, and premium features
+
+## Project Structure
+
+- `FRONTEND/MAINDEX/` - Main frontend application (React + TypeScript)
+- `CONTRACTS/GENERALCONTRACTS/MSWAP/` - Smart contracts (Solidity)
+- `DEX_API/DEXAPI/` - Backend API services
+
+## 📁 Folder Name
+
+**Current folder name:** `MARSWAP_PLATFORM`  
+**Suggested rename:** `SHADOWVAULT_PROTOCOL` (optional, doesn't affect functionality)
+
+You can rename the root folder after testing to match the new branding.
 
 Optimized Contract modifications are found under - GENERALCONTRACTS/MSWAP/contracts with artifacts
 Deploy optimized contracts with Hardhat
@@ -10,7 +43,16 @@ Install dependencies: npm install
 
 Run the instance from MAINDEX: npx vite dev --host
 
-ZkDex removed and code cleanup under progress
+## Quick Start
+
+### Frontend Development
+```bash
+cd FRONTEND/MAINDEX
+npm install
+npx vite dev --host
+```
+
+### Smart Contract Development
 
 -------------
 

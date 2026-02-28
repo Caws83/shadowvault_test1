@@ -87,11 +87,14 @@ const PMTokenSelector = () => {
   const chainId = chain?.id ?? defaultChainId
   const ETHER = getETHER(chainId) as Token
   const [payWithPM, setUsePaymaster, payToken, setPaytoken] = useGasTokenManager()
-  const payTokenOptions = {
-    245022926: [getETHER(282) as Token],
+  const payTokenOptions: Record<number, Token[]> = {
+    56: [getETHER(56) as Token],
+    97: [getETHER(97) as Token],
+    11155111: [getETHER(11155111) as Token],
+    245022926: [getETHER(245022926) as Token],
   }
-  const startIndex = payTokenOptions[chainId].findIndex(token => token.symbol === payToken.symbol)
-  const options = payTokenOptions[chainId]
+  const options = payTokenOptions[chainId] ?? [getETHER(chainId) as Token]
+  const startIndex = options.findIndex(token => token.symbol === payToken?.symbol)
 
   const containerRef = useRef(null)
   const dropdownRef = useRef(null)

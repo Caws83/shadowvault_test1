@@ -37,12 +37,12 @@ const RemoveLiquidity = lazy(() => import('./views/RemoveLiquidity'))
 // const NftPools = lazy(() => import('./views/NftPools'));
 // const NftLaunch = lazy(() => import('./views/nftlaunch'));
 // const Games = lazy(() => import('./views/Games'));
-const MARSEND = lazy(() => import('./views/MultiSender'))
+const MultiSender = lazy(() => import('./views/MultiSender'))
 const Swap = lazy(() => import('./views/Swap'))
-const MARSALE = lazy(() => import('./views/Ifos'))
-const MARSCREATE = lazy(() => import('./views/TokenMaker'))
-const MARSHOT = lazy(() => import('./views/MarsShot'))
-const MARSPIN = lazy(() => import('./views/MarsSpin'))
+const IFOs = lazy(() => import('./views/Ifos'))
+const TokenMaker = lazy(() => import('./views/TokenMaker'))
+const Shot = lazy(() => import('./views/MarsShot'))
+const Spin = lazy(() => import('./views/MarsSpin'))
 // const TokenMakerV2 = lazy(() => import('./views/TokenMakerV2'));
 // const Analytics = lazy(() => import('./views/Analytics'));
 // const Colors = lazy(() => import('./views/Colors/colors'));
@@ -80,13 +80,13 @@ const App: React.FC = () => {
           <SuspenseWithChunkError fallback={<PageLoader />}>
             <Routes>
               <Route path='/' element={<Home />} />
-              <Route path='/marsale/*' element={<MARSALE />} />
-              <Route path='/marscreate/*' element={<MARSCREATE />} />
-              <Route path='/marsend' element={<MARSEND />} />
-              <Route path="/marshot/*" element={<MARSHOT />} />
-              <Route path="/marspin/*" element={<MARSPIN />} />
-              <Route path="/marstake/*" element={<Stake isLocker={false} />} />
-              <Route path="/marspools/*" element={<Pools />} />
+              <Route path='/ifos/*' element={<IFOs />} />
+              <Route path='/tokenmaker/*' element={<TokenMaker />} />
+              <Route path='/multisender' element={<MultiSender />} />
+              <Route path="/shot/*" element={<Shot />} />
+              <Route path="/spin/*" element={<Spin />} />
+              <Route path="/stake/*" element={<Stake isLocker={false} />} />
+              <Route path="/pools/*" element={<Pools />} />
               {/* 
             
             <Route path="/Lockers/*" element={<Farms isLocker={true} />} />

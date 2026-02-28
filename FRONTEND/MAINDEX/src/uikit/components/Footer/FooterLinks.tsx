@@ -44,7 +44,7 @@ const FooterLinks = () => {
   };
   
   const handleDisclaimer = () => {
-    window.open('https://solforgeai.com/disclaimer/', '_blank', 'noopener noreferrer');
+    window.open('https://shadowvault.protocol/disclaimer/', '_blank', 'noopener noreferrer');
   };
 
   // const [onPresentLegal] = useModal(<Legal />)

@@ -17,7 +17,7 @@ const MenuItems: React.FC<MenuItemsProps> = ({ items = [], activeItem, activeSub
             items={menuItems} 
             py={1} 
             activeItem={activeSubItem}
-            className={label === 'Tools' ? 'solForgeMenu' : ''}
+            className={label === 'AI Agents' ? 'shadowVaultMenu' : ''}
           >
             <MenuItem href={href} isActive={isActive} statusColor={statusColor}>
               {label || <IconComponent iconName={icon} color={isActive ? 'secondary' : 'textSubtle'} />}

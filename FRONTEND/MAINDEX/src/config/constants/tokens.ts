@@ -15,17 +15,36 @@ export const USDT: { [chainId: number]: Token } = {
 
 
 const tokens = {
-
-// CRONOS 
-wneon: {
-  symbol: 'WNEON',
-  name: 'Wrapped NEON',
-  address: {
-    245022926: '0x11adC2d986E334137b9ad0a0F290771F31e9517F',
+  // BSC Testnet (tBNB)
+  wbnb: {
+    symbol: 'WBNB',
+    name: 'Wrapped BNB',
+    address: {
+      56: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+      97: '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd',
+    },
+    decimals: 18,
+    projectLink: 'https://www.binance.org',
   },
-  decimals: 18,
-  projectLink: `${BASE_URL}`,
-},
+  // Sepolia
+  wethSepolia: {
+    symbol: 'WETH',
+    name: 'Wrapped Ether',
+    address: {
+      11155111: '0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14',
+    },
+    decimals: 18,
+    projectLink: 'https://ethereum.org',
+  },
+  wneon: {
+    symbol: 'WNEON',
+    name: 'Wrapped NEON',
+    address: {
+      245022926: '0x11adC2d986E334137b9ad0a0F290771F31e9517F',
+    },
+    decimals: 18,
+    projectLink: `${BASE_URL}`,
+  },
 
   weth: {
     symbol: 'WETH',
@@ -52,6 +71,8 @@ wneon: {
     symbol: 'USD',
     name: 'USD',
     address: {
+      97: "0x337610d27c682E347C9cD60BD4b3b107C9d34dDd",
+      11155111: "",
       245022926: "",
     },
     decimals: 6,
@@ -61,6 +82,8 @@ wneon: {
     symbol: 'NATIVE',
     name: 'native',
     address: {
+      97: "0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd",
+      11155111: "0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14",
       245022926: "0x11adC2d986E334137b9ad0a0F290771F31e9517F",
     },
     decimals: 18,

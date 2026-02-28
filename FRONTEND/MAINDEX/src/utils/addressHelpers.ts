@@ -36,8 +36,10 @@ export const getCompostAddress = (chain_Id?: number) => {
 }
 
 export const getWrappedAddress = (chainId: number) => {
-  if(chainId === 245022926) return getAddress(tokens.wneon.address, 245022926)
-
+  if (chainId === 56 || chainId === 97) return getAddress(tokens.wbnb?.address, chainId)
+  if (chainId === 11155111) return getAddress(tokens.wethSepolia?.address ?? tokens.weth?.address, 11155111)
+  if (chainId === 245022926) return getAddress(tokens.wneon.address, 245022926)
+  return undefined
 }
 
 export const getMulticallAddress = (chain_Id?: number) => {

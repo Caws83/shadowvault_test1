@@ -97,7 +97,7 @@ const zeroAddress = '0x0000000000000000000000000000000000000000'
 const StyledTitle = styled.h2`
   font-size: 24px;
   color: transparent !important;
-  background: linear-gradient(9deg, rgb(255, 255, 255) 0%, rgb(138, 212, 249) 100%) !important;
+  background: linear-gradient(9deg, rgb(255, 255, 255) 0%, rgb(220, 20, 60) 100%) !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   margin: 0;
@@ -142,7 +142,7 @@ const SubtleText = styled(Text)`
 `;
 
 const GradientButton = styled(Button)`
-  background-image: linear-gradient(9deg, rgb(0, 104, 143) 0%, rgb(138, 212, 249) 100%);
+  background-image: linear-gradient(9deg, rgb(220, 20, 60) 0%, rgb(139, 0, 0) 100%);
   opacity: ${({ disabled }) => (disabled ? '0.6' : '1')};
   color: white;
   border: 1px solid rgba(0, 0, 0, 0.05);
@@ -156,12 +156,12 @@ const GradientButton = styled(Button)`
   gap: 8px;
   
   &:hover:not(:disabled) {
-    box-shadow: 0 4px 15px rgba(0, 104, 143, 0.3);
+    box-shadow: 0 4px 15px rgba(220, 20, 60, 0.3);
     transform: translateY(-1px);
   }
   
   &:disabled {
-    background-image: linear-gradient(9deg, rgb(0, 104, 143) 0%, rgb(138, 212, 249) 100%);
+    background-image: linear-gradient(9deg, rgb(220, 20, 60) 0%, rgb(139, 0, 0) 100%);
     color: white;
     cursor: not-allowed;
   }

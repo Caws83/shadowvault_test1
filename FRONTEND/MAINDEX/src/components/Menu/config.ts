@@ -23,33 +23,21 @@ const config: (t: ContextApi['t']) => ConfigMenuItemsType[] = (t) => [
   },
 
   {
-    label: t('Tools'),
-    href: '/marshot',
+    label: t('AI Agents'),
+    href: '/swap',
     hideSubNav: true,
     items: [
       {
-        label: t('Foundry'),
-        href: '/marshot',
+        label: t('AI Trading'),
+        href: '/swap',
       },
       {
-        label: t('Pools'),
-        href: '/marspools',
+        label: t('Leverage Trading'),
+        href: '/swap',
       },
       {
-        label: t('Stake'),
-        href: '/marstake',
-      },
-      {
-        label: t('Presale'),
-        href: '/marsale',
-      },
-      {
-        label: t('Create Token'),
-        href: '/marscreate',
-      },
-      {
-        label: t('Quick Airdrop'),
-        href: '/marsend',
+        label: t('Privacy Mode'),
+        href: '/swap',
       },
     ],
   },

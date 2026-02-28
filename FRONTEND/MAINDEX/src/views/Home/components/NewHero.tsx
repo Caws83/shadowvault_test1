@@ -12,6 +12,7 @@ import { isMobile } from 'components/isMobile'
 const Hero = () => {
   const { t } = useTranslation()
   const { address: account } = useAccount()
+  const mobile = isMobile()
 
   const handleAskToly = () => {
     console.log("Ask Toly button clicked")
@@ -19,35 +20,35 @@ const Hero = () => {
   }
 
   return (
-    <>
-      <div className="hero-container">
+    <div style={{ minHeight: '400px', padding: '20px', background: '#000' }}>
+      <div className="hero-container" style={{ minHeight: '400px' }}>
         <div className="text-container">
           <Flex flexDirection="column">
             {/* Main Headline */}
-            <Text className="hero-headline" fontSize={isMobile ? '32px' : '48px'} bold>
-              Launch Tokens with AI
+            <Text className="hero-headline" fontSize={mobile ? '32px' : '48px'} bold>
+              ShadowVault Protocol
             </Text>
 
             {/* Subheadline */}
             <Text
               className="hero-subheadline"
-              fontSize={isMobile ? '16px' : '20px'}
+              fontSize={mobile ? '16px' : '20px'}
               color="#dadad2"
               maxWidth="600px"
             >
-              AI-powered DEX that makes token launches safer than PumpFun
+              Trade in Shadows. Leverage Fearless. Privacy-centric DEX with AI-driven leverage trading.
             </Text>
 
             {/* Key Features */}
             <Flex flexDirection="column" mt="20px">
               <div className="feature-item">
-                <CheckIcon /> Instant Token Launch (1-8 hours graduation)
+                <CheckIcon /> Zero-Knowledge Privacy - Complete transaction anonymity
               </div>
               <div className="feature-item">
-                <CheckIcon /> AI-Powered Security
+                <CheckIcon /> Uniswap Liquidity - Deep pools for optimal execution
               </div>
               <div className="feature-item">
-                <CheckIcon /> Managed by Toly - Your AI Token Launch Assistant
+                <CheckIcon /> AI Trading Agent - Safe Mode (5-10x) or Psycho Mode (100x)
               </div>
             </Flex>
 
@@ -77,24 +78,24 @@ const Hero = () => {
           </Flex>
         </div>
 
-        {!isMobile && (
+        {!mobile && (
           <div className="action-panel">
             {/* Quick Token Forge -> /marscreate */}
-            <Link to="/marshot">
+            <Link to="/swap">
               <button className="quick-action-button hero-cta-button btnBorderAnim">
-                Create Token <GiThorHammer style={{ width: '30px', height: '30px' }} />
+                Trade Now <BsCurrencyExchange style={{ width: '30px', height: '30px' }} />
               </button>
             </Link>
 
             <Link to="/swap">
               <button className="quick-action-button hero-cta-button">
-                Trade Now <BsCurrencyExchange />
+                AI Agents <FaUserShield />
               </button>
             </Link>
 
-            <Link to="/marsale">
+            <Link to="/liquidity">
               <button className="quick-action-button hero-cta-button">
-                Create Presale <FaChartLine />
+                Add Liquidity <FaChartLine />
               </button>
             </Link>
 
@@ -102,7 +103,7 @@ const Hero = () => {
               className="quick-action-button hero-cta-button"
               onClick={handleAskToly}
             >
-              Ask Toly <FaUserShield />
+              AI Agents <FaUserShield />
             </button>
 
             <Flex flexDirection="column" mt="24px">
@@ -125,7 +126,7 @@ const Hero = () => {
           </div>
         )}
       </div>
-    </>
+    </div>
   )
 }
 

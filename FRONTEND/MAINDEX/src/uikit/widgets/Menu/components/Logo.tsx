@@ -32,26 +32,33 @@ const StyledLink = styled(Link)`
   }
 `;
 
+const LogoImage = styled.img<{ $isMobile: boolean }>`
+  height: ${({ $isMobile }) => $isMobile ? '40px' : '50px'};
+  width: auto;
+  object-fit: contain;
+  max-width: ${({ $isMobile }) => $isMobile ? '200px' : '300px'};
+`;
+
 const Logo: React.FC<Props> = ({ isDark, href }) => {
   const isAbsoluteUrl = href.startsWith('http');
+  const mobile = isMobile();
+  
   const innerLogo = (
-    <>
-      {isMobile ? (
-        <img src="/images/home/sol-forge-ai-logo.png" alt="Sol Forge AI" className="mobile-icon" />
-      ) : (
-        <img src="/images/home/sol-forge-ai-logo.png" alt="Sol Forge AI" className="desktop-icon" />
-      )}
-    </>
+    <LogoImage 
+      src="/images/home/marswap.png" 
+      alt="ShadowVault Protocol" 
+      $isMobile={mobile}
+    />
   );
 
   return (
     <Flex>
       {isAbsoluteUrl ? (
-        <StyledLink to={href} aria-label="MarSwap Dex">
+        <StyledLink to={href} aria-label="ShadowVault Protocol">
           {innerLogo}
         </StyledLink>
       ) : (
-        <StyledLink to={href} aria-label="MarSwap Dex">
+        <StyledLink to={href} aria-label="ShadowVault Protocol">
           {innerLogo}
         </StyledLink>
       )}
