@@ -55,7 +55,10 @@ import TradeModeDropdown, { TradeMode } from './components/TradeModeDropdown'
 import ChainSelector from './components/ChainSelector'
 import OrderBook from './components/OrderBook'
 import BitgetTradePanel from './components/BitgetTradePanel'
+import PairSelectorDropdown from './components/PairSelectorDropdown'
 import { LeverageMode } from 'features/ai-agent/types'
+import CopyAddress from 'components/Menu/UserMenu/CopyAddress'
+import useToast from 'hooks/useToast'
 
 const Label = styled(Text)`
   font-size: 14px;
@@ -80,7 +83,7 @@ const HeaderContainer = styled(Flex)`
 `;
 
 const StyledButton = styled(Button)`
-  background-image: linear-gradient(9deg, rgb(220, 20, 60) 0%, rgb(139, 0, 0) 100%);
+  background-image: linear-gradient(9deg, rgb(156, 69, 69) 0%, rgb(110, 40, 40) 100%);
   color: white;
 `
 
@@ -88,10 +91,10 @@ const AnimatedBorderBox = styled.div`
   position: relative;
   border-radius: 24px;
   padding: 4px;
-  background: linear-gradient(90deg, #000000, #DC143C, #8B0000, #DC143C, #000000);
+  background: linear-gradient(90deg, #000000, #9c4545, #6e2828, #9c4545, #000000);
   background-size: 200% 100%;
   animation: gradient 4s linear infinite;
-  box-shadow: 0 0 20px rgba(220, 20, 60, 0.3);
+  box-shadow: 0 0 20px rgba(156, 69, 69, 0.25);
 
   @keyframes gradient {
     0% {
@@ -108,7 +111,7 @@ const SwapPageLayout = styled.div`
   width: 100%;
   max-width: 1600px;
   gap: 12px;
-  min-height: 600px;
+  min-height: 640px;
   flex-direction: row;
   flex-wrap: wrap;
 
@@ -156,6 +159,8 @@ const ChartSection = styled.div`
   width: 100%;
   flex: 1;
   min-height: 380px;
+  display: flex;
+  flex-direction: column;
 `
 
 const ChartHeader = styled.button`
@@ -196,10 +201,10 @@ const HeaderRow = styled.div`
 
 const FeeBadge = styled.span`
   padding: 8px 14px;
-  background: rgba(220, 20, 60, 0.15);
+  background: rgba(156, 69, 69, 0.15);
   border-radius: 8px;
   font-size: 13px;
-  color: #DC143C;
+  color: #9c4545;
   white-space: nowrap;
 `
 
@@ -216,6 +221,8 @@ export default function Swap () {
   const [leverage, setLeverage] = useState(10)
   const [tradeModeUI, setTradeModeUI] = useState<'open' | 'close'>('open')
   const [limitPrice, setLimitPrice] = useState('')
+  const [quantityPercent, setQuantityPercent] = useState(0)
+  const [chartSymbol, setChartSymbol] = useState('')
   
 
   useEffect(() => {
@@ -352,6 +359,7 @@ export default function Swap () {
     })
 
   const { address: account } = useAccount()
+  const { toastInfo } = useToast()
 
   const navigate = useNavigate()
 
@@ -581,8 +589,22 @@ export default function Swap () {
   const handleMaxInput = useCallback(() => {
     if (maxAmountInput) {
       onUserInput(Field.INPUT, maxAmountInput.toExact())
+      setQuantityPercent(100)
     }
   }, [maxAmountInput, onUserInput])
+
+  const handleQuantityPercentChange = useCallback(
+    (p: number) => {
+      setQuantityPercent(p)
+      if (maxAmountInput && p > 0) {
+        const amount = maxAmountInput.multiply(JSBI.BigInt(p)).divide(JSBI.BigInt(100))
+        onUserInput(Field.INPUT, amount.toExact())
+      } else if (p === 0) {
+        onUserInput(Field.INPUT, '')
+      }
+    },
+    [maxAmountInput, onUserInput],
+  )
 
   const handleOutputSelect = useCallback(
     (outputCurrency, chainId) => {
@@ -595,6 +617,19 @@ export default function Swap () {
 
   const swapIsUnsupported = useIsTransactionUnsupported(localDex.chainId, currencies?.INPUT, currencies?.OUTPUT)
 
+  const [onPresentDepositModal] = useModal(
+    <Box p="24px">
+      <Text mb="16px" bold>Deposit</Text>
+      {account ? (
+        <>
+          <Text fontSize="14px" color="textSubtle" mb="8px">Send assets to your wallet address:</Text>
+          <CopyAddress account={account} mb="16px" />
+        </>
+      ) : (
+        <Text>Connect wallet to view deposit address</Text>
+      )}
+    </Box>,
+  )
   const [onPresentImportTokenWarningModal] = useModal(
     <ImportTokenWarningModal tokens={importTokensNotInDefault} onCancel={() => navigate('/swap/')} />,
   )
@@ -666,8 +701,14 @@ export default function Swap () {
 
         <SwapPageLayout>
         <ChartPane>
+          <Flex mb="12px" alignItems="center" gap="12px" flexWrap="wrap">
+            <PairSelectorDropdown
+              value={chartSymbol || inputSymbol || 'BTC'}
+              onChange={(s) => setChartSymbol(s)}
+            />
+          </Flex>
           <ChartSection>
-            <LiveChartSection tokenAddress={inputTokenAddress} symbol={inputSymbol || 'BNB'} dex={localDex} height="420px" />
+            <LiveChartSection tokenAddress={inputTokenAddress} symbol={inputSymbol || chartSymbol || 'BTC'} dex={localDex} height="420px" chartSymbol={chartSymbol || undefined} onChartSymbolChange={setChartSymbol} />
           </ChartSection>
         </ChartPane>
 
@@ -677,6 +718,18 @@ export default function Swap () {
 
         <TradePane>
         <BitgetTradePanel
+          onDeposit={onPresentDepositModal}
+          onTransfer={() => toastInfo('Transfer', 'Coming soon')}
+          onOpenLong={() => {
+            setSwapState({ tradeToConfirm: trade, attemptingTxn: false, swapErrorMessage: undefined, txHash: undefined })
+            onPresentConfirmModal()
+          }}
+          onOpenShort={() => {
+            setSwapState({ tradeToConfirm: trade, attemptingTxn: false, swapErrorMessage: undefined, txHash: undefined })
+            onPresentConfirmModal()
+          }}
+          isLongDisabled={showConnectButton || swapIsUnsupported || showWrap || !isValid || priceImpactSeverity > 3 || !!swapCallbackError}
+          isShortDisabled={showConnectButton || swapIsUnsupported || showWrap || !isValid || priceImpactSeverity > 3 || !!swapCallbackError}
           orderType={orderType}
           onOrderTypeChange={setOrderType}
           marginMode={marginMode}
@@ -689,8 +742,12 @@ export default function Swap () {
           onPriceChange={setLimitPrice}
           quantity={typedValue}
           onQuantityChange={(v) => onUserInput(Field.INPUT, v)}
+          quantityPercent={quantityPercent}
+          onQuantityPercentChange={handleQuantityPercentChange}
+          inputSymbol={inputSymbol}
           midPrice={midPrice}
           onBBO={handleBBO}
+          availableBalance={currencyBalances[Field.INPUT]?.toSignificant(6) ?? '0.00'}
         >
           <AnimatedBorderBox>
           <Wrapper style={{ padding: '16px' }}>
@@ -725,7 +782,7 @@ export default function Swap () {
               <AutoColumn justify='center'>
                 <AutoRow justify='center' style={{}} mb='0rem'>
                   <ArrowWrapper clickable>
-                    <MdSwapVerticalCircle size={32} color="#DC143C" style={{ cursor: 'pointer' }} onClick={() => {
+                    <MdSwapVerticalCircle size={32} color="#9c4545" style={{ cursor: 'pointer' }} onClick={() => {
                       onSwitchTokens()
                     }} />
                   </ArrowWrapper>
@@ -768,54 +825,28 @@ export default function Swap () {
 
             <PayMasterPreview paymasterInfo={paymasterInfo} dex={dex} onDisableStatusChange={handleDisableStatusChange} error={entireError}/>
 
-            
-            <Flex justifyContent="center" alignItems="center" mt="20px" mb="10px">
-          
-          
-              {showConnectButton ? (
+            {showConnectButton && (
+              <Flex justifyContent="center" alignItems="center" mt="12px" mb="8px">
                 <Text color="textSubtle" fontSize="14px">
                   {t('Connect your wallet above to trade')}
                 </Text>
-              ) : swapIsUnsupported ? (
-                <Button disabled mb='4px'>
-                  {t('Unsupported Asset')}
-                </Button>
-              ) : showWrap ? (
+              </Flex>
+            )}
+            {showWrap && (
+              <Flex justifyContent="center" alignItems="center" mt="12px" mb="8px">
                 <Button disabled={Boolean(wrapInputError) || disabledDoToPM} onClick={onWrap}>
                   {wrapInputError ??
                     (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
                 </Button>
-              ) : noRoute && userHasSpecifiedInputOutput ? (
-                <GreyCard style={{ textAlign: 'center' }}>
-                  <Text color='textSubtle' mb='4px'>
-                    {t('Insufficient liquidity for this trade.')}
-                  </Text>
-                </GreyCard>
-              ) : (
-                <StyledButton
-                  onClick={() => {
-                    setSwapState({
-                      tradeToConfirm: trade,
-                      attemptingTxn: false,
-                      swapErrorMessage: undefined,
-                      txHash: undefined,
-                    })
-                    onPresentConfirmModal()
-                  }}
-                  id='swap-button'
-                  disabled={!isValid || priceImpactSeverity > 3 || !!swapCallbackError}
-                >
-                  {swapInputError ||
-                    (priceImpactSeverity > 3
-                      ? `Price Impact Too High`
-                      : priceImpactSeverity > 2
-                      ? t(`Swap anyway`)
-                      : t(`Swap`))}
-                </StyledButton>
-              )}
-
-             
-            </Flex>
+              </Flex>
+            )}
+            {noRoute && userHasSpecifiedInputOutput && !showWrap && (
+              <GreyCard style={{ textAlign: 'center', margin: '12px 0' }}>
+                <Text color='textSubtle' mb='4px'>
+                  {t('Insufficient liquidity for this trade.')}
+                </Text>
+              </GreyCard>
+            )}
 
             <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
               <Text fontSize="12px" color="textSubtle" mb="8px">Leverage: {leverage}x • {marginMode}</Text>

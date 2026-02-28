@@ -17,24 +17,47 @@ import { config } from 'wagmiConfig'
 
 const ChartWrap = styled.div`
   width: 100%;
+  flex: 1;
   min-height: 420px;
+  display: flex;
+  flex-direction: column;
   background: #0d0d0d;
   border-radius: 12px;
   overflow: hidden;
   border: 1px solid rgba(255,255,255,0.08);
 `
 
-const TRADINGVIEW_SYMBOLS = ['BNB', 'ETH', 'BTC', 'WBNB', 'WETH', 'TNEON']
+const ChartTabs = styled.div`
+  display: flex;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 0 12px;
+`
+
+const ChartTab = styled.button<{ active?: boolean }>`
+  padding: 12px 16px;
+  background: none;
+  border: none;
+  color: ${({ active }) => (active ? '#fff' : 'rgba(255,255,255,0.5)')};
+  font-size: 13px;
+  cursor: pointer;
+  border-bottom: 2px solid ${({ active }) => (active ? '#9c4545' : 'transparent')};
+  margin-bottom: -1px;
+`
+
+const TRADINGVIEW_SYMBOLS = ['BNB', 'ETH', 'BTC', 'WBNB', 'WETH', 'TNEON', 'SOL', 'XRP', 'ADA', 'DOGE', 'AVAX', 'DOT', 'MATIC', 'LINK', 'UNI', 'ATOM', 'LTC', 'BCH', 'ETC', 'XLM', 'ALGO', 'NEAR', 'APT', 'ARB', 'OP', 'SUI', 'SEI', 'INJ', 'TIA', 'PEPE', 'SHIB']
 
 interface LiveChartSectionProps {
   tokenAddress: string | undefined
   symbol: string
   dex: Dex
   height?: string
+  chartSymbol?: string
+  onChartSymbolChange?: (s: string) => void
 }
 
-export default function LiveChartSection({ tokenAddress, symbol, dex, height = '420px' }: LiveChartSectionProps) {
+export default function LiveChartSection({ tokenAddress, symbol, dex, height = '420px', chartSymbol, onChartSymbolChange }: LiveChartSectionProps) {
   const [pairAddress, setPairAddress] = useState<Address>(zeroAddress)
+  const [activeChartTab, setActiveChartTab] = useState<'chart' | 'about' | 'news' | 'data'>('chart')
   const chainId = dex.chainId
 
   useEffect(() => {
@@ -78,13 +101,14 @@ export default function LiveChartSection({ tokenAddress, symbol, dex, height = '
     run()
   }, [tokenAddress, chainId])
 
-  const useTradingView = TRADINGVIEW_SYMBOLS.includes(symbol)
+  const displaySymbol = chartSymbol || symbol
+  const useTradingView = TRADINGVIEW_SYMBOLS.includes(displaySymbol) || (!!chartSymbol && displaySymbol.length <= 10)
 
-  if (!tokenAddress || !symbol) {
+  if (!displaySymbol && !tokenAddress) {
     return (
       <ChartWrap>
         <Flex height="400px" alignItems="center" justifyContent="center">
-          <Text color="textSubtle">Select a token to view chart</Text>
+          <Text color="textSubtle">Select a token or search a crypto to view chart</Text>
         </Flex>
       </ChartWrap>
     )
@@ -93,12 +117,32 @@ export default function LiveChartSection({ tokenAddress, symbol, dex, height = '
   if (useTradingView) {
     return (
       <ChartWrap>
-        <TradingViewChart symbol={symbol} height={height} />
+        <ChartTabs>
+          <ChartTab active={activeChartTab === 'chart'} onClick={() => setActiveChartTab('chart')}>Chart</ChartTab>
+          <ChartTab active={activeChartTab === 'about'} onClick={() => setActiveChartTab('about')}>About</ChartTab>
+          <ChartTab active={activeChartTab === 'news'} onClick={() => setActiveChartTab('news')}>News</ChartTab>
+          <ChartTab active={activeChartTab === 'data'} onClick={() => setActiveChartTab('data')}>Trading data</ChartTab>
+        </ChartTabs>
+        {activeChartTab === 'chart' && (
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+            <TradingViewChart symbol={displaySymbol} onSymbolChange={onChartSymbolChange} searchable fill />
+          </div>
+        )}
+        {activeChartTab !== 'chart' && (
+          <Flex height="380px" alignItems="center" justifyContent="center" flexDirection="column" p="24px">
+            <Text color="textSubtle" fontSize="14px">
+              {activeChartTab === 'about' && 'Token info & contract details'}
+              {activeChartTab === 'news' && 'Latest news & announcements'}
+              {activeChartTab === 'data' && '24h volume, funding, open interest'}
+            </Text>
+            <Text color="textSubtle" fontSize="12px" mt="8px">Coming soon</Text>
+          </Flex>
+        )}
       </ChartWrap>
     )
   }
 
-  if (pairAddress === zeroAddress) {
+  if (pairAddress === zeroAddress && tokenAddress) {
     return (
       <ChartWrap>
         <Flex height="400px" alignItems="center" justifyContent="center">

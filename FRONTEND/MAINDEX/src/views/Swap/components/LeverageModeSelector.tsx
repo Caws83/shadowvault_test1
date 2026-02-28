@@ -7,7 +7,7 @@ const ModeCard = styled(Box)<{ active: boolean; mode: LeverageMode }>`
   border: 2px solid ${({ active, mode }) => 
     active 
       ? mode === LeverageMode.PSYCHO 
-        ? '#DC143C' 
+        ? '#9c4545' 
         : '#22c55e'
       : 'rgba(255,255,255,0.1)'};
   border-radius: 14px;
@@ -25,7 +25,7 @@ const ModeCard = styled(Box)<{ active: boolean; mode: LeverageMode }>`
   &:hover {
     border-color: ${({ mode }) => 
       mode === LeverageMode.PSYCHO 
-        ? '#DC143C' 
+        ? '#9c4545' 
         : '#22c55e'};
     background: ${({ mode }) => 
       mode === LeverageMode.PSYCHO
@@ -37,7 +37,7 @@ const ModeCard = styled(Box)<{ active: boolean; mode: LeverageMode }>`
 
 const WarningBox = styled(Box)`
   background: linear-gradient(135deg, rgba(220, 20, 60, 0.25) 0%, rgba(139, 0, 0, 0.2) 100%);
-  border: 2px solid #DC143C;
+  border: 2px solid #9c4545;
   border-radius: 12px;
   padding: 16px;
   margin-top: 14px;

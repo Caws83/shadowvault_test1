@@ -45,6 +45,25 @@ export const pancakeBscTest = {
   isMars: true,
 }
 
+// Sepolia - Uniswap V2
+export const uniswapSepolia = {
+  id: 'Uniswap',
+  factory: { 11155111: '0xF62c03E08ada871A0bEb309762E260a7a6a880E6' },
+  router: { 11155111: '0xeE567Fe1712Faf6149d80dA1E6934E354124CfE3' },
+  dexABI: pancakeFactoryAbi,
+  allowTrade: true,
+  factoryBase: tokens.wethSepolia,
+  info: {
+    name: 'Uniswap',
+    lpname: 'Uniswap LPs',
+    factory: '0xF62c03E08ada871A0bEb309762E260a7a6a880E6',
+    codeHash: '0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f',
+    numerator: 9975,
+  },
+  chainId: 11155111,
+  isMars: false,
+}
+
 // Neon Devnet - Forge
 export const forgeTest = {
   id: 'Forge Test',
@@ -71,12 +90,14 @@ export const forgeTest = {
 export const dexs = {
   pancakeBsc,
   pancakeBscTest,
+  uniswapSepolia,
   forgeTest,
 }
 
 export const dexList: Dex[] = [
   dexs.pancakeBsc,
   dexs.pancakeBscTest,
+  dexs.uniswapSepolia,
   dexs.forgeTest,
 ]
 

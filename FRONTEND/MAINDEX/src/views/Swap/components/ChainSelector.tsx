@@ -24,7 +24,7 @@ const Trigger = styled.button`
   min-width: 120px;
 
   &:hover {
-    border-color: #DC143C;
+    border-color: #9c4545;
   }
 `
 
@@ -66,9 +66,9 @@ const Item = styled.button`
 const chainLabels: Record<number, string> = {
   1: 'Ethereum',
   56: 'BSC',
-  97: 'BSC Testnet',
-  11155111: 'Sepolia',
-  245022926: 'Neon',
+  97: 'tBNB BSC Testnet',
+  11155111: 'Sepolia ETH Testnet',
+  245022926: 'Neon Devnet',
 }
 
 interface ChainSelectorProps {
@@ -90,7 +90,13 @@ export default function ChainSelector({ currentChainId, onChainChange }: ChainSe
     return () => document.removeEventListener('mousedown', onClick)
   }, [])
 
-  const chains = [...new Set(dexList.map((d) => d.chainId))]
+  const chains = [...new Set(dexList.map((d) => d.chainId))].sort((a, b) => {
+    const testnets = [97, 11155111]
+    const aTest = testnets.includes(a) ? 0 : 1
+    const bTest = testnets.includes(b) ? 0 : 1
+    if (aTest !== bTest) return aTest - bTest
+    return a - b
+  })
   const label = chainLabels[currentChainId] ?? `Chain ${currentChainId}`
 
   const handleSelect = async (chainId: number) => {

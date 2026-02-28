@@ -24,7 +24,7 @@ const Trigger = styled.button`
   color: ${({ theme }) => theme.colors.text};
 
   &:hover {
-    border-color: #DC143C;
+    border-color: #9c4545;
     box-shadow: 0 0 12px rgba(220, 20, 60, 0.2);
   }
 `

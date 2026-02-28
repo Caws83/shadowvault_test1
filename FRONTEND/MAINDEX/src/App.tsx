@@ -1,5 +1,5 @@
 import React, { lazy } from 'react'
-import { HashRouter, Route, Routes } from 'react-router-dom'
+import { HashRouter, Route, Routes, Navigate } from 'react-router-dom'
 import { ResetCSS } from 'uikit'
 import BigNumber from 'bignumber.js'
 import { usePollBlockNumber } from 'state/block/hooks'
@@ -19,6 +19,7 @@ import {
 } from './views/AddLiquidity/redirects'
 import RedirectOldRemoveLiquidityPathStructure from './views/RemoveLiquidity/redirects'
 import { RedirectPathToSwapOnly, RedirectToSwap } from './views/Swap/redirects'
+import { ErrorBoundary } from './components/ErrorBoundary'
 import { usePollCoreFarmData } from 'state/farms/hooks'
 // import { useEffect } from 'react'
 // import { useNavigate } from 'react-router-dom'
@@ -79,7 +80,8 @@ const App: React.FC = () => {
         <Menu>
           <SuspenseWithChunkError fallback={<PageLoader />}>
             <Routes>
-              <Route path='/' element={<Home />} />
+              <Route path='/' element={<Navigate to="/swap" replace />} />
+              <Route path='/home' element={<ErrorBoundary><Home /></ErrorBoundary>} />
               <Route path='/ifos/*' element={<IFOs />} />
               <Route path='/tokenmaker/*' element={<TokenMaker />} />
               <Route path='/multisender' element={<MultiSender />} />
@@ -115,7 +117,7 @@ const App: React.FC = () => {
             <Route path="/nftCollection/:chain/:collection" element={<CollectionCard />} />
             */}
 
-              <Route path='/swap' element={<Swap />} />
+              <Route path='/swap' element={<ErrorBoundary><Swap /></ErrorBoundary>} />
               <Route path='/swap/:outputCurrency' element={<RedirectToSwap />} />
               <Route path='/send' element={<RedirectPathToSwapOnly />} />
               <Route path='/find' element={<PoolFinder />} />

@@ -14,7 +14,7 @@ const AgentCard = styled(Card)`
 
 const SignalBox = styled(Box)`
   background: rgba(220, 20, 60, 0.1);
-  border: 1px solid #DC143C;
+  border: 1px solid #9c4545;
   border-radius: 8px;
   padding: 12px;
   margin-top: 12px;

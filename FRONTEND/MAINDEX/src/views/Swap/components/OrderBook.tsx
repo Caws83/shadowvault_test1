@@ -6,7 +6,7 @@ const Wrap = styled.div`
   background: #141414;
   border-radius: 12px;
   border: 1px solid rgba(255,255,255,0.08);
-  min-height: 400px;
+  min-height: 520px;
   display: flex;
   flex-direction: column;
 `
@@ -24,7 +24,7 @@ const Tab = styled.button<{ active?: boolean }>`
   color: ${({ active }) => (active ? '#fff' : 'rgba(255,255,255,0.5)')};
   font-size: 13px;
   cursor: pointer;
-  border-bottom: 2px solid ${({ active }) => (active ? '#DC143C' : 'transparent')};
+  border-bottom: 2px solid ${({ active }) => (active ? '#9c4545' : 'transparent')};
   margin-bottom: -1px;
 `
 
@@ -55,16 +55,47 @@ const DepthBar = styled.div<{ width: number; isAsk?: boolean }>`
   top: 0;
   bottom: 0;
   width: ${({ width }) => width}%;
-  background: ${({ isAsk }) => (isAsk ? 'rgba(255,82,82,0.15)' : 'rgba(0,180,42,0.15)')};
+  background: ${({ isAsk }) => (isAsk ? 'rgba(165,91,91,0.18)' : 'rgba(0,180,42,0.15)')};
 `
 
 const MidPrice = styled.div`
   padding: 12px 16px;
   font-size: 20px;
   font-weight: 700;
-  color: #fff;
+  color: #00B42A;
   text-align: center;
   background: rgba(0,0,0,0.3);
+`
+
+const ObToolbar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 6px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  font-size: 12px;
+`
+
+const DepthBarRow = styled.div`
+  display: flex;
+  padding: 8px 16px;
+  gap: 12px;
+  font-size: 12px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+`
+const DepthBarItem = styled.span<{ color: string }>`
+  color: ${({ color }) => color};
+`
+
+const DepthSelect = styled.select`
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 4px;
+  color: rgba(255,255,255,0.9);
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
 `
 
 interface OrderBookProps {
@@ -72,10 +103,10 @@ interface OrderBookProps {
   pairLabel: string
 }
 
-function genBids(mid: number, n: number): { price: string; amount: string; total: string }[] {
-  const out = []
+function genBids(mid: number): { price: string; amount: string; total: string }[] {
+  const out: { price: string; amount: string; total: string }[] = []
   let tot = 0
-  for (let i = 0; i < n; i++) {
+  for (let i = 0; i < 12; i++) {
     const p = mid * (1 - (i + 1) * 0.0003)
     const a = 0.01 + Math.random() * 1.5
     tot += a
@@ -84,10 +115,10 @@ function genBids(mid: number, n: number): { price: string; amount: string; total
   return out
 }
 
-function genAsks(mid: number, n: number): { price: string; amount: string; total: string }[] {
-  const out = []
+function genAsks(mid: number): { price: string; amount: string; total: string }[] {
+  const out: { price: string; amount: string; total: string }[] = []
   let tot = 0
-  for (let i = 0; i < n; i++) {
+  for (let i = 0; i < 12; i++) {
     const p = mid * (1 + (i + 1) * 0.0003)
     const a = 0.01 + Math.random() * 1.5
     tot += a
@@ -98,10 +129,9 @@ function genAsks(mid: number, n: number): { price: string; amount: string; total
 
 export default function OrderBook({ midPrice, pairLabel }: OrderBookProps) {
   const [activeTab, setActiveTab] = useState<'orderbook' | 'trades'>('orderbook')
-
   const { bids, asks } = useMemo(() => {
     const mid = parseFloat(midPrice) > 0 ? parseFloat(midPrice) : 1
-    return { bids: genBids(mid, 12), asks: genAsks(mid, 12) }
+    return { bids: genBids(mid), asks: genAsks(mid) }
   }, [midPrice])
 
   const maxBid = Math.max(...bids.map((b) => parseFloat(b.total)), 0.01)
@@ -120,23 +150,32 @@ export default function OrderBook({ midPrice, pairLabel }: OrderBookProps) {
 
       {activeTab === 'orderbook' && (
         <>
+          <ObToolbar>
+            <span style={{ color: 'rgba(255,255,255,0.5)', cursor: 'pointer' }} title="Settings">⚙</span>
+            <span style={{ color: 'rgba(255,255,255,0.5)', cursor: 'pointer' }} title="Grid">⊞</span>
+            <DepthSelect defaultValue="0.1">
+              <option value="0.01">0.01</option>
+              <option value="0.1">0.1</option>
+              <option value="1">1</option>
+            </DepthSelect>
+          </ObToolbar>
           <Header>
-            <span>Price ({pairLabel})</span>
-            <span style={{ textAlign: 'right' }}>Amount</span>
-            <span style={{ textAlign: 'right' }}>Total</span>
+            <span>Price</span>
+            <span style={{ textAlign: 'right' }}>Quantity ({pairLabel.split('/')[0] || 'BTC'})</span>
+            <span style={{ textAlign: 'right' }}>Total ({pairLabel.split('/')[0] || 'BTC'})</span>
           </Header>
-          <div style={{ maxHeight: 180, overflow: 'auto' }}>
+          <div style={{ maxHeight: 220, overflow: 'auto' }}>
             {[...asks].reverse().map((a, i) => (
               <Row key={'a' + i}>
                 <DepthBar width={(parseFloat(a.total) / maxAsk) * 100} isAsk />
-                <span style={{ color: '#FF5252' }}>{a.price}</span>
+                <span style={{ color: '#a55b5b' }}>{a.price}</span>
                 <span style={{ textAlign: 'right' }}>{a.amount}</span>
                 <span style={{ textAlign: 'right', color: 'rgba(255,255,255,0.6)' }}>{a.total}</span>
               </Row>
             ))}
           </div>
           <MidPrice>{midPrice || '—'}</MidPrice>
-          <div style={{ maxHeight: 180, overflow: 'auto' }}>
+          <div style={{ maxHeight: 220, overflow: 'auto' }}>
             {bids.map((b, i) => (
               <Row key={'b' + i}>
                 <DepthBar width={(parseFloat(b.total) / maxBid) * 100} />
@@ -146,6 +185,10 @@ export default function OrderBook({ midPrice, pairLabel }: OrderBookProps) {
               </Row>
             ))}
           </div>
+          <DepthBarRow>
+            <DepthBarItem color="#00B42A">B {((maxBid / (maxBid + maxAsk)) * 100).toFixed(1)}%</DepthBarItem>
+            <DepthBarItem color="#a55b5b">S {((maxAsk / (maxBid + maxAsk)) * 100).toFixed(1)}%</DepthBarItem>
+          </DepthBarRow>
         </>
       )}
 
