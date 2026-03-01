@@ -25,9 +25,18 @@ const TriggerBtn = styled.button`
   }
 `
 
+const IframeWrapper = styled.div`
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  height: 700px;
+  z-index: 1001;
+`
+
 const CloseBtn = styled.button`
   position: fixed;
-  bottom: 624px;
+  bottom: 728px;
   right: 20px;
   z-index: 1002;
   width: 32px;
@@ -62,20 +71,16 @@ export default function AIAgentsIframeWidget() {
           <CloseBtn type="button" onClick={() => setOpen(false)} aria-label="Close">
             ×
           </CloseBtn>
-          <iframe
-            src="https://your-agent-url.com/chat"
-            width="400"
-            height="600"
-            style={{
-              position: 'fixed',
-              bottom: '20px',
-              right: '20px',
-              border: 'none',
-              borderRadius: '16px',
-              boxShadow: '0 25px 50px rgba(139,92,246,0.25)',
-            }}
-            title="AI Agent Chat"
-          />
+          <IframeWrapper>
+            <iframe
+              src="https://venerable-cupcake-ec1bc0.netlify.app/shadowvault-agent.html"
+              width="100%"
+              height="700px"
+              style={{ border: 'none', borderRadius: '12px' }}
+              allow="fullscreen"
+              title="AI Agent Chat"
+            />
+          </IframeWrapper>
         </>
       )}
     </>
