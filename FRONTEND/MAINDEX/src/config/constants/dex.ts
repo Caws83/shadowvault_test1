@@ -45,6 +45,25 @@ export const pancakeBscTest = {
   isMars: true,
 }
 
+// Ethereum mainnet - Uniswap V2
+export const uniswapEthereum = {
+  id: 'Uniswap',
+  factory: { 1: '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f' },
+  router: { 1: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D' },
+  dexABI: pancakeFactoryAbi,
+  allowTrade: true,
+  factoryBase: tokens.wethEthereum,
+  info: {
+    name: 'Uniswap',
+    lpname: 'Uniswap LPs',
+    factory: '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
+    codeHash: '0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f',
+    numerator: 9975,
+  },
+  chainId: 1,
+  isMars: false,
+}
+
 // Sepolia - Uniswap V2
 export const uniswapSepolia = {
   id: 'Uniswap',
@@ -90,15 +109,17 @@ export const forgeTest = {
 export const dexs = {
   pancakeBsc,
   pancakeBscTest,
+  uniswapEthereum,
   uniswapSepolia,
   forgeTest,
 }
 
+// Swap chain list: tBNB, BSC, Ethereum, Sepolia (Neon Devnet removed)
 export const dexList: Dex[] = [
-  dexs.pancakeBsc,
   dexs.pancakeBscTest,
+  dexs.pancakeBsc,
+  dexs.uniswapEthereum,
   dexs.uniswapSepolia,
-  dexs.forgeTest,
 ]
 
 export const defaultDex = dexs.pancakeBscTest

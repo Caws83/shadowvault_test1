@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { dexs } from 'config/constants/dex'
+import { defaultDex } from 'config/constants/dex'
 import { Dex } from 'config/constants/types'
 import { INITIAL_ALLOWED_SLIPPAGE, DEFAULT_DEADLINE_FROM_NOW } from '../../config/constants'
 import { updateVersion } from '../global/actions'
@@ -73,7 +73,7 @@ const initialState: UserState = {
   isDark: false,
   userFarmStakedOnly: FarmStakedOnly.ON_FINISHED,
   gasPrice: GAS_PRICE_GWEI.default,
-  dex: dexs.forgeTest,
+  dex: defaultDex,
   zap: false,
   gasToken: JSON.parse(localStorage.getItem('gasToken') || '{}'),
   usePaymaster: JSON.parse(localStorage.getItem('usePaymaster') || '{}')

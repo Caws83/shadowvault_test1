@@ -50,8 +50,13 @@ export type TokenAddressMap = Readonly<{
 
 /**
  * An empty result, useful as a default.
+ * Must include every ChainId so tokenMap[chainId] is never undefined in listToTokenMap.
  */
 const EMPTY_LIST: TokenAddressMap = {
+  [ChainId.ETHEREUM]: {},
+  [ChainId.BSC]: {},
+  [ChainId.BSC_TESTNET]: {},
+  [ChainId.SEPOLIA]: {},
   [ChainId.NEONDEV]: {},
 }
 
@@ -79,7 +84,9 @@ export function easyTokenMap(): TokenAddressMap {
 }
 
 export function listToTokenMap(list: TokenList): TokenAddressMap {
-  const result = listCache?.get(list)
+  // Never cache default list so SVP and other tokens always load from current JSON (avoids stale cache)
+  const isDefaultList = list?.name === 'MarSwap Default'
+  const result = !isDefaultList && listCache?.get(list)
   if (result) return result
 
   const map = list.tokens.reduce<TokenAddressMap>(
@@ -92,11 +99,12 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
           })
           ?.filter((x): x is TagInfo => Boolean(x)) ?? []
       const token = new WrappedTokenInfo(tokenInfo, tags)
-      if (tokenMap[token.chainId][token.address] !== undefined) throw Error('Duplicate tokens.')
+      const chainMap = tokenMap[token.chainId] ?? {}
+      if (chainMap[token.address] !== undefined) throw Error('Duplicate tokens.')
       return {
         ...tokenMap,
         [token.chainId]: {
-          ...tokenMap[token.chainId],
+          ...chainMap,
           [token.address]: {
             token,
             list,
@@ -106,7 +114,7 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
     },
     { ...EMPTY_LIST },
   )
-  listCache?.set(list, map)
+  if (!isDefaultList) listCache?.set(list, map)
   return map
 }
 
@@ -123,6 +131,10 @@ export function useAllLists(): {
 
 function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
   return {
+    [ChainId.ETHEREUM]: { ...map1[ChainId.ETHEREUM], ...map2[ChainId.ETHEREUM] },
+    [ChainId.BSC]: { ...map1[ChainId.BSC], ...map2[ChainId.BSC] },
+    [ChainId.BSC_TESTNET]: { ...map1[ChainId.BSC_TESTNET], ...map2[ChainId.BSC_TESTNET] },
+    [ChainId.SEPOLIA]: { ...map1[ChainId.SEPOLIA], ...map2[ChainId.SEPOLIA] },
     [ChainId.NEONDEV]: { ...map1[ChainId.NEONDEV], ...map2[ChainId.NEONDEV] },
   }
 }

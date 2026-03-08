@@ -1,5 +1,24 @@
 import { defineChain } from 'viem'
 
+export const EthereumMainnet = defineChain({
+  id: 1,
+  name: 'Ethereum',
+  network: 'homestead',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'Ether',
+    symbol: 'ETH',
+  },
+  rpcUrls: {
+    public: { http: ['https://eth.llamarpc.com'] },
+    default: { http: ['https://eth.llamarpc.com'] },
+  },
+  blockExplorers: {
+    etherscan: { name: 'Etherscan', url: 'https://etherscan.io/' },
+    default: { name: 'Etherscan', url: 'https://etherscan.io/' },
+  },
+})
+
 export const BscMainnet = defineChain({
   id: 56,
   name: 'BNB Smart Chain',

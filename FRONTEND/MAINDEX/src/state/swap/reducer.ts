@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { dexs } from 'config/constants/dex'
+import { defaultDex } from 'config/constants/dex'
 import { Dex } from 'config/constants/types'
 import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 
@@ -27,7 +27,7 @@ const initialState: SwapState = {
     currencyId: '',
   },
   recipient: null,
-  dex: dexs.forgeTest,
+  dex: defaultDex,
 }
 
 export default createReducer<SwapState>(initialState, (builder) =>

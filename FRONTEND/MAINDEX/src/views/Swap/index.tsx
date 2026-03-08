@@ -8,7 +8,7 @@ import { useTranslation } from 'contexts/Localization'
 import { getAddress, getWrappedAddress } from 'utils/addressHelpers'
 import { Dex } from 'config/constants/types'
 // import GraphIndex, { showGraph } from 'views/graphs'
-import { dexs, dexList } from 'config/constants/dex'
+import { dexs, dexList, defaultDex } from 'config/constants/dex'
 import { BigNumber } from 'bignumber.js'
 import { useGetFactoryTxFee } from 'utils/calls/factory'
 import { GreyCard } from '../../components/Card'
@@ -342,15 +342,15 @@ export default function Swap () {
     }
   }, [amountInp, autoAI])
 
-  const getDex = () => {
+  const getDex = (): Dex => {
     for (const key in dexs) {
       if (dexs[key].chainId === chain?.id) {
         return dexs[key]
       }
     }
-    return dex
+    return dex ?? defaultDex
   }
-  const [localDex, setLocalDex] = useState<Dex>(getDex())
+  const [localDex, setLocalDex] = useState<Dex>(() => getDex() ?? defaultDex)
 
   useEffect(() => {
     handleDexChange(getDex())

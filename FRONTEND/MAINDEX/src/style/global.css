@@ -28,6 +28,20 @@ body::before {
   z-index: 1;
 }
 
+/* Remove default blue focus outline from dropdowns, buttons, links - use theme red */
+a:focus,
+button:focus,
+[role="button"]:focus,
+[role="tab"]:focus {
+  outline: none;
+}
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid rgba(230, 57, 70, 0.6);
+  outline-offset: 2px;
+}
+
 /* Header/Navbar styling */
 nav, .navbar, header, [role="navigation"] {
   -webkit-backdrop-filter: blur(10px);
@@ -1210,7 +1224,7 @@ w3m-button button:active {
 }
 
 .how-it-works-step:hover {
-  border-color: #41d1ff;
+  border-color: rgba(230, 57, 70, 0.5);
   transform: translateY(-2px);
 }
 
@@ -1314,7 +1328,7 @@ w3m-button button:active {
 }
 
 .costs-container:hover {
-  border-color: #41d1ff;
+  border-color: rgba(230, 57, 70, 0.5);
 }
 
 .costs-title {

@@ -39,12 +39,12 @@ export const DropdownMenuItem = styled.button<StyledDropdownMenuItemProps & { $i
     transform: translateY(1px);
   }
 
-  ${({ $isActive }) =>
+  ${({ $isActive, theme }) =>
     $isActive &&
     `
-      background-image: linear-gradient(9deg, rgb(0, 104, 143) 0%, rgb(138, 212, 249) 100%);
-      color: white;
-      border-radius: 0px !important;
+      background: rgba(230, 57, 70, 0.15);
+      color: ${theme.colors.text};
+      border-radius: 4px;
     `}
 `
 

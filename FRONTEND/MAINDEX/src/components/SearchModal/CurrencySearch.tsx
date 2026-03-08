@@ -5,7 +5,7 @@ import { useTranslation } from 'contexts/Localization'
 import { FixedSizeList } from 'react-window'
 import { useAudioModeManager } from 'state/user/hooks'
 import useDebounce from 'hooks/useDebounce'
-import { useAllTokens, useToken, useIsUserAddedToken, useFoundOnInactiveList } from '../../hooks/Tokens'
+import { useAllTokens, useTokenWithLoading, useIsUserAddedToken, useFoundOnInactiveList } from '../../hooks/Tokens'
 import { isAddress } from '../../utils'
 import Column, { AutoColumn } from '../Layout/Column'
 import Row from '../Layout/Row'
@@ -48,9 +48,10 @@ function CurrencySearch({
   const [invertSearchOrder] = useState<boolean>(false)
 
   const tokenList = useAllTokens(chainId)
-  // if they input an address, use it
-  const searchToken = useToken(chainId, debouncedQuery)
+  // if they input an address, fetch it (with loading state for paste-address)
+  const { token: searchToken, isLoading: searchTokenLoading } = useTokenWithLoading(chainId, debouncedQuery)
   const searchTokenIsAdded = useIsUserAddedToken(searchToken)
+  const searchQueryIsAddress = Boolean(debouncedQuery && isAddress(debouncedQuery))
 
   const [audioPlay] = useAudioModeManager()
 
@@ -138,9 +139,21 @@ function CurrencySearch({
             <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
           )}
         </AutoColumn>
-        {searchToken && !searchTokenIsAdded ? (
+        {searchQueryIsAddress && searchTokenLoading ? (
+          <Column style={{ padding: '20px 0', height: '100%' }}>
+            <Text color="textSubtle" textAlign="center" py="24px">
+              {t('Loading token…')}
+            </Text>
+          </Column>
+        ) : searchToken && !searchTokenIsAdded ? (
           <Column style={{ padding: '20px 0', height: '100%' }}>
             <ImportRow token={searchToken} showImportView={showImportView} setImportToken={setImportToken} chainId={chainId} />
+          </Column>
+        ) : searchQueryIsAddress && searchToken === undefined && !searchTokenLoading ? (
+          <Column style={{ padding: '20px 0', height: '100%' }}>
+            <Text color="textSubtle" textAlign="center" py="24px">
+              {t('Token not found on this chain. Check the address and network.')}
+            </Text>
           </Column>
         ) : filteredSortedTokens?.length > 0 || filteredInactiveTokens?.length > 0 ? (
           <Box margin="24px -24px">

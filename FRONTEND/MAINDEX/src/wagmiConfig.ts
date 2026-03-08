@@ -1,12 +1,13 @@
 import { createWeb3Modal } from '@web3modal/wagmi/react'
 import { defaultWagmiConfig } from '@web3modal/wagmi/react/config'
-import { BscMainnet, BscTestnet, Sepolia, NeonDevNet } from 'config/constants/chains'
+import { EthereumMainnet, BscMainnet, BscTestnet, Sepolia } from 'config/constants/chains'
 import { BASE_URL } from 'config';
 
 
 export const projectId = '2b6111ec844e3cd755c1792dfacc8533'
 
-const chains = [BscMainnet, BscTestnet, Sepolia, NeonDevNet] as const
+// tBNB, BSC, Ethereum, Sepolia (Neon Devnet removed)
+const chains = [BscTestnet, BscMainnet, EthereumMainnet, Sepolia] as const
 
 const metadata = {
   name: 'FORGE',
@@ -31,7 +32,7 @@ createWeb3Modal({
   enableOnramp: true,
   themeMode: 'dark',
   themeVariables: {
-    '--w3m-accent': '#41d1ff',
+    '--w3m-accent': '#E63946',
     // '--w3m-font-family': 'DM Sans',
     '--w3m-border-radius-master': '2px',
     '--w3m-font-size-master': '8px'

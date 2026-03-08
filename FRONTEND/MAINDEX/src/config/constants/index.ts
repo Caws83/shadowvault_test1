@@ -3,20 +3,31 @@ import { ChainId, JSBI, Percent, Token, REALWBONE } from 'sdk'
 
 export const ROUTER_ADDRESS = '0xe368B201EdbE8759e7c0D128752DBFb5325EdF36'
 
+// SVP on BSC Testnet (tBNB) for swap testing
+const SVP_BSC_TESTNET = new Token(
+  ChainId.BSC_TESTNET,
+  '0x860585c7a8118D162BcF3F9CbAEd34f3AB5a7979',
+  18,
+  'SVP',
+  'ShadowVault Protocol',
+)
+
 // a list of tokens by chain
 export type ChainTokenList = {
   readonly [chainId in ChainId]: Token[]
 }
 
-// used to construct intermediary pairs for trading 
+// used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
+  [ChainId.ETHEREUM]: [REALWBONE[ChainId.ETHEREUM]],
   [ChainId.BSC]: [REALWBONE[ChainId.BSC]],
-  [ChainId.BSC_TESTNET]: [REALWBONE[ChainId.BSC_TESTNET]],
+  [ChainId.BSC_TESTNET]: [REALWBONE[ChainId.BSC_TESTNET], SVP_BSC_TESTNET],
   [ChainId.SEPOLIA]: [REALWBONE[ChainId.SEPOLIA]],
   [ChainId.NEONDEV]: [REALWBONE[ChainId.NEONDEV]],
 }
 
 export const EASY_TOKENS: Token[] = [
+  REALWBONE[ChainId.ETHEREUM],
   REALWBONE[ChainId.BSC],
   REALWBONE[ChainId.BSC_TESTNET],
   REALWBONE[ChainId.SEPOLIA],
@@ -27,6 +38,7 @@ export const EASY_TOKENS: Token[] = [
  * Additional bases for specific tokens
  */
 export const ADDITIONAL_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
+  [ChainId.ETHEREUM]: {},
   [ChainId.BSC]: {},
   [ChainId.BSC_TESTNET]: {},
   [ChainId.SEPOLIA]: {},
@@ -34,6 +46,7 @@ export const ADDITIONAL_BASES: { [chainId in ChainId]?: { [tokenAddress: string]
 }
 
 export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
+  [ChainId.ETHEREUM]: {},
   [ChainId.BSC]: {},
   [ChainId.BSC_TESTNET]: {},
   [ChainId.SEPOLIA]: {},
@@ -41,13 +54,15 @@ export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: To
 }
 
 export const SUGGESTED_BASES: ChainTokenList = {
+  [ChainId.ETHEREUM]: [REALWBONE[ChainId.ETHEREUM]],
   [ChainId.BSC]: [REALWBONE[ChainId.BSC]],
-  [ChainId.BSC_TESTNET]: [REALWBONE[ChainId.BSC_TESTNET]],
+  [ChainId.BSC_TESTNET]: [REALWBONE[ChainId.BSC_TESTNET], SVP_BSC_TESTNET],
   [ChainId.SEPOLIA]: [REALWBONE[ChainId.SEPOLIA]],
   [ChainId.NEONDEV]: [REALWBONE[ChainId.NEONDEV]],
 }
 
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
+  [ChainId.ETHEREUM]: [REALWBONE[ChainId.ETHEREUM]],
   [ChainId.BSC]: [REALWBONE[ChainId.BSC]],
   [ChainId.BSC_TESTNET]: [REALWBONE[ChainId.BSC_TESTNET]],
   [ChainId.SEPOLIA]: [REALWBONE[ChainId.SEPOLIA]],

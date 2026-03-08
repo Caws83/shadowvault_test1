@@ -135,27 +135,33 @@ const BYTES32_REGEX = /^0x[a-fA-F0-9]{64}$/
 // null if loading
 // otherwise returns the token
 export function useToken(chainId: number, tokenAddress?: `0x${string}`): Token | undefined | null {
+  const { token } = useTokenWithLoading(chainId, tokenAddress)
+  return token
+}
+
+// Like useToken but also returns isLoading for address lookup (e.g. token selector paste-address flow)
+export function useTokenWithLoading(
+  chainId: number,
+  tokenAddress?: `0x${string}`,
+): { token: Token | undefined | null; isLoading: boolean } {
   const tokens = useAllTokens(chainId)
-
   const address = isAddress(tokenAddress)
-
-  const token: Token | undefined = address ? tokens[address] : undefined
-
+  const tokenFromList: Token | undefined = address ? tokens[address] : undefined
   const { data, isLoading } = useToken_({
     address: tokenAddress || undefined,
     chainId,
-    enabled: Boolean(!!address && !token),
+    enabled: Boolean(!!address && !tokenFromList),
   })
-
-  return useMemo(() => {
-    if (token) return token
+  const token = useMemo(() => {
+    if (tokenFromList) return tokenFromList
     if (!chainId || !address) return undefined
     if (isLoading) return null
     if (data) {
       return new Token(chainId, data.address, data.decimals, data.symbol ?? 'UNKNOWN', data.name ?? 'Unknown Token')
     }
     return undefined
-  }, [address, chainId, data, token])
+  }, [address, chainId, data, tokenFromList, isLoading])
+  return { token, isLoading: Boolean(address && !tokenFromList && isLoading) }
 }
 
 export function useCurrency(currencyId: string | undefined, chainId: number): Currency | null | undefined {

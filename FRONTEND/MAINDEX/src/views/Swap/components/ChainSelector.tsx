@@ -67,8 +67,7 @@ const chainLabels: Record<number, string> = {
   1: 'Ethereum',
   56: 'BSC',
   97: 'tBNB BSC Testnet',
-  11155111: 'Sepolia ETH Testnet',
-  245022926: 'Neon Devnet',
+  11155111: 'Sepolia',
 }
 
 interface ChainSelectorProps {
@@ -90,12 +89,10 @@ export default function ChainSelector({ currentChainId, onChainChange }: ChainSe
     return () => document.removeEventListener('mousedown', onClick)
   }, [])
 
+  // Order: tBNB, BSC, Ethereum, Sepolia (dexList only; no Neon)
   const chains = [...new Set(dexList.map((d) => d.chainId))].sort((a, b) => {
-    const testnets = [97, 11155111]
-    const aTest = testnets.includes(a) ? 0 : 1
-    const bTest = testnets.includes(b) ? 0 : 1
-    if (aTest !== bTest) return aTest - bTest
-    return a - b
+    const order = [97, 56, 1, 11155111]
+    return order.indexOf(a) - order.indexOf(b)
   })
   const label = chainLabels[currentChainId] ?? `Chain ${currentChainId}`
 

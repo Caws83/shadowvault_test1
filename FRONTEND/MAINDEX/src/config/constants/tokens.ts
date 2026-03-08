@@ -26,6 +26,16 @@ const tokens = {
     decimals: 18,
     projectLink: 'https://www.binance.org',
   },
+  // Ethereum mainnet
+  wethEthereum: {
+    symbol: 'WETH',
+    name: 'Wrapped Ether',
+    address: {
+      1: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+    },
+    decimals: 18,
+    projectLink: 'https://ethereum.org',
+  },
   // Sepolia
   wethSepolia: {
     symbol: 'WETH',
@@ -88,8 +98,30 @@ const tokens = {
     },
     decimals: 18,
     projectLink: `${BASE_URL}`,
-  }
+  },
 
+  // ShadowVault / user-deployed token on tBNB (BSC Testnet)
+  svp: {
+    symbol: 'SVP',
+    name: 'ShadowVault Protocol',
+    address: {
+      97: '0x860585c7a8118D162BcF3F9CbAEd34f3AB5a7979',
+    },
+    decimals: 18,
+    projectLink: `${BASE_URL}`,
+  },
+}
+
+export const TESTNET_TOKENS_BY_CHAIN: Record<number, Array<{ address: string; symbol: string; name: string; decimals: number }>> = {
+  97: [
+    { address: '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd', symbol: 'WBNB', name: 'Wrapped BNB', decimals: 18 },
+    { address: '0x860585c7a8118D162BcF3F9CbAEd34f3AB5a7979', symbol: 'SVP', name: 'ShadowVault Protocol', decimals: 18 },
+    { address: '0x337610d27c682E347C9cD60BD4b3b107C9d34dDd', symbol: 'USDT', name: 'BSC Testnet USDT', decimals: 6 },
+  ],
+  11155111: [
+    { address: '0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14', symbol: 'WETH', name: 'Wrapped Ether', decimals: 18 },
+    { address: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', symbol: 'UNI', name: 'Uniswap', decimals: 18 },
+  ],
 }
 
 export default tokens

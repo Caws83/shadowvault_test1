@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from 'config/constants'
 import { useAllTokens } from 'hooks/Tokens'
 import { Dex } from 'config/constants/types'
-import { dexs, dexList } from 'config/constants/dex'
+import { dexs, dexList, defaultDex } from 'config/constants/dex'
 import { AppDispatch, AppState } from '../../index'
 import BigNumber from 'bignumber.js'
 import {
@@ -241,13 +241,16 @@ export function useGasTokenManager(): [boolean, (usePaymaster: boolean) => void,
 
 export function useUserDex(): [Dex, (newDex: Dex) => void] {
   const dispatch = useDispatch<AppDispatch>()
-  let userDex = useSelector<AppState, AppState['user']['dex']>((state) => state.user.dex)
-  if(userDex === undefined) {
-    dispatch(updateDex({ dex: dexs.forgeTest }))
+  const userDexFromState = useSelector<AppState, AppState['user']['dex']>((state) => state.user.dex)
+  // Never read .id when userDex is undefined (avoids crash on first load / blank Swap page)
+  const fallback = defaultDex
+  let userDex = userDexFromState ?? fallback
+  if (userDexFromState === undefined) {
+    dispatch(updateDex({ dex: fallback }))
   }
-  const actualUserDex = dexList.find((d) => d.id === userDex.id)
-  if (userDex === undefined || actualUserDex === undefined) {
-    userDex = dexs.forgeTest
+  const actualUserDex = dexList.find((d) => d.id === userDex.id && d.chainId === userDex.chainId) ?? dexList.find((d) => d.id === userDex.id)
+  if (actualUserDex === undefined) {
+    userDex = fallback
     dispatch(updateDex({ dex: userDex }))
   } else if (userDex !== actualUserDex) {
     userDex = actualUserDex
