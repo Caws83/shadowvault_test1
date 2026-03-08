@@ -17,14 +17,14 @@ const Trigger = styled.button`
   gap: 8px;
   padding: 10px 14px;
   background: ${({ theme }) => theme.colors.input};
-  border: 2px solid rgba(220, 20, 60, 0.4);
+  border: 1px solid rgba(230, 57, 70, 0.35);
   border-radius: 10px;
   cursor: pointer;
   color: ${({ theme }) => theme.colors.text};
   min-width: 120px;
 
   &:hover {
-    border-color: #9c4545;
+    border-color: rgba(230, 57, 70, 0.6);
   }
 `
 

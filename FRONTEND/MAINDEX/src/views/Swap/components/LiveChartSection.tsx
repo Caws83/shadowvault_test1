@@ -40,7 +40,7 @@ const ChartTab = styled.button<{ active?: boolean }>`
   color: ${({ active }) => (active ? '#fff' : 'rgba(255,255,255,0.5)')};
   font-size: 13px;
   cursor: pointer;
-  border-bottom: 2px solid ${({ active }) => (active ? '#9c4545' : 'transparent')};
+  border-bottom: 2px solid ${({ active }) => (active ? 'rgba(230, 57, 70, 0.6)' : 'transparent')};
   margin-bottom: -1px;
 `
 

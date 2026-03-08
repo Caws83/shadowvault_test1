@@ -146,7 +146,7 @@ export default function TradingViewChart({ symbol, height = '450px', searchable,
             onClick={handleSearch}
             style={{
               padding: '8px 14px',
-              background: '#9c4545',
+              background: '#E63946',
               border: 'none',
               borderRadius: '6px',
               color: '#fff',

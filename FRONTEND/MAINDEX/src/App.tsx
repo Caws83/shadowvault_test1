@@ -7,7 +7,6 @@ import { DatePickerPortal } from 'components/DatePicker'
 import GlobalStyle from './style/Global'
 import './style/global.css'
 import Menu from './components/Menu'
-import AIAgentsIframeWidget from './components/AIAgentsIframeWidget'
 import SuspenseWithChunkError from './components/SuspenseWithChunkError'
 import { ToastListener } from './contexts/ToastsContext'
 import PageLoader from './components/Loader/PageLoader'
@@ -138,7 +137,6 @@ const App: React.FC = () => {
         </Menu>
         <ToastListener />
         <DatePickerPortal />
-        <AIAgentsIframeWidget />
       </HashRouter>
     </>
   )

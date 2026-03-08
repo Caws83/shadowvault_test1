@@ -23,7 +23,7 @@ const Trigger = styled.button`
   min-width: 180px;
 
   &:hover {
-    border-color: #9c4545;
+    border-color: rgba(230, 57, 70, 0.5);
   }
 `
 
@@ -60,7 +60,7 @@ const Item = styled.button`
   font-size: 13px;
 
   &:hover {
-    background: rgba(156,69,69,0.15);
+    background: rgba(230, 57, 70, 0.12);
   }
 `
 

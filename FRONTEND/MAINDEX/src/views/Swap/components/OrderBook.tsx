@@ -6,9 +6,12 @@ const Wrap = styled.div`
   background: #141414;
   border-radius: 12px;
   border: 1px solid rgba(255,255,255,0.08);
-  min-height: 520px;
+  min-height: 400px;
+  height: 100%;
+  max-height: 640px;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 `
 
 const Tabs = styled.div`
@@ -24,25 +27,27 @@ const Tab = styled.button<{ active?: boolean }>`
   color: ${({ active }) => (active ? '#fff' : 'rgba(255,255,255,0.5)')};
   font-size: 13px;
   cursor: pointer;
-  border-bottom: 2px solid ${({ active }) => (active ? '#9c4545' : 'transparent')};
+  border-bottom: 2px solid ${({ active }) => (active ? 'rgba(230, 57, 70, 0.6)' : 'transparent')};
   margin-bottom: -1px;
 `
 
 const Header = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  padding: 8px 16px;
-  font-size: 12px;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
+  padding: 8px 12px;
+  font-size: 11px;
   color: rgba(255,255,255,0.5);
+  gap: 4px;
 `
 
 const Row = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  padding: 4px 16px;
-  font-size: 13px;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
+  padding: 4px 12px;
+  font-size: 12px;
   cursor: pointer;
   position: relative;
+  gap: 4px;
 
   &:hover {
     background: rgba(255,255,255,0.04);
@@ -149,8 +154,8 @@ export default function OrderBook({ midPrice, pairLabel }: OrderBookProps) {
       </Tabs>
 
       {activeTab === 'orderbook' && (
-        <>
-          <ObToolbar>
+        <Flex flexDirection="column" flex={1} minHeight={0} style={{ overflow: 'hidden' }}>
+          <ObToolbar style={{ flexShrink: 0 }}>
             <span style={{ color: 'rgba(255,255,255,0.5)', cursor: 'pointer' }} title="Settings">⚙</span>
             <span style={{ color: 'rgba(255,255,255,0.5)', cursor: 'pointer' }} title="Grid">⊞</span>
             <DepthSelect defaultValue="0.1">
@@ -159,12 +164,12 @@ export default function OrderBook({ midPrice, pairLabel }: OrderBookProps) {
               <option value="1">1</option>
             </DepthSelect>
           </ObToolbar>
-          <Header>
+          <Header style={{ flexShrink: 0 }}>
             <span>Price</span>
             <span style={{ textAlign: 'right' }}>Quantity ({pairLabel.split('/')[0] || 'BTC'})</span>
             <span style={{ textAlign: 'right' }}>Total ({pairLabel.split('/')[0] || 'BTC'})</span>
           </Header>
-          <div style={{ maxHeight: 220, overflow: 'auto' }}>
+          <div style={{ flex: 1, minHeight: 0, overflow: 'auto', maxHeight: 200 }}>
             {[...asks].reverse().map((a, i) => (
               <Row key={'a' + i}>
                 <DepthBar width={(parseFloat(a.total) / maxAsk) * 100} isAsk />
@@ -174,8 +179,8 @@ export default function OrderBook({ midPrice, pairLabel }: OrderBookProps) {
               </Row>
             ))}
           </div>
-          <MidPrice>{midPrice || '—'}</MidPrice>
-          <div style={{ maxHeight: 220, overflow: 'auto' }}>
+          <MidPrice style={{ flexShrink: 0 }}>{midPrice || '—'}</MidPrice>
+          <div style={{ flex: 1, minHeight: 0, overflow: 'auto', maxHeight: 200 }}>
             {bids.map((b, i) => (
               <Row key={'b' + i}>
                 <DepthBar width={(parseFloat(b.total) / maxBid) * 100} />
@@ -185,11 +190,11 @@ export default function OrderBook({ midPrice, pairLabel }: OrderBookProps) {
               </Row>
             ))}
           </div>
-          <DepthBarRow>
+          <DepthBarRow style={{ flexShrink: 0 }}>
             <DepthBarItem color="#00B42A">B {((maxBid / (maxBid + maxAsk)) * 100).toFixed(1)}%</DepthBarItem>
             <DepthBarItem color="#a55b5b">S {((maxAsk / (maxBid + maxAsk)) * 100).toFixed(1)}%</DepthBarItem>
           </DepthBarRow>
-        </>
+        </Flex>
       )}
 
       {activeTab === 'trades' && (

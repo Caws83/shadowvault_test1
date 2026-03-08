@@ -4,10 +4,10 @@ import { Flex, Text, Box } from 'uikit'
 import { LeverageMode } from 'features/ai-agent/types'
 
 const ModeCard = styled(Box)<{ active: boolean; mode: LeverageMode }>`
-  border: 2px solid ${({ active, mode }) => 
+  border: 1px solid ${({ active, mode }) => 
     active 
       ? mode === LeverageMode.PSYCHO 
-        ? '#9c4545' 
+        ? 'rgba(230, 57, 70, 0.6)' 
         : '#22c55e'
       : 'rgba(255,255,255,0.1)'};
   border-radius: 14px;
@@ -15,33 +15,30 @@ const ModeCard = styled(Box)<{ active: boolean; mode: LeverageMode }>`
   cursor: pointer;
   background: ${({ active, mode }) => 
     active && mode === LeverageMode.PSYCHO
-      ? 'linear-gradient(135deg, rgba(220, 20, 60, 0.2) 0%, rgba(139, 0, 0, 0.15) 100%)'
+      ? 'rgba(80, 40, 40, 0.25)'
       : active
-      ? 'linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.05) 100%)'
+      ? 'linear-gradient(135deg, rgba(34, 197, 94, 0.12) 0%, rgba(34, 197, 94, 0.04) 100%)'
       : 'rgba(0,0,0,0.3)'};
   transition: all 0.25s ease;
-  box-shadow: ${({ active }) => active ? '0 0 20px rgba(220, 20, 60, 0.25)' : 'none'};
   
   &:hover {
     border-color: ${({ mode }) => 
       mode === LeverageMode.PSYCHO 
-        ? '#9c4545' 
+        ? 'rgba(230, 57, 70, 0.7)' 
         : '#22c55e'};
     background: ${({ mode }) => 
       mode === LeverageMode.PSYCHO
-        ? 'rgba(220, 20, 60, 0.12)'
+        ? 'rgba(80, 40, 40, 0.2)'
         : 'rgba(34, 197, 94, 0.08)'};
-    box-shadow: 0 0 16px rgba(220, 20, 60, 0.2);
   }
 `
 
 const WarningBox = styled(Box)`
-  background: linear-gradient(135deg, rgba(220, 20, 60, 0.25) 0%, rgba(139, 0, 0, 0.2) 100%);
-  border: 2px solid #9c4545;
+  background: rgba(60, 30, 30, 0.35);
+  border: 1px solid rgba(230, 57, 70, 0.4);
   border-radius: 12px;
   padding: 16px;
   margin-top: 14px;
-  box-shadow: 0 0 16px rgba(220, 20, 60, 0.3);
 `
 
 interface LeverageModeSelectorProps {
@@ -86,10 +83,10 @@ const LeverageModeSelector: React.FC<LeverageModeSelectorProps> = ({
           onClick={() => onModeChange(LeverageMode.PSYCHO)}
           flex="1"
         >
-          <Text bold fontSize="18px" color="failure" mb="8px">
+          <Text bold fontSize="18px" style={{ color: 'rgba(220, 180, 180, 0.95)' }} mb="8px">
             Full Psycho Mode
           </Text>
-          <Text fontSize="15px" color="failure" mb="10px" bold>
+          <Text fontSize="15px" style={{ color: 'rgba(220, 180, 180, 0.9)' }} mb="10px" bold>
             Up to 100x Leverage
           </Text>
           <Text fontSize="13px" color="textSubtle">
@@ -103,7 +100,7 @@ const LeverageModeSelector: React.FC<LeverageModeSelectorProps> = ({
 
       {selectedMode === LeverageMode.PSYCHO && (
         <WarningBox>
-          <Text bold fontSize="14px" color="failure" mb="4px">
+          <Text bold fontSize="14px" style={{ color: 'rgba(220, 180, 180, 0.95)' }} mb="4px">
             ⚠️ EXTREME RISK WARNING
           </Text>
           <Text fontSize="12px" color="text">

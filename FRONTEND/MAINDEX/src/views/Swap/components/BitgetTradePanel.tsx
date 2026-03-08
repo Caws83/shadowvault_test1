@@ -27,7 +27,7 @@ const Tab = styled.button<{ active?: boolean }>`
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  border-bottom: 2px solid ${({ active }) => (active ? '#9c4545' : 'transparent')};
+  border-bottom: 2px solid ${({ active }) => (active ? 'rgba(230, 57, 70, 0.6)' : 'transparent')};
   margin-bottom: -1px;
 `
 
@@ -46,15 +46,15 @@ const Row = styled.div`
 const Btn = styled.button<{ active?: boolean }>`
   padding: 8px 16px;
   border-radius: 6px;
-  border: 1px solid ${({ active }) => (active ? '#9c4545' : 'rgba(255,255,255,0.2)')};
-  background: ${({ active }) => (active ? 'rgba(156,69,69,0.2)' : 'transparent')};
+  border: 1px solid ${({ active }) => (active ? 'rgba(230, 57, 70, 0.5)' : 'rgba(255,255,255,0.2)')};
+  background: ${({ active }) => (active ? 'rgba(230, 57, 70, 0.1)' : 'transparent')};
   color: ${({ theme }) => theme.colors.text};
   font-size: 13px;
   cursor: pointer;
 
   &:hover {
-    border-color: #9c4545;
-    background: rgba(156,69,69,0.1);
+    border-color: rgba(230, 57, 70, 0.5);
+    background: rgba(230, 57, 70, 0.08);
   }
 `
 
@@ -118,7 +118,7 @@ const QtySlider = styled.input`
     width: 14px;
     height: 14px;
     border-radius: 50%;
-    background: #9c4545;
+    background: rgba(198, 48, 48, 0.95);
     cursor: pointer;
   }
 `
@@ -199,9 +199,9 @@ const ActionBtn = styled.button<{ variant: 'long' | 'short'; disabled?: boolean 
     &:hover:not(:disabled) { background: #00d632; }
   `
       : `
-    background: #9c4545;
-    color: #fff;
-    &:hover:not(:disabled) { background: #b35454; }
+    background: rgba(100, 50, 50, 0.9);
+    color: rgba(255, 255, 255, 0.95);
+    &:hover:not(:disabled) { background: rgba(120, 60, 60, 0.95); }
   `}
 `
 
@@ -379,7 +379,7 @@ export default function BitgetTradePanel({
         <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>
           <div style={{ marginBottom: 4 }}>Maintenance margin rate (MMR) 0.00%</div>
           <div style={{ marginBottom: 4 }}>Maintenance margin 0.00</div>
-          <div><a href="#" style={{ color: '#9c4545' }}>Position tier guide</a> <span style={{ marginLeft: 4 }}>More</span></div>
+          <div><a href="#" style={{ color: 'rgba(230, 57, 70, 0.95)' }}>Position tier guide</a> <span style={{ marginLeft: 4 }}>More</span></div>
         </div>
       </Section>
 

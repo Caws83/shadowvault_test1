@@ -91,17 +91,17 @@ const AnimatedBorderBox = styled.div`
   position: relative;
   border-radius: 24px;
   padding: 4px;
-  background: linear-gradient(90deg, #000000, #9c4545, #6e2828, #9c4545, #000000);
+  background: linear-gradient(90deg, #1a1a1a, rgba(80, 45, 45, 0.6), #1a1a1a);
   background-size: 200% 100%;
-  animation: gradient 4s linear infinite;
-  box-shadow: 0 0 20px rgba(156, 69, 69, 0.25);
+  animation: gradient 6s ease-in-out infinite;
+  border: 1px solid rgba(255, 255, 255, 0.06);
 
   @keyframes gradient {
-    0% {
+    0%, 100% {
       background-position: 0% 50%;
     }
-    100% {
-      background-position: 200% 50%;
+    50% {
+      background-position: 100% 50%;
     }
   }
 `
@@ -136,8 +136,12 @@ const ChartPane = styled.div`
 `
 
 const OrderBookPane = styled.div`
-  width: 300px;
-  min-width: 260px;
+  width: 320px;
+  min-width: 280px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 
   @media (max-width: 1200px) {
     width: 100%;
@@ -201,11 +205,35 @@ const HeaderRow = styled.div`
 
 const FeeBadge = styled.span`
   padding: 8px 14px;
-  background: rgba(156, 69, 69, 0.15);
+  background: rgba(230, 57, 70, 0.12);
   border-radius: 8px;
   font-size: 13px;
-  color: #9c4545;
+  color: ${({ theme }) => theme.colors.primary};
   white-space: nowrap;
+`
+
+const SwapBranding = styled.div`
+  margin-bottom: 16px;
+  padding: 12px 0 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+`
+
+const SwapBrandTitle = styled.div`
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.02em;
+  margin-bottom: 4px;
+`
+
+const SwapTagline = styled.div`
+  font-size: 13px;
+  color: rgba(255,255,255,0.75);
+`
+
+const SpanRed = styled.span`
+  color: ${({ theme }) => theme.colors.primary};
+  font-weight: 600;
 `
 
 export default function Swap () {
@@ -690,6 +718,10 @@ export default function Swap () {
   return (
     <Page>
       <SwapBody>
+        <SwapBranding>
+          <SwapBrandTitle>ShadowVault Protocol</SwapBrandTitle>
+          <SwapTagline>Trade in <SpanRed>Shadows.</SpanRed> Leverage Fearlessly</SwapTagline>
+        </SwapBranding>
         <HeaderRow>
           <ChainSelector currentChainId={localDex.chainId} onChainChange={handleChainSelect} />
           <PMTokenSelector />
@@ -782,7 +814,7 @@ export default function Swap () {
               <AutoColumn justify='center'>
                 <AutoRow justify='center' style={{}} mb='0rem'>
                   <ArrowWrapper clickable>
-                    <MdSwapVerticalCircle size={32} color="#9c4545" style={{ cursor: 'pointer' }} onClick={() => {
+                    <MdSwapVerticalCircle size={32} color="#E63946" style={{ cursor: 'pointer' }} onClick={() => {
                       onSwitchTokens()
                     }} />
                   </ArrowWrapper>

@@ -1,10 +1,12 @@
 import { Colors } from './types'
 
+// ShadowVault Protocol — Trade in Shadows. Leverage Fearlessly
+// Whitepaper: dark background, vibrant red accents, white text
 export const baseColors = {
-  primary: '#DC143C', // Crimson red - Sith Lord aesthetic
-  success: '#00FF41', // Bright green for success
-  warning: '#FF6B00', // Orange-red warning
-  failure: '#DC143C', // Crimson red for failures
+  primary: '#E63946',   // Vibrant red (SVP accent)
+  success: '#00B42A',   // Green for success / Long
+  warning: '#F59E0B',   // Amber warning
+  failure: '#C53030',   // Muted red for risk/short
 }
 
 export const additionalColors = {
@@ -14,50 +16,50 @@ export const additionalColors = {
   silver: '#B2B2B2',
   bronze: '#E7974D',
 }
-// 41d1ff
+
 export const lightColors: Colors = {
   ...baseColors,
   ...additionalColors,
-  secondary: '#DC143C', // Crimson red accent
-  background:  '#000000', // Pure black background
-  backgroundAlt: '#0A0A0A', // Slightly lighter black
-  backgroundAlt2: '#1A0000', // Dark red-tinted black
-  cardBorder: '#DC143C', // Red borders with glow effect
+  secondary: '#E63946',
+  background: '#0A0A0A',
+  backgroundAlt: '#111111',
+  backgroundAlt2: '#1A1A1A',
+  cardBorder: 'rgba(230, 57, 70, 0.25)',
   contrast: '#FFFFFF',
-  dropdown:  '#0A0A0A', // Dark dropdown
+  dropdown: '#111111',
   invertedContrast: '#1A1A1A',
-  input: '#1A0000', // Dark red-tinted input
-  tertiary: '#4A0000', // Dark red tertiary
-  text: '#FFFFFF', // White text
-  textDisabled: '#4A0000',
-  textSubtle: '#DC143C', // Red subtle text
-  disabled: '#2A0000',
+  input: '#141414',
+  tertiary: '#262626',
+  text: '#FFFFFF',
+  textDisabled: 'rgba(255,255,255,0.35)',
+  textSubtle: 'rgba(255,255,255,0.65)',
+  disabled: '#262626',
   gradients: {
-    cardHeader: 'linear-gradient(135deg, #DC143C 0%, #8B0000 100%)', // Red gradient
-    gold: 'linear-gradient(180deg, #DC143C 7%, #8B0000 100%)',
+    cardHeader: 'linear-gradient(135deg, rgba(230, 57, 70, 0.2) 0%, rgba(139, 0, 0, 0.15) 100%)',
+    gold: 'linear-gradient(180deg, #E63946 7%, #8B0000 100%)',
   },
 }
 
 export const darkColors: Colors = {
   ...baseColors,
   ...additionalColors,
-  secondary: '#DC143C', // Crimson red accent
-  background:  '#000000', // Pure black background
-  backgroundAlt: '#0A0A0A', // Slightly lighter black
-  backgroundAlt2: '#1A0000', // Dark red-tinted black
-  cardBorder: '#DC143C', // Red borders with glow effect
+  secondary: '#E63946',
+  background: '#0A0A0A',
+  backgroundAlt: '#111111',
+  backgroundAlt2: '#1A1A1A',
+  cardBorder: 'rgba(230, 57, 70, 0.25)',
   contrast: '#FFFFFF',
-  dropdown:  '#0A0A0A', // Dark dropdown
+  dropdown: '#111111',
   invertedContrast: '#1A1A1A',
-  input: '#1A0000', // Dark red-tinted input
-  tertiary: '#4A0000', // Dark red tertiary
-  text: '#FFFFFF', // White text
-  textDisabled: '#4A0000',
-  textSubtle: '#DC143C', // Red subtle text
-  disabled: '#2A0000',
+  input: '#141414',
+  tertiary: '#262626',
+  text: '#FFFFFF',
+  textDisabled: 'rgba(255,255,255,0.35)',
+  textSubtle: 'rgba(255,255,255,0.65)',
+  disabled: '#262626',
   gradients: {
-    cardHeader: 'linear-gradient(135deg, #DC143C 0%, #8B0000 100%)', // Red gradient
-    gold: 'linear-gradient(180deg, #DC143C 7%, #8B0000 100%)',
+    cardHeader: 'linear-gradient(135deg, rgba(230, 57, 70, 0.2) 0%, rgba(139, 0, 0, 0.15) 100%)',
+    gold: 'linear-gradient(180deg, #E63946 7%, #8B0000 100%)',
   },
 }
 
