@@ -4,6 +4,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Flex, Text, Button } from 'uikit'
+import type { MarginPosition } from 'hooks/useMarginContract'
 
 const Panel = styled.div`
   background-color: #121316;
@@ -224,6 +225,48 @@ const ActionBtn = styled.button<{ variant: 'long' | 'short'; disabled?: boolean 
   `}
 `
 
+const PositionsWrap = styled.div`
+  margin-top: 12px;
+`
+const PositionsTitle = styled.div`
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.9);
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+`
+const PositionRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  font-size: 12px;
+  gap: 8px;
+`
+const PositionCol = styled.span<{ type?: 'long' | 'short' }>`
+  color: ${({ type }) => (type === 'long' ? '#00B42A' : type === 'short' ? 'rgba(230, 57, 70, 0.95)' : 'rgba(255,255,255,0.8)')};
+`
+const CloseBtn = styled.button`
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: 1px solid rgba(230, 57, 70, 0.5);
+  background: rgba(230, 57, 70, 0.15);
+  color: rgba(255, 255, 255, 0.95);
+  cursor: pointer;
+  white-space: nowrap;
+  &:hover:not(:disabled) {
+    background: rgba(230, 57, 70, 0.3);
+  }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`
+
 const LEVERAGE_OPTIONS = [2, 5, 10, 20, 50, 100]
 
 interface BitgetTradePanelProps {
@@ -257,6 +300,11 @@ interface BitgetTradePanelProps {
   pmTokenSelector?: React.ReactNode
   feeBadge?: React.ReactNode
   leverageModeSelector?: React.ReactNode
+  positions?: MarginPosition[]
+  onClosePosition?: (positionId: number) => void
+  isClosePending?: boolean
+  positionsLoading?: boolean
+  nativeSymbol?: string
 }
 
 export default function BitgetTradePanel({
@@ -290,8 +338,19 @@ export default function BitgetTradePanel({
   pmTokenSelector,
   feeBadge,
   leverageModeSelector,
+  positions = [],
+  onClosePosition,
+  isClosePending = false,
+  positionsLoading = false,
+  nativeSymbol = 'BNB',
 }: BitgetTradePanelProps) {
   const [activeTab, setActiveTab] = useState<'swap' | 'margin' | 'bots'>('margin')
+
+  const formatCollateral = (wei: bigint) => {
+    const str = wei.toString()
+    if (str.length <= 18) return `0.${str.padStart(18, '0').slice(-18).replace(/0+$/, '') || '0'}`
+    return `${str.slice(0, -18)}.${str.slice(-18).slice(0, 6)}`
+  }
 
   return (
     <Panel>
@@ -444,6 +503,32 @@ export default function BitgetTradePanel({
                 <div style={{ marginBottom: 4 }}>Maintenance margin 0.00</div>
                 <div><a href="#" style={{ color: 'rgba(230, 57, 70, 0.95)' }}>Position tier guide</a> <span style={{ marginLeft: 4 }}>More</span></div>
               </div>
+            </Section>
+
+            <Section style={{ borderBottom: 'none' }}>
+              <PositionsTitle>Positions ({positions.length})</PositionsTitle>
+              {positionsLoading ? (
+                <Text fontSize="12px" color="textSubtle">Loading positions...</Text>
+              ) : positions.length === 0 ? (
+                <Text fontSize="12px" color="textSubtle">No open positions</Text>
+              ) : (
+                <PositionsWrap>
+                  {positions.map((p) => (
+                    <PositionRow key={p.id}>
+                      <PositionCol type={p.isLong ? 'long' : 'short'}>{p.isLong ? 'Long' : 'Short'}</PositionCol>
+                      <PositionCol>{formatCollateral(p.collateral)} {nativeSymbol}</PositionCol>
+                      <PositionCol>{p.leverage}x</PositionCol>
+                      <CloseBtn
+                        type="button"
+                        disabled={isClosePending}
+                        onClick={() => onClosePosition?.(p.id)}
+                      >
+                        {isClosePending ? 'Closing…' : 'Close'}
+                      </CloseBtn>
+                    </PositionRow>
+                  ))}
+                </PositionsWrap>
+              )}
             </Section>
           </>
         )}

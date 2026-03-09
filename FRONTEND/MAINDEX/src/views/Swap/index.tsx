@@ -59,7 +59,7 @@ import PairSelectorDropdown from './components/PairSelectorDropdown'
 import { LeverageMode } from 'features/ai-agent/types'
 import CopyAddress from 'components/Menu/UserMenu/CopyAddress'
 import useToast from 'hooks/useToast'
-import { useMarginOpen, getMarginVaultAddress } from 'hooks/useMarginContract'
+import { useMarginOpen, useUserPositions } from 'hooks/useMarginContract'
 
 const Label = styled(Text)`
   font-size: 14px;
@@ -410,7 +410,9 @@ export default function Swap () {
   const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
-  const { openLong: marginOpenLong, openShort: marginOpenShort, isPending: marginPending, error: marginError, isSupported: marginSupported } = useMarginOpen(localDex.chainId)
+  const { openLong: marginOpenLong, openShort: marginOpenShort, closePosition: marginClosePosition, isPending: marginPending, error: marginError, isSupported: marginSupported } = useMarginOpen(localDex.chainId)
+  const [positionsRefetchTick, setPositionsRefetchTick] = useState(0)
+  const { positions, isLoading: positionsLoading, refetch: refetchPositions } = useUserPositions(localDex.chainId, account ?? undefined, positionsRefetchTick)
   const isNativeInput = !!(currencies[Field.INPUT] && !(currencies[Field.INPUT] instanceof Token))
   const marginCollateralWei = isNativeInput && parsedAmounts[Field.INPUT]?.greaterThan(JSBI.BigInt(0))
     ? BigInt(parsedAmounts[Field.INPUT].raw.toString())
@@ -729,6 +731,7 @@ export default function Swap () {
               try {
                 await marginOpenLong(marginCollateralWei, leverage)
                 toastInfo(t('Open Long'), t('Position opened successfully'))
+                setPositionsRefetchTick((t) => t + 1)
               } catch (e) {
                 toastInfo(t('Error'), marginError ?? (e as Error)?.message)
               }
@@ -754,6 +757,7 @@ export default function Swap () {
               try {
                 await marginOpenShort(marginCollateralWei, leverage)
                 toastInfo(t('Open Short'), t('Position opened successfully'))
+                setPositionsRefetchTick((t) => t + 1)
               } catch (e) {
                 toastInfo(t('Error'), marginError ?? (e as Error)?.message)
               }
@@ -800,6 +804,19 @@ export default function Swap () {
               <LeverageModeSelector selectedMode={leverageMode} onModeChange={setLeverageMode} />
             </div>
           }
+          positions={positions}
+          positionsLoading={positionsLoading}
+          isClosePending={marginPending}
+          nativeSymbol={publicClient?.chain?.nativeCurrency?.symbol ?? 'BNB'}
+          onClosePosition={marginSupported ? async (positionId) => {
+            try {
+              await marginClosePosition(positionId)
+              toastInfo(t('Close'), t('Position closed'))
+              setPositionsRefetchTick((t) => t + 1)
+            } catch (e) {
+              toastInfo(t('Error'), marginError ?? (e as Error)?.message)
+            }
+          } : undefined}
         >
           <Wrapper style={{ padding: '16px' }}>
             <AutoColumn>
