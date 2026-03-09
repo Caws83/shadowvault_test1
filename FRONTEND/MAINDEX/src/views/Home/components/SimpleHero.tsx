@@ -36,7 +36,7 @@ const SimpleHero: React.FC = () => {
             maxWidth: '600px',
             marginBottom: '20px'
           }}>
-            Trade in Shadows. Leverage Fearless. Privacy-centric DEX with AI-driven leverage trading.
+            Trade in Shadows. Leverage Fearlessly. Privacy-centric DEX with AI-driven leverage trading.
           </p>
           <div style={{ marginTop: '20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px', color: '#dadad2' }}>

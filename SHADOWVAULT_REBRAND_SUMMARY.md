@@ -8,7 +8,7 @@ Successfully rebranded and upgraded the DEX platform from MARSWAP/Farmageddon to
 ### 1. Branding & Naming ✅
 - **Package name**: `farmageddon-frontend` → `shadowvault-protocol-frontend`
 - **App name**: "MARSWAP" → "ShadowVault Protocol"
-- **Tagline**: "Trade in Shadows. Leverage Fearless."
+- **Tagline**: "Trade in Shadows. Leverage Fearlessly."
 - **Meta tags**: Updated all SEO and social media meta tags
 - **Manifest**: Updated PWA manifest with new branding
 - **Theme color**: Changed from `#1FC7D4` (cyan) to `#DC143C` (crimson red)

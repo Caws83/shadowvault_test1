@@ -31,7 +31,7 @@ All blue colors replaced with red (#DC143C / rgb(220, 20, 60)):
 
 ### 4. Homepage Hero ✅
 - **Title**: "Launch Tokens with AI" → "ShadowVault Protocol"
-- **Subtitle**: Updated to "Trade in Shadows. Leverage Fearless."
+- **Subtitle**: Updated to "Trade in Shadows. Leverage Fearlessly."
 - **Features**: Updated to reflect three pillars:
   - Zero-Knowledge Privacy
   - Uniswap Liquidity

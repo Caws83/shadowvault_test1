@@ -56,7 +56,7 @@ Navigate to the URL shown in your terminal (usually `http://localhost:5173`)
 ## What You Should See
 
 1. **Homepage** with:
-   - New "Trade in Shadows. Leverage Fearless." tagline
+   - New "Trade in Shadows. Leverage Fearlessly." tagline
    - Three Pillars section (Privacy, Uniswap Liquidity, AI Agent)
    - Dark red/black theme
 

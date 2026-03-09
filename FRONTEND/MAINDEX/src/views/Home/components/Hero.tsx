@@ -51,7 +51,7 @@ const Hero = () => {
             <img src="/images/home/logoWithText.svg" alt="Desktop Logo" className="desktop-icon" style={{ width: `240px` }} />
 
             <Text style={{ textShadow: '0 0 10px #DC143C, 3px 3px 6px black' }} fontSize={isMobile ? "28px" : "32px"} color="text" mb="18px" bold>
-              Trade in Shadows. Leverage Fearless.
+              Trade in Shadows. Leverage Fearlessly.
             </Text>
 
             <Text style={{ textShadow: '0 0 8px #DC143C, 3px 3px 6px black' }} fontSize={isMobile ? "24px" : "28px"} color="secondary" mb="18px">

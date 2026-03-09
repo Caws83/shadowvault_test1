@@ -1,6 +1,6 @@
 import { Colors } from './types'
 
-// ShadowVault Protocol — Trade in Shadows. Leverage Fearlessly
+// ShadowVault Protocol — Trade in Shadows. Leverage Fearlesslyly
 // Whitepaper: dark background, vibrant red accents, white text
 export const baseColors = {
   primary: '#E63946',   // Vibrant red (SVP accent)

@@ -1,6 +1,6 @@
 # ShadowVault Protocol
 
-**Trade in Shadows. Leverage Fearless.**
+**Trade in Shadows. Leverage Fearlessly.**
 
 A privacy-centric decentralized exchange (DEX) with AI-driven leverage trading, zero-knowledge privacy, and Uniswap liquidity integration.
 

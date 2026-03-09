@@ -180,7 +180,7 @@ const ThreePillars: React.FC = () => {
         maxWidth="800px"
         style={{ fontStyle: 'italic' }}
       >
-        "Trade in Shadows. Leverage Fearless."
+        "Trade in Shadows. Leverage Fearlessly."
       </Text>
     </Flex>
   )

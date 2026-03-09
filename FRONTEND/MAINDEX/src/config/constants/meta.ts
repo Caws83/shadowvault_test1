@@ -3,7 +3,7 @@ import { PageMeta } from './types'
 
 export const DEFAULT_META: PageMeta = {
   title: 'ShadowVault Protocol',
-  description: 'Trade in Shadows. Leverage Fearless. Privacy-centric DEX with AI-driven leverage trading, zero-knowledge privacy, and Uniswap liquidity.',
+  description: 'Trade in Shadows. Leverage Fearlessly. Privacy-centric DEX with AI-driven leverage trading, zero-knowledge privacy, and Uniswap liquidity.',
   image: 'https://shadowvault.protocol/images/hero.png',
 }
 

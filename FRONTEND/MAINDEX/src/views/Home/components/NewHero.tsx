@@ -194,7 +194,7 @@ const Hero = () => {
           </MainTitle>
           
           <SubTitle>
-            Trade in Shadows. Leverage Fearless.<br />
+            Trade in Shadows. Leverage Fearlessly.<br />
             Privacy-centric DEX with AI-driven trading.
           </SubTitle>
 
