@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
+@import url('./fogMist.css');
 
 body {
   font-family: 'Manrope', sans-serif;
@@ -164,20 +165,20 @@ w3m-button button:active {
   gap: 8px;
   padding: 8px 12px;
   border-radius: 20px;
-  background: rgba(220, 20, 60, 0.1);
-  border: 1px solid rgba(220, 20, 60, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .ai-chat-button:hover {
-  background: rgba(220, 20, 60, 0.2);
+  background: rgba(255, 255, 255, 0.1);
   transform: translateY(-1px);
 }
 
 .ai-chat-label {
   font-size: 14px;
-  color: #DC143C;
+  color: #dadad2;
   font-weight: 500;
 }
 

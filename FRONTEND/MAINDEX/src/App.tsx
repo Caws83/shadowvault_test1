@@ -11,6 +11,10 @@ import SuspenseWithChunkError from './components/SuspenseWithChunkError'
 import { ToastListener } from './contexts/ToastsContext'
 import PageLoader from './components/Loader/PageLoader'
 import styled from 'styled-components'
+import { GlowBackground } from './components/GlowBackground'
+import { FogMist } from './components/FogMist'
+import { SmokeBackground } from './components/SmokeBackground'
+
 // import { isMobile } from 'components/isMobile'
 import {
   RedirectDuplicateTokenIds,
@@ -73,7 +77,13 @@ const App: React.FC = () => {
 
   return (
     <>
-      <HashRouter>
+      <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
+        <GlowBackground />
+        <SmokeBackground />
+        <FogMist />
+      </div>
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <HashRouter>
         <ResetCSS />
         <GlobalStyle />
         <Menu>
@@ -138,6 +148,7 @@ const App: React.FC = () => {
         <ToastListener />
         <DatePickerPortal />
       </HashRouter>
+      </div>
     </>
   )
 }

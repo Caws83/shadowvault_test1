@@ -1,44 +1,40 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Flex, Text, Box } from 'uikit'
+import { Flex, Text, Box, HelpIcon, useTooltip } from 'uikit'
 import { LeverageMode } from 'features/ai-agent/types'
 
-const ModeCard = styled(Box)<{ active: boolean; mode: LeverageMode }>`
-  border: 1px solid ${({ active, mode }) => 
+const ModeCard = styled(Box)<{ active: boolean }>`
+  position: relative;
+  border: 1px solid ${({ active }) => 
     active 
-      ? mode === LeverageMode.PSYCHO 
-        ? 'rgba(230, 57, 70, 0.6)' 
-        : '#22c55e'
-      : 'rgba(255,255,255,0.1)'};
-  border-radius: 14px;
-  padding: 18px;
+      ? 'rgba(230, 57, 70, 0.6)' 
+      : 'rgba(255,255,255,0.05)'};
+  border-radius: 8px;
+  padding: 12px;
   cursor: pointer;
-  background: ${({ active, mode }) => 
-    active && mode === LeverageMode.PSYCHO
-      ? 'rgba(80, 40, 40, 0.25)'
-      : active
-      ? 'linear-gradient(135deg, rgba(34, 197, 94, 0.12) 0%, rgba(34, 197, 94, 0.04) 100%)'
-      : 'rgba(0,0,0,0.3)'};
-  transition: all 0.25s ease;
+  background: ${({ active }) => 
+    active 
+      ? 'linear-gradient(180deg, rgba(230, 57, 70, 0.08) 0%, rgba(230, 57, 70, 0.02) 100%)'
+      : 'rgba(30, 31, 34, 0.4)'};
+  transition: all 0.3s ease;
+  overflow: hidden;
   
   &:hover {
-    border-color: ${({ mode }) => 
-      mode === LeverageMode.PSYCHO 
-        ? 'rgba(230, 57, 70, 0.7)' 
-        : '#22c55e'};
-    background: ${({ mode }) => 
-      mode === LeverageMode.PSYCHO
-        ? 'rgba(80, 40, 40, 0.2)'
-        : 'rgba(34, 197, 94, 0.08)'};
+    border-color: ${({ active }) => 
+      active ? 'rgba(230, 57, 70, 0.8)' : 'rgba(255,255,255,0.1)'};
+    background: ${({ active }) => 
+      active 
+        ? 'linear-gradient(180deg, rgba(230, 57, 70, 0.1) 0%, rgba(230, 57, 70, 0.04) 100%)'
+        : 'rgba(30, 31, 34, 0.6)'};
   }
 `
 
 const WarningBox = styled(Box)`
-  background: rgba(60, 30, 30, 0.35);
-  border: 1px solid rgba(230, 57, 70, 0.4);
-  border-radius: 12px;
-  padding: 16px;
-  margin-top: 14px;
+  background: rgba(230, 57, 70, 0.08);
+  border-left: 3px solid rgba(230, 57, 70, 0.6);
+  border-radius: 4px 12px 12px 4px;
+  padding: 12px 16px;
+  margin-top: 12px;
 `
 
 interface LeverageModeSelectorProps {
@@ -50,63 +46,65 @@ const LeverageModeSelector: React.FC<LeverageModeSelectorProps> = ({
   selectedMode,
   onModeChange,
 }) => {
+  const { targetRef: safeRef, tooltip: safeTooltip, tooltipVisible: safeVisible } = useTooltip(
+    "Automated stop-losses and conservative sizing. Ideal for beginners.",
+    { placement: 'bottom' }
+  )
+
+  const { targetRef: psychoRef, tooltip: psychoTooltip, tooltipVisible: psychoVisible } = useTooltip(
+    "Maximum leverage potential. High risk, high reward. Minimal safeguards.",
+    { placement: 'bottom' }
+  )
+
   return (
-    <Flex flexDirection="column" gap="18px">
-      <Text bold fontSize="20px" color="text">
-        Select Leverage Mode
-      </Text>
-      
-      <Flex gap="14px" flexDirection={['column', 'row']}>
+    <Flex flexDirection="column">
+      <Flex gap="12px" flexDirection={['column', 'row']}>
         <ModeCard
           active={selectedMode === LeverageMode.SAFE}
-          mode={LeverageMode.SAFE}
           onClick={() => onModeChange(LeverageMode.SAFE)}
           flex="1"
         >
-          <Text bold fontSize="18px" color="success" mb="8px">
-            Safe Mode
-          </Text>
-          <Text fontSize="15px" color="text" mb="10px" bold>
-            5-10x Leverage
-          </Text>
-          <Text fontSize="13px" color="textSubtle">
-            • Automated stop-loss protection<br/>
-            • Volatility-adjusted position sizing<br/>
-            • Conservative risk management<br/>
-            • Recommended for beginners
+          <Flex alignItems="center" mb="4px">
+            <Text bold fontSize="12px" color={selectedMode === LeverageMode.SAFE ? "#E11D2E" : "textSubtle"} style={{ textTransform: 'uppercase', letterSpacing: '0.05em', marginRight: '6px' }}>
+              Safe Mode
+            </Text>
+            <div ref={safeRef} style={{ display: 'flex' }}>
+              <HelpIcon color="textSubtle" width="14px" />
+            </div>
+            {safeVisible && safeTooltip}
+          </Flex>
+          <Text fontSize="16px" color="text" bold>
+            5-10x
           </Text>
         </ModeCard>
 
         <ModeCard
           active={selectedMode === LeverageMode.PSYCHO}
-          mode={LeverageMode.PSYCHO}
           onClick={() => onModeChange(LeverageMode.PSYCHO)}
           flex="1"
         >
-          <Text bold fontSize="18px" style={{ color: 'rgba(220, 180, 180, 0.95)' }} mb="8px">
-            Full Psycho Mode
-          </Text>
-          <Text fontSize="15px" style={{ color: 'rgba(220, 180, 180, 0.9)' }} mb="10px" bold>
-            Up to 100x Leverage
-          </Text>
-          <Text fontSize="13px" color="textSubtle">
-            • Maximum leverage potential<br/>
-            • High-risk, high-reward<br/>
-            • Minimal safeguards<br/>
-            • ⚠️ Can liquidate on 1% moves
+          <Flex alignItems="center" mb="4px">
+            <Text bold fontSize="12px" style={{ color: selectedMode === LeverageMode.PSYCHO ? '#E11D2E' : 'rgba(255,255,255,0.5)', textTransform: 'uppercase', letterSpacing: '0.05em', marginRight: '6px' }}>
+              Psycho Mode
+            </Text>
+            <div ref={psychoRef} style={{ display: 'flex' }}>
+              <HelpIcon color="textSubtle" width="14px" />
+            </div>
+            {psychoVisible && psychoTooltip}
+          </Flex>
+          <Text fontSize="16px" color="text" bold>
+            Up to 100x
           </Text>
         </ModeCard>
       </Flex>
 
       {selectedMode === LeverageMode.PSYCHO && (
         <WarningBox>
-          <Text bold fontSize="14px" style={{ color: 'rgba(220, 180, 180, 0.95)' }} mb="4px">
-            ⚠️ EXTREME RISK WARNING
+          <Text bold fontSize="13px" style={{ color: '#E11D2E' }} mb="4px">
+            ⚠️ EXTREME RISK
           </Text>
-          <Text fontSize="12px" color="text">
-            Full Psycho Mode enables up to 100x leverage. This can lead to TOTAL LOSS very quickly. 
-            A 1% adverse price move can liquidate your position. Only use funds you can afford to lose completely.
-            Proceed at your own peril.
+          <Text fontSize="12px" color="textSubtle" style={{ lineHeight: '1.5' }}>
+            100x leverage can lead to rapid total loss. A 1% adverse price move will liquidate your position.
           </Text>
         </WarningBox>
       )}

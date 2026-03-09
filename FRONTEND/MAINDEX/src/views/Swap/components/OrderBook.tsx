@@ -3,12 +3,10 @@ import styled from 'styled-components'
 import { Flex, Text } from 'uikit'
 
 const Wrap = styled.div`
-  background: #141414;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.08);
-  min-height: 400px;
+  background-color: #121316;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
   height: 100%;
-  max-height: 640px;
   display: flex;
   flex-direction: column;
   overflow: hidden;

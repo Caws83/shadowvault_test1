@@ -20,7 +20,7 @@ const MenuItems: React.FC<MenuItemsProps> = ({ items = [], activeItem, activeSub
             className={label === 'AI Agents' ? 'shadowVaultMenu' : ''}
           >
             <MenuItem href={href} isActive={isActive} statusColor={statusColor}>
-              {label || <IconComponent iconName={icon} color={isActive ? 'secondary' : 'textSubtle'} />}
+              {label || <IconComponent iconName={icon} color={isActive ? 'text' : 'textSubtle'} />}
             </MenuItem>
           </DropdownMenu>
         )

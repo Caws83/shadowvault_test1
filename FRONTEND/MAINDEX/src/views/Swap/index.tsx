@@ -109,35 +109,31 @@ const AnimatedBorderBox = styled.div`
 const SwapPageLayout = styled.div`
   display: flex;
   width: 100%;
-  max-width: 1600px;
-  gap: 12px;
-  min-height: 640px;
+  gap: 8px;
+  height: calc(100vh - 120px);
+  min-height: 600px;
   flex-direction: row;
-  flex-wrap: wrap;
+  align-items: stretch;
 
   @media (max-width: 1200px) {
     flex-direction: column;
+    height: auto;
   }
 `
 
 const ChartPane = styled.div`
   flex: 1;
-  min-width: 500px;
-  background: #0d0d0d;
-  border-radius: 12px;
-  padding: 16px;
+  min-width: 0;
+  background-color: #121316;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-
-  @media (max-width: 968px) {
-    min-width: 100%;
-    min-height: 400px;
-  }
 `
 
 const OrderBookPane = styled.div`
-  width: 320px;
-  min-width: 280px;
+  width: 300px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -150,10 +146,12 @@ const OrderBookPane = styled.div`
 `
 
 const TradePane = styled.div`
-  width: 380px;
-  min-width: 340px;
+  width: 340px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
 
-  @media (max-width: 968px) {
+  @media (max-width: 1200px) {
     width: 100%;
     min-width: 100%;
   }
@@ -167,40 +165,11 @@ const ChartSection = styled.div`
   flex-direction: column;
 `
 
-const ChartHeader = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 10px 0;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: ${({ theme }) => theme.colors.text};
-  font-size: 14px;
-`
-
 const SwapBody = styled.div`
   width: 100%;
-  max-width: 1400px;
+  max-width: 100%;
   z-index: 1;
   background: transparent;
-  overflow: hidden;
-`
-
-const HeaderRow = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  align-items: center;
-  padding: 12px 16px;
-  background: #1a1a1a;
-  border-radius: 10px;
-  margin-bottom: 12px;
-
-  > * {
-    flex-shrink: 0;
-  }
 `
 
 const FeeBadge = styled.span`
@@ -716,21 +685,8 @@ export default function Swap () {
   const handleBBO = () => setLimitPrice(midPrice)
 
   return (
-    <Page>
+    <Page maxWidth="100%" px="0" style={{ paddingTop: '8px', paddingBottom: '16px', paddingLeft: '24px', paddingRight: '24px' }}>
       <SwapBody>
-        <SwapBranding>
-          <SwapBrandTitle>ShadowVault Protocol</SwapBrandTitle>
-          <SwapTagline>Trade in <SpanRed>Shadows.</SpanRed> Leverage Fearlessly</SwapTagline>
-        </SwapBranding>
-        <HeaderRow>
-          <ChainSelector currentChainId={localDex.chainId} onChainChange={handleChainSelect} />
-          <PMTokenSelector />
-          <TradeModeDropdown value={tradeMode} onChange={setTradeMode} />
-          <FeeBadge>
-            Fee: {parseFloat(new BigNumber(FLAT_FEE).shiftedBy(-18).toFixed(5))} {publicClient?.chain?.nativeCurrency?.symbol ?? 'ETH'}
-          </FeeBadge>
-        </HeaderRow>
-
         <SwapPageLayout>
         <ChartPane>
           <Flex mb="12px" alignItems="center" gap="12px" flexWrap="wrap">
@@ -750,6 +706,14 @@ export default function Swap () {
 
         <TradePane>
         <BitgetTradePanel
+          chainSelector={<ChainSelector currentChainId={localDex.chainId} onChainChange={handleChainSelect} />}
+          tradeModeSelector={<TradeModeDropdown value={tradeMode} onChange={setTradeMode} />}
+          pmTokenSelector={<PMTokenSelector />}
+          feeBadge={
+            <FeeBadge style={{ padding: '6px 12px', fontSize: '12px', margin: 0 }}>
+              Fee: {parseFloat(new BigNumber(FLAT_FEE).shiftedBy(-18).toFixed(5))} {publicClient?.chain?.nativeCurrency?.symbol ?? 'ETH'}
+            </FeeBadge>
+          }
           onDeposit={onPresentDepositModal}
           onTransfer={() => toastInfo('Transfer', 'Coming soon')}
           onOpenLong={() => {
@@ -780,8 +744,13 @@ export default function Swap () {
           midPrice={midPrice}
           onBBO={handleBBO}
           availableBalance={currencyBalances[Field.INPUT]?.toSignificant(6) ?? '0.00'}
+          leverageModeSelector={
+            <div>
+              <Text fontSize="12px" color="textSubtle" mb="8px">Leverage: {leverage}x • {marginMode}</Text>
+              <LeverageModeSelector selectedMode={leverageMode} onModeChange={setLeverageMode} />
+            </div>
+          }
         >
-          <AnimatedBorderBox>
           <Wrapper style={{ padding: '16px' }}>
             <AutoColumn>
               <CurrencyInputPanel
@@ -879,13 +848,7 @@ export default function Swap () {
                 </Text>
               </GreyCard>
             )}
-
-            <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-              <Text fontSize="12px" color="textSubtle" mb="8px">Leverage: {leverage}x • {marginMode}</Text>
-              <LeverageModeSelector selectedMode={leverageMode} onModeChange={setLeverageMode} />
-            </div>
           </Wrapper>
-          </AnimatedBorderBox>
         </BitgetTradePanel>
         </TradePane>
       </SwapPageLayout>

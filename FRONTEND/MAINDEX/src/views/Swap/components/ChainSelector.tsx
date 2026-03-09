@@ -7,24 +7,28 @@ import { Flex, Text } from 'uikit'
 import { useSwitchChain } from 'wagmi'
 import { dexList } from 'config/constants/dex'
 
-const Wrap = styled.div`
+const Wrap = styled.div<{ open: boolean }>`
   position: relative;
+  z-index: ${({ open }) => (open ? 1000 : 100)};
 `
 
 const Trigger = styled.button`
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
   padding: 10px 14px;
-  background: ${({ theme }) => theme.colors.input};
-  border: 1px solid rgba(230, 57, 70, 0.35);
-  border-radius: 10px;
+  background-color: #1a1b1f;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
   cursor: pointer;
   color: ${({ theme }) => theme.colors.text};
-  min-width: 120px;
+  width: 100%;
+  height: 52px;
 
   &:hover {
-    border-color: rgba(230, 57, 70, 0.6);
+    border-color: rgba(255, 255, 255, 0.1);
+    background-color: #1e1f24;
   }
 `
 
@@ -34,16 +38,16 @@ const Menu = styled.div<{ open: boolean }>`
   left: 0;
   margin-top: 6px;
   min-width: 160px;
-  background: ${({ theme }) => theme.colors.backgroundAlt};
-  border: 2px solid rgba(220, 20, 60, 0.4);
-  border-radius: 10px;
+  width: 100%;
+  background-color: #121316;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
   overflow: hidden;
-  z-index: 100;
+  z-index: 1000;
   opacity: ${({ open }) => (open ? 1 : 0)};
   visibility: ${({ open }) => (open ? 'visible' : 'hidden')};
   transform: ${({ open }) => (open ? 'translateY(0)' : 'translateY(-8px)')};
   transition: all 0.2s;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
 `
 
 const Item = styled.button`
@@ -66,7 +70,7 @@ const Item = styled.button`
 const chainLabels: Record<number, string> = {
   1: 'Ethereum',
   56: 'BSC',
-  97: 'tBNB BSC Testnet',
+  97: 'tBNB Testnet',
   11155111: 'Sepolia',
 }
 
@@ -108,10 +112,14 @@ export default function ChainSelector({ currentChainId, onChainChange }: ChainSe
   }
 
   return (
-    <Wrap ref={ref}>
+    <Wrap ref={ref} open={open}>
       <Trigger onClick={() => setOpen(!open)} type="button">
-        <Text bold fontSize="14px">{label}</Text>
-        <Text color="primary">{open ? '▲' : '▼'}</Text>
+        <Flex flexDirection="column" alignItems="flex-start" gap="2px" style={{ minWidth: 0, overflow: 'hidden' }}>
+          <Text bold fontSize="13px" color="text" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%' }}>
+            {label}
+          </Text>
+        </Flex>
+        <Text color="primary" fontSize="14px" style={{ flexShrink: 0, marginLeft: '4px' }}>{open ? '▲' : '▼'}</Text>
       </Trigger>
       <Menu open={open}>
         {chains.map((c) => (

@@ -5,9 +5,10 @@ import React, { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
 import { Flex, Text } from 'uikit'
 
-const DropdownWrap = styled.div`
+const DropdownWrap = styled.div<{ isOpen: boolean }>`
   position: relative;
   width: 100%;
+  z-index: ${({ isOpen }) => (isOpen ? 1000 : 100)};
 `
 
 const Trigger = styled.button`
@@ -15,17 +16,18 @@ const Trigger = styled.button`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 14px 16px;
-  background: ${({ theme }) => theme.colors.input};
-  border: 2px solid rgba(220, 20, 60, 0.5);
-  border-radius: 12px;
+  padding: 10px 14px;
+  background-color: #1a1b1f;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s;
   color: ${({ theme }) => theme.colors.text};
+  height: 52px;
 
   &:hover {
-    border-color: rgba(230, 57, 70, 0.6);
-    box-shadow: 0 0 12px rgba(220, 20, 60, 0.2);
+    border-color: rgba(255, 255, 255, 0.1);
+    background-color: #1e1f24;
   }
 `
 
@@ -34,16 +36,15 @@ const DropdownMenu = styled.div<{ isOpen: boolean }>`
   top: calc(100% + 8px);
   left: 0;
   right: 0;
-  background: ${({ theme }) => theme.colors.backgroundAlt};
-  border: 2px solid rgba(220, 20, 60, 0.5);
-  border-radius: 12px;
+  background-color: #121316;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
   overflow: hidden;
-  z-index: 100;
+  z-index: 1000;
   opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
   visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
   transform: ${({ isOpen }) => (isOpen ? 'translateY(0)' : 'translateY(-8px)')};
   transition: all 0.2s;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 `
 
 const Option = styled.button<{ active?: boolean }>`
@@ -97,17 +98,17 @@ export default function TradeModeDropdown({ value, onChange }: TradeModeDropdown
   const current = MODES.find((m) => m.value === value) ?? MODES[0]
 
   return (
-    <DropdownWrap ref={ref}>
+    <DropdownWrap ref={ref} isOpen={isOpen}>
       <Trigger onClick={() => setIsOpen(!isOpen)} type="button">
-        <Flex flexDirection="column" alignItems="flex-start" gap="2px">
-          <Text bold fontSize="14px" color="text">
+        <Flex flexDirection="column" alignItems="flex-start" gap="2px" style={{ minWidth: 0, overflow: 'hidden' }}>
+          <Text bold fontSize="13px" color="text" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%' }}>
             Trade Mode
           </Text>
-          <Text fontSize="12px" color="textSubtle">
-            {current.label} – {current.desc}
+          <Text fontSize="11px" color="textSubtle" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%' }}>
+            {current.label}
           </Text>
         </Flex>
-        <Text fontSize="18px" color="primary">{isOpen ? '▲' : '▼'}</Text>
+        <Text fontSize="14px" color="primary" style={{ flexShrink: 0, marginLeft: '4px' }}>{isOpen ? '▲' : '▼'}</Text>
       </Trigger>
       <DropdownMenu isOpen={isOpen}>
         {MODES.map((m) => (
