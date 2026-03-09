@@ -59,6 +59,7 @@ import PairSelectorDropdown from './components/PairSelectorDropdown'
 import { LeverageMode } from 'features/ai-agent/types'
 import CopyAddress from 'components/Menu/UserMenu/CopyAddress'
 import useToast from 'hooks/useToast'
+import { useMarginOpen, getMarginVaultAddress } from 'hooks/useMarginContract'
 
 const Label = styled(Text)`
   font-size: 14px;
@@ -408,6 +409,13 @@ export default function Swap () {
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
   const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
+
+  const { openLong: marginOpenLong, openShort: marginOpenShort, isPending: marginPending, error: marginError, isSupported: marginSupported } = useMarginOpen(localDex.chainId)
+  const isNativeInput = !!(currencies[Field.INPUT] && !(currencies[Field.INPUT] instanceof Token))
+  const marginCollateralWei = isNativeInput && parsedAmounts[Field.INPUT]?.greaterThan(JSBI.BigInt(0))
+    ? BigInt(parsedAmounts[Field.INPUT].raw.toString())
+    : 0n
+  const marginAmountValid = marginCollateralWei > 0n
   const [ changed, setChanged ] = useState(false)
   const madeAChange = () => {
     setPaymasterInfo(undefined)
@@ -716,16 +724,58 @@ export default function Swap () {
           }
           onDeposit={onPresentDepositModal}
           onTransfer={() => toastInfo('Transfer', 'Coming soon')}
-          onOpenLong={() => {
+          onOpenLong={async () => {
+            if (marginSupported && isNativeInput && marginAmountValid) {
+              try {
+                await marginOpenLong(marginCollateralWei, leverage)
+                toastInfo(t('Open Long'), t('Position opened successfully'))
+              } catch (e) {
+                toastInfo(t('Error'), marginError ?? (e as Error)?.message)
+              }
+              return
+            }
+            if (!marginSupported) {
+              toastInfo(t('Margin'), t('Margin not available on this chain'))
+              return
+            }
+            if (!isNativeInput) {
+              toastInfo(t('Margin'), t('Use native token (BNB/ETH) as collateral for margin'))
+              return
+            }
+            if (!marginAmountValid) {
+              toastInfo(t('Margin'), t('Enter an amount'))
+              return
+            }
             setSwapState({ tradeToConfirm: trade, attemptingTxn: false, swapErrorMessage: undefined, txHash: undefined })
             onPresentConfirmModal()
           }}
-          onOpenShort={() => {
+          onOpenShort={async () => {
+            if (marginSupported && isNativeInput && marginAmountValid) {
+              try {
+                await marginOpenShort(marginCollateralWei, leverage)
+                toastInfo(t('Open Short'), t('Position opened successfully'))
+              } catch (e) {
+                toastInfo(t('Error'), marginError ?? (e as Error)?.message)
+              }
+              return
+            }
+            if (!marginSupported) {
+              toastInfo(t('Margin'), t('Margin not available on this chain'))
+              return
+            }
+            if (!isNativeInput) {
+              toastInfo(t('Margin'), t('Use native token (BNB/ETH) as collateral for margin'))
+              return
+            }
+            if (!marginAmountValid) {
+              toastInfo(t('Margin'), t('Enter an amount'))
+              return
+            }
             setSwapState({ tradeToConfirm: trade, attemptingTxn: false, swapErrorMessage: undefined, txHash: undefined })
             onPresentConfirmModal()
           }}
-          isLongDisabled={showConnectButton || swapIsUnsupported || showWrap || !isValid || priceImpactSeverity > 3 || !!swapCallbackError}
-          isShortDisabled={showConnectButton || swapIsUnsupported || showWrap || !isValid || priceImpactSeverity > 3 || !!swapCallbackError}
+          isLongDisabled={showConnectButton || marginPending || (marginSupported ? !isNativeInput || !marginAmountValid : (swapIsUnsupported || showWrap || !isValid || priceImpactSeverity > 3 || !!swapCallbackError))}
+          isShortDisabled={showConnectButton || marginPending || (marginSupported ? !isNativeInput || !marginAmountValid : (swapIsUnsupported || showWrap || !isValid || priceImpactSeverity > 3 || !!swapCallbackError))}
           orderType={orderType}
           onOrderTypeChange={setOrderType}
           marginMode={marginMode}

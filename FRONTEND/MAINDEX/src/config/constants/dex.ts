@@ -22,7 +22,7 @@ export const pancakeBsc = {
   isMars: true,
 }
 
-// BSC Testnet - PancakeSwap V2
+// BSC Testnet (tBNB) - PancakeSwap V2 only (same pair bytecode as mainnet → use Pancake init code hash)
 export const pancakeBscTest = {
   id: 'PancakeSwap',
   factory: {
@@ -38,7 +38,7 @@ export const pancakeBscTest = {
     name: 'PancakeSwap',
     lpname: 'Pancake LPs',
     factory: "0x6725F303b657a9451d8BA641348b6761A6CC7a17",
-    codeHash: "0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f",
+    codeHash: "0x00fb7f630766e6a796048ea87d01acd3068e8ff67d078148a3fa3f4a84f69bd5",
     numerator: 9975,
   },
   chainId: 97,

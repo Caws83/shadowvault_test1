@@ -1,0 +1,51 @@
+export const SHADOW_VAULT_MARGIN_ABI = [
+  {
+    inputs: [{ internalType: 'uint256', name: 'leverage', type: 'uint256' }],
+    name: 'openLong',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'uint256', name: 'leverage', type: 'uint256' }],
+    name: 'openShort',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'uint256', name: 'positionId', type: 'uint256' }],
+    name: 'closePosition',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'uint256', name: 'positionId', type: 'uint256' }],
+    name: 'getPosition',
+    outputs: [
+      { internalType: 'address', name: 'user', type: 'address' },
+      { internalType: 'uint256', name: 'collateral', type: 'uint256' },
+      { internalType: 'uint256', name: 'leverage', type: 'uint256' },
+      { internalType: 'bool', name: 'isLong', type: 'bool' },
+      { internalType: 'uint256', name: 'openBlock', type: 'uint256' },
+      { internalType: 'bool', name: 'closed', type: 'bool' },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'getPositionCount',
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [{ internalType: 'address', name: 'user', type: 'address' }],
+    name: 'getPositionIdsByUser',
+    outputs: [{ internalType: 'uint256[]', name: '', type: 'uint256[]' }],
+    stateMutability: 'view',
+    type: 'function',
+  },
+] as const

@@ -54,7 +54,7 @@ contract SHDVToken is ERC20, ERC20Burnable, Ownable, ERC20Pausable {
         address _teamWallet,
         address _marketingWallet,
         address _ecosystemWallet
-    ) ERC20("ShadowVault Protocol", "SHDV") {
+    ) ERC20("ShadowVault Protocol", "SHDV") Ownable(_presaleWallet) {
         require(_presaleWallet != address(0), "Invalid presale wallet");
         require(_liquidityWallet != address(0), "Invalid liquidity wallet");
         require(_teamWallet != address(0), "Invalid team wallet");

@@ -79,4 +79,8 @@ export default {
     245022926: '', // compiler 8.7
   },
 
+  // ShadowVault margin/leverage (open long/short with BNB collateral)
+  marginVault: {
+    97: '0xfBAdE338A0Df548F28E2E34d61609A2CC67D7A54', // BSC Testnet
+  },
 }

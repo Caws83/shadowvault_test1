@@ -24,7 +24,8 @@ cypress/fixtures/example.json
 .DS_Store
 .eslintcache
 
-# local env files
+# local env files (never commit secrets)
+.env
 .env.local
 .env.development.local
 .env.test.local

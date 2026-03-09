@@ -105,7 +105,7 @@ const tokens = {
     symbol: 'SVP',
     name: 'ShadowVault Protocol',
     address: {
-      97: '0x860585c7a8118D162BcF3F9CbAEd34f3AB5a7979',
+      97: '0x87Db4987f842f37b182cb6BCE8add350D244469B',
     },
     decimals: 18,
     projectLink: `${BASE_URL}`,
@@ -115,7 +115,7 @@ const tokens = {
 export const TESTNET_TOKENS_BY_CHAIN: Record<number, Array<{ address: string; symbol: string; name: string; decimals: number }>> = {
   97: [
     { address: '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd', symbol: 'WBNB', name: 'Wrapped BNB', decimals: 18 },
-    { address: '0x860585c7a8118D162BcF3F9CbAEd34f3AB5a7979', symbol: 'SVP', name: 'ShadowVault Protocol', decimals: 18 },
+    { address: '0x87Db4987f842f37b182cb6BCE8add350D244469B', symbol: 'SVP', name: 'ShadowVault Protocol', decimals: 18 },
     { address: '0x337610d27c682E347C9cD60BD4b3b107C9d34dDd', symbol: 'USDT', name: 'BSC Testnet USDT', decimals: 6 },
   ],
   11155111: [

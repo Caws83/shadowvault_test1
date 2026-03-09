@@ -6,7 +6,7 @@ export const ROUTER_ADDRESS = '0xe368B201EdbE8759e7c0D128752DBFb5325EdF36'
 // SVP on BSC Testnet (tBNB) for swap testing
 const SVP_BSC_TESTNET = new Token(
   ChainId.BSC_TESTNET,
-  '0x860585c7a8118D162BcF3F9CbAEd34f3AB5a7979',
+  '0x87Db4987f842f37b182cb6BCE8add350D244469B',
   18,
   'SVP',
   'ShadowVault Protocol',
