@@ -26,6 +26,7 @@ const config: (t: ContextApi['t']) => ConfigMenuItemsType[] = (t) => [
     label: t('AI Agents'),
     href: '/swap',
     hideSubNav: true,
+    showOnMobile: false,
     items: [
       {
         label: t('AI Trading'),
