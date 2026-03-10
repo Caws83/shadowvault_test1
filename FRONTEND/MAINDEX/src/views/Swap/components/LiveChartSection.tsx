@@ -25,6 +25,10 @@ const ChartWrap = styled.div`
   border-radius: 12px;
   overflow: hidden;
   border: 1px solid rgba(255,255,255,0.08);
+
+  @media (max-width: 1200px) {
+    min-height: 480px;
+  }
 `
 
 const ChartTabs = styled.div`
@@ -124,7 +128,7 @@ export default function LiveChartSection({ tokenAddress, symbol, dex, height = '
           <ChartTab active={activeChartTab === 'data'} onClick={() => setActiveChartTab('data')}>Trading data</ChartTab>
         </ChartTabs>
         {activeChartTab === 'chart' && (
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
             <TradingViewChart symbol={displaySymbol} onSymbolChange={onChartSymbolChange} searchable fill />
           </div>
         )}

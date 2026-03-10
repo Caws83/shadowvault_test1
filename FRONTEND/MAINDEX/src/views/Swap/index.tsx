@@ -131,6 +131,10 @@ const ChartPane = styled.div`
   padding: 12px;
   display: flex;
   flex-direction: column;
+
+  @media (max-width: 1200px) {
+    min-height: 480px;
+  }
 `
 
 const OrderBookPane = styled.div`
@@ -161,9 +165,13 @@ const TradePane = styled.div`
 const ChartSection = styled.div`
   width: 100%;
   flex: 1;
-  min-height: 380px;
+  min-height: 480px;
   display: flex;
   flex-direction: column;
+
+  @media (max-width: 1200px) {
+    min-height: 420px;
+  }
 `
 
 const SwapBody = styled.div`

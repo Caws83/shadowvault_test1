@@ -8,6 +8,12 @@ const ChartContainer = styled.div<{ fill?: boolean }>`
   display: flex;
   flex-direction: column;
   flex: ${({ fill }) => (fill ? 1 : 'none')};
+
+  @media (max-width: 1200px) {
+    height: 420px;
+    min-height: 420px;
+    flex: none;
+  }
 `
 
 const SearchWrap = styled.div`
@@ -158,7 +164,7 @@ export default function TradingViewChart({ symbol, height = '450px', searchable,
           </button>
         </SearchWrap>
       )}
-      <div ref={containerRef} style={{ width: '100%', flex: 1, minHeight: 0 }} />
+      <div ref={containerRef} style={{ width: '100%', flex: 1, minHeight: '300px' }} />
     </ChartContainer>
   )
 }

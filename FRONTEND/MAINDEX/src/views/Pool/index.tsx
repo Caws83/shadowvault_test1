@@ -19,7 +19,7 @@ import { dexs } from 'config/constants/dex'
 import CenterBody from 'components/App/CenterBody'
 
 const Body = styled(CardBody)`
-  background-image: radial-gradient(circle, rgba(144, 205, 240, 0.09) 0%, rgb(27, 27, 31) 100%);
+  background-image: radial-gradient(circle, rgba(230, 57, 70, 0.06) 0%, rgb(27, 27, 31) 100%);
 `
 
 const StyledCardHeader = styled(CardHeader)`
@@ -33,16 +33,13 @@ const StyledTitle = styled.h2`
   font-weight: 600;
   margin: 0;
   padding: 4px 0;
-  background: linear-gradient(9deg, rgb(255, 255, 255) 0%, rgb(138, 212, 249) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: #fff;
 `;
 
 const GradientButton = styled(Button)`
-  background: linear-gradient(9deg, rgb(0, 104, 143) 0%, rgb(138, 212, 249) 100%) !important;
+  background: linear-gradient(135deg, #8b2030 0%, #e63946 100%) !important;
   color: white !important;
-  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+  border: 1px solid rgba(230, 57, 70, 0.2) !important;
   box-shadow: none;
   font-size: 16px !important;
   padding: 0 24px !important;
@@ -53,13 +50,13 @@ const GradientButton = styled(Button)`
   justify-content: center !important;
   
   &:hover {
-    box-shadow: 0 4px 15px rgba(0, 104, 143, 0.3) !important;
+    box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3) !important;
     transform: translateY(-1px) !important;
   }
   
   &:active {
     transform: translateY(1px) !important;
-    box-shadow: 0 2px 8px rgba(0, 104, 143, 0.2) !important;
+    box-shadow: 0 2px 8px rgba(230, 57, 70, 0.2) !important;
   }
 `;
 

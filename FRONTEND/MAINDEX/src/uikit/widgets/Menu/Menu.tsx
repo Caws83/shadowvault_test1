@@ -1,6 +1,6 @@
 import throttle from 'lodash/throttle'
-import React, { useEffect, useRef, useState } from 'react'
-import styled from 'styled-components'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import styled, { keyframes } from 'styled-components'
 import BottomNav from '../../components/BottomNav'
 import { Box } from '../../components/Box'
 import Flex from '../../components/Box/Flex'
@@ -9,6 +9,8 @@ import MenuItems from '../../components/MenuItems/MenuItems'
 import { SubMenuItems } from '../../components/SubMenuItems'
 import { useMatchBreakpoints } from '../../hooks'
 import CakePrice from '../../components/CakePrice/CakePrice'
+import { HamburgerIcon, CloseIcon } from '../../components/Svg'
+import IconButton from '../../components/Button/IconButton'
 import Logo from './components/Logo'
 import { MENU_HEIGHT, MOBILE_MENU_HEIGHT } from './config'
 import { NavProps } from './types'
@@ -18,13 +20,14 @@ import useRefresh from 'hooks/useRefresh'
 import { defaultChainId } from 'config/constants/chains'
 import { useAccount } from 'wagmi'
 import { API_URL } from 'config'
+import { Link } from 'react-router-dom'
 
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
-  min-height: 100vh; /* Ensure the wrapper takes up at least the height of the viewport */
+  min-height: 100vh;
   display: flex;
-  flex-direction: column; /* Ensure children stack vertically */
+  flex-direction: column;
 `
 
 const StyledNav = styled.nav<{ showMenu: boolean }>`
@@ -49,11 +52,85 @@ const StyledNav = styled.nav<{ showMenu: boolean }>`
   }
 `
 
+const Overlay = styled.div<{ isOpen: boolean }>`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 25;
+  opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
+  pointer-events: ${({ isOpen }) => (isOpen ? 'auto' : 'none')};
+  transition: opacity 0.25s ease;
+`
+
+const slideIn = keyframes`
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+`
+
+const slideOut = keyframes`
+  from { transform: translateX(0); }
+  to   { transform: translateX(100%); }
+`
+
+const MobileDrawer = styled.div<{ isOpen: boolean }>`
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 260px;
+  max-width: 80vw;
+  height: 100%;
+  background: ${({ theme }) => theme.nav.background};
+  z-index: 26;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 0;
+  animation: ${({ isOpen }) => (isOpen ? slideIn : slideOut)} 0.25s ease forwards;
+`
+
+const DrawerHeader = styled(Flex)`
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 16px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+`
+
+const DrawerBody = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 0;
+`
+
+const DrawerSection = styled.div`
+  margin-bottom: 8px;
+`
+
+const DrawerLink = styled(Link)<{ isActive?: boolean }>`
+  display: block;
+  padding: 12px 24px;
+  color: ${({ isActive, theme }) => (isActive ? '#E11D2E' : theme.colors.text)};
+  font-size: 15px;
+  font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
+  text-decoration: none;
+  transition: background 0.15s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.04);
+  }
+`
+
+const DrawerSectionLabel = styled.div`
+  padding: 8px 24px 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.35);
+`
 
 const BodyWrapper = styled(Box)`
   position: relative;
   display: flex;
-  flex: 1; /* Grow to fill available space */
+  flex: 1;
 `
 
 const Inner = styled.div<{ isPushed: boolean; showMenu: boolean }>`
@@ -66,7 +143,7 @@ const Inner = styled.div<{ isPushed: boolean; showMenu: boolean }>`
 `
 
 const FooterWrapper = styled.div`
-  margin-top: auto; /* Push footer to the bottom */
+  margin-top: auto;
   width: 100%;
 `
 
@@ -89,7 +166,11 @@ const Menu: React.FC<NavProps> = ({
 }) => {
   const { isMobile } = useMatchBreakpoints()
   const [showMenu, setShowMenu] = useState(true)
+  const [drawerOpen, setDrawerOpen] = useState(false)
   const refPrevOffset = useRef(window.pageYOffset)
+
+  const toggleDrawer = useCallback(() => setDrawerOpen((prev) => !prev), [])
+  const closeDrawer = useCallback(() => setDrawerOpen(false), [])
 
   const { chain, address } = useAccount();
   const chainId = chain ? chain.id : defaultChainId;
@@ -158,10 +239,63 @@ const Menu: React.FC<NavProps> = ({
 
         <Flex alignItems="center" justifyContent="center">
           <FreeSpinView isActive={isActive}/>
-          <ChatbotModal isActive={isActive} />
-          {globalMenu} {userMenu}
+          {!isMobile && <ChatbotModal isActive={isActive} />}
+          {!isMobile && globalMenu} {userMenu}
+          {isMobile && (
+            <IconButton onClick={toggleDrawer} variant="text" scale="sm" ml="4px">
+              <HamburgerIcon width="24px" color="text" />
+            </IconButton>
+          )}
         </Flex>
       </StyledNav>
+
+      {/* Mobile slide-out drawer */}
+      {isMobile && (
+        <>
+          <Overlay isOpen={drawerOpen} onClick={closeDrawer} />
+          {drawerOpen && (
+            <MobileDrawer isOpen={drawerOpen}>
+              <DrawerHeader>
+                <span style={{ color: '#fff', fontWeight: 600, fontSize: 16 }}>Menu</span>
+                <IconButton onClick={closeDrawer} variant="text" scale="sm">
+                  <CloseIcon width="24px" color="text" />
+                </IconButton>
+              </DrawerHeader>
+              <DrawerBody>
+                {links.map((link) => (
+                  <DrawerSection key={link.label}>
+                    {link.items && link.items.length > 0 ? (
+                      <>
+                        <DrawerSectionLabel>{link.label}</DrawerSectionLabel>
+                        {link.items.map((sub) =>
+                          sub.label ? (
+                            <DrawerLink
+                              key={sub.label}
+                              to={sub.href}
+                              isActive={sub.href === activeSubItem}
+                              onClick={closeDrawer}
+                            >
+                              {sub.label}
+                            </DrawerLink>
+                          ) : null,
+                        )}
+                      </>
+                    ) : (
+                      <DrawerLink
+                        to={link.href}
+                        isActive={link.href === activeItem}
+                        onClick={closeDrawer}
+                      >
+                        {link.label}
+                      </DrawerLink>
+                    )}
+                  </DrawerSection>
+                ))}
+              </DrawerBody>
+            </MobileDrawer>
+          )}
+        </>
+      )}
       {subLinks && <SubMenuItems items={subLinks} mt={`${MENU_HEIGHT + 1}px`} activeItem={activeSubItem} />}
       <BodyWrapper mt={!subLinks ? `${MENU_HEIGHT + 1}px` : '0'}>
         <Inner isPushed={false} showMenu={showMenu}>
