@@ -6,12 +6,11 @@ A privacy-centric decentralized exchange (DEX) with AI-driven leverage trading, 
 
 ## 🚀 Quick Start
 
-See `QUICK_START.md` for 3-step setup, or `LOCAL_SETUP_GUIDE.md` for detailed instructions.
-
 ```bash
 cd FRONTEND/MAINDEX
 npm install
 npm run start
+# or: npx vite dev --host
 ```
 
 ## Core Features
@@ -25,9 +24,15 @@ npm run start
 
 ## Project Structure
 
-- `FRONTEND/MAINDEX/` - Main frontend application (React + TypeScript)
+- `FRONTEND/MAINDEX/` - Main frontend application (React + TypeScript, Vite)
 - `CONTRACTS/GENERALCONTRACTS/MSWAP/` - Smart contracts (Solidity)
-- `DEX_API/DEXAPI/` - Backend API services
+- `DEX_API/DEXAPI/` - Backend API (Node/Express, AI Agent, DEX)
+
+## Deployment
+
+- **Frontend (Netlify):** Build from repo root; `netlify.toml` sets base to `FRONTEND/MAINDEX`, publish `dist`.
+- **Backend (Railway):** Set Root Directory to `DEX_API/DEXAPI`. Set `OPENAI_API_KEY` and optional vars (see `DEX_API/DEXAPI/.env.example`).
+- **Netlify env:** Set `VITE_AI_AGENT_API_URL` to your Railway backend URL for the AI Agent (Bots tab).
 
 ## 📁 Folder Name
 
