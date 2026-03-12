@@ -4,4 +4,6 @@
 pairs.json
 yarn.lock
 market.json
+history.json
+spins.json
 .env

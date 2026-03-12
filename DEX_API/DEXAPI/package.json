@@ -13,6 +13,7 @@
   "dependencies": {
     "@langchain/community": "^0.2.0",
     "@langchain/core": "^0.2.0",
+    "@openai/chatkit": "^1.6.0",
     "@upstash/ratelimit": "^1.2.1",
     "@upstash/redis": "^1.32.0",
     "axios": "^1.4.0",
@@ -21,6 +22,7 @@
     "cheerio": "^1.0.0-rc.12",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
+    "ethereum-block-by-date": "^1.5.0",
     "ethers": "^5.7.2",
     "express": "^4.18.2",
     "http-proxy-middleware": "^3.0.0",

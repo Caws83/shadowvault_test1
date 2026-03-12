@@ -5,6 +5,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Flex, Text, Button } from 'uikit'
 import type { MarginPosition } from 'hooks/useMarginContract'
+import ShadowVaultAIAgentPanel from './ShadowVaultAIAgentPanel'
 
 const Panel = styled.div`
   background-color: #121316;
@@ -535,9 +536,7 @@ export default function BitgetTradePanel({
 
         {activeTab === 'bots' && (
           <Section style={{ borderBottom: 'none' }}>
-            <Flex justifyContent="center" alignItems="center" height="200px">
-              <Text color="textSubtle">AI Trading Bots Coming Soon</Text>
-            </Flex>
+            <ShadowVaultAIAgentPanel />
           </Section>
         )}
       </div>

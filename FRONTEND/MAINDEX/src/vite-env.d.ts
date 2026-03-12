@@ -19,6 +19,11 @@ interface ImportMetaEnv {
   readonly VITE_SNAPSHOT_VOTING_API: string
 
   readonly VITE_API_PROFILE: string
+
+  /** Set to 'false' to hide the AI Agent panel. Omit or any other value shows it. */
+  readonly VITE_ENABLE_AI_AGENT?: string
+  /** Backend base URL for AI agent (e.g. https://your-api.up.railway.app). If set, requests go here instead of relative /api/ai-agent. */
+  readonly VITE_AI_AGENT_API_URL?: string
 }
 
 interface ImportMeta {

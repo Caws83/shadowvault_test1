@@ -11,6 +11,7 @@
     "updateLPsAPR": "ts-node --compiler-options '{\"module\":\"commonjs\"}' scripts/updateLPsAPR.ts"
   },
   "dependencies": {
+    "@openai/chatkit": "^1.6.0",
     "@pancakeswap-libs/pancake-swap-core": "0.1.0",
     "@reduxjs/toolkit": "^2.0.1",
     "@solana/wallet-adapter-base": "^0.9.23",

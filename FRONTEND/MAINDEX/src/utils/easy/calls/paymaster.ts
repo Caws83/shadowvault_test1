@@ -21,7 +21,12 @@ function normalizeValue(value: string | bigint | BigNumber | number): string {
   }
 }
 
-const sendTransactionPM = async (payload: any, payWithPM: boolean, chainId: number, feeTokenAddress: string): Promise<`0x${string}` | undefined> => {
+const sendTransactionPM = async (
+  payload: any,
+  payWithPM: boolean,
+  chainId: number,
+  feeTokenAddress: string,
+): Promise<`0x${string}` | undefined> => {
   const attemptDirectTransaction = async () => {
     try {
       const hash = await writeContract(config, payload);
@@ -33,7 +38,13 @@ const sendTransactionPM = async (payload: any, payWithPM: boolean, chainId: numb
     }
   };
 
-  if (payWithPM) {
+  // Only attempt paymaster flow on supported zk-style chains (e.g. Neon 245022926).
+  // On BSC / Ethereum / non-zk chains we always send a normal wallet transaction
+  // so the UI doesn't hang waiting on an unsupported paymaster.
+  const chainIds = chains.map((c) => (c as { id: number }).id);
+  const isZkChain = chainIds.includes(245022926);
+
+  if (payWithPM && isZkChain) {
     try {
       console.log("payload", payload);
       const normalizedValue = normalizeValue(payload.value ?? '0');
@@ -63,7 +74,11 @@ const sendTransactionPM = async (payload: any, payWithPM: boolean, chainId: numb
 
       const apiResponseData = await response.json();
       console.log("response", apiResponseData);
-      const walletClient = (await getWalletClient(config)).extend(eip712WalletActions()) as any;
+      const baseClient = await getWalletClient(config);
+      const walletClient = baseClient
+        ? (baseClient as any).extend(eip712WalletActions())
+        : null;
+      if (!walletClient) throw new Error('Wallet client not available');
 
       const paymasterTxData = {
         account: apiResponseData.txData.from,
