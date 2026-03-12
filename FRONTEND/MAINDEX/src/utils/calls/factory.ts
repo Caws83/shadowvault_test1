@@ -6,7 +6,6 @@ import { getAddress } from 'utils/addressHelpers'
 import { readContract } from '@wagmi/core'
 import { farmFactoryAbi } from 'config/abi/farmFactory'
 import { Dex } from 'config/constants/types'
-import contracts from 'config/constants/contracts'
 import { config } from 'wagmiConfig'
 import { Address } from 'viem'
 import { PairV2Abi } from 'config/abi/PairV2'
@@ -19,9 +18,13 @@ export const useGetFactoryTxFee = (dex: Dex) => {
 
   useEffect(() => {
     async function fetchInfo() {
-      let feeGetterAddress = 
-        dex.isMars ? getAddress(dex.factory, dex.chainId) : getAddress(contracts.superRouter, dex.chainId)
+      // Flat fee only from Mars/factory; Uniswap etc. use 0 (no SuperRouter)
+      if (!dex.isMars) {
+        setFlatFee(0)
+        return
+      }
       try {
+        const feeGetterAddress = getAddress(dex.factory, dex.chainId)
         const feeRaw = await readContract(config, {
           abi: farmFactoryAbi,
           address: feeGetterAddress,
@@ -32,9 +35,7 @@ export const useGetFactoryTxFee = (dex: Dex) => {
       } catch {
         setFlatFee(0)
       }
-      }
-
-    
+    }
     fetchInfo()
   }, [slowRefresh, dex])
 

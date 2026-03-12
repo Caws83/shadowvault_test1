@@ -2,7 +2,6 @@ import { JSBI, Percent, Router, SwapParameters, Trade, TradeType } from 'sdk'
 import { useMemo } from 'react'
 import { getAddress } from 'utils/addressHelpers'
 import { Address, Dex } from 'config/constants/types'
-// import contracts from 'config/constants/contracts'
 import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from '../config/constants'
 import { calculateGasMargin } from '../utils'
 import isZero from '../utils/isZero'
@@ -10,8 +9,6 @@ import useTransactionDeadline from './useTransactionDeadline'
 import { getPublicClient, waitForTransactionReceipt, simulateContract, writeContract } from "@wagmi/core";
 import { pancakeRouterAbi } from 'config/abi/pancakeRouter'
 import { useGasPrice, useGasTokenManager } from 'state/user/hooks'
-import contracts from 'config/constants/contracts'
-import { superRouterAbi } from 'config/abi/superRouter'
 import { config } from 'wagmiConfig'
 import useToast from 'hooks/useToast'
 import { TransactionReceipt } from 'viem'
@@ -166,7 +163,6 @@ export function useSwapCallback(
   FLAT_FEE: number,
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
 
-  const isMarswap = dex ? dex.isMars : false
   const router = dex ? dex.router : undefined
   const chainId = dex ? dex.chainId : undefined
 
@@ -199,11 +195,7 @@ export function useSwapCallback(
               contract,
             } = call
 
-              
-              
-              if(!isMarswap) args.push(getAddress(contract, chainId))
-
-            if(isMarswap) {
+            // Use DEX router directly for all chains (no SuperRouter)
             try {
               const gasEstimate = await publicClient.estimateContractGas({
                 account: account,
@@ -226,38 +218,8 @@ export function useSwapCallback(
               })
               return { call, gasEstimate }
             } catch (error: any) {
-              return {call, error}
+              return { call, error }
             }
-
-          } else {
-
-            try {
-              
-              const gasEstimate = await publicClient.estimateContractGas({
-                account: account,
-                address: getAddress(contracts.superRouter, chainId),
-                abi: superRouterAbi,
-                functionName: methodName as
-                  | 'swapETHForExactTokens'
-                  | 'swapExactETHForTokens'
-                  | 'swapExactETHForTokensSupportingFeeOnTransferTokens'
-                  | 'swapExactTokensForETH'
-                  | 'swapExactTokensForETHSupportingFeeOnTransferTokens'
-                  | 'swapExactTokensForTokens'
-                  | 'swapExactTokensForTokensSupportingFeeOnTransferTokens'
-                  | 'swapTokensForExactETH'
-                  | 'swapTokensForExactTokens',
-                args: args as any,
-                value: value,
-                chainId,
-                gasPrice
-              })
-              return { call, gasEstimate }
-            } catch (error: any) {
-              return {call, error}
-            }
-
-          }
 
           }),
         )
@@ -284,8 +246,8 @@ export function useSwapCallback(
 
         try {
          const { request } = await simulateContract(config, {
-            address: isMarswap ? getAddress(contract, chainId) : getAddress(contracts.superRouter, chainId),
-            abi: isMarswap  ? pancakeRouterAbi : superRouterAbi,
+            address: getAddress(contract, chainId),
+            abi: pancakeRouterAbi,
             functionName: methodName,
             args: args as any,
             ...(value && !isZero(value) ? { value, from: account } : { from: account }),
@@ -324,10 +286,9 @@ export function useSwapCallbackBest(
   FLAT_FEE: number,
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
   
-  const isMarswap = dex ? dex.isMars : false
   const router = dex ? dex.router : undefined
   const chainId = dex ? dex.chainId : undefined
-  
+
   const swapCalls = useSwapCallArgumentsBest(trade, allowedSlippage, router, recipientAddressOrName, chainId, account as string, FLAT_FEE)
   const gasPrice = useGasPrice()
   const { toastSuccess, toastError } = useToast()
@@ -357,64 +318,30 @@ export function useSwapCallbackBest(
               contract,
             } = call
 
-            
-            if(!isMarswap) args.push(getAddress(contract, chainId))
-
-          if(isMarswap) {
-          try {
-            const gasEstimate = await publicClient.estimateContractGas({
-              account: account,
-              address: getAddress(contract, chainId),
-              abi: pancakeRouterAbi,
-              functionName: methodName as
-                | 'swapETHForExactTokens'
-                | 'swapExactETHForTokens'
-                | 'swapExactETHForTokensSupportingFeeOnTransferTokens'
-                | 'swapExactTokensForETH'
-                | 'swapExactTokensForETHSupportingFeeOnTransferTokens'
-                | 'swapExactTokensForTokens'
-                | 'swapExactTokensForTokensSupportingFeeOnTransferTokens'
-                | 'swapTokensForExactETH'
-                | 'swapTokensForExactTokens',
-              args: args as any,
-              value: value,
-              chainId,
-              gasPrice
-            })
-            return { call, gasEstimate }
-          } catch (error: any) {
-            return {call, error}
-          }
-
-        } else {
-
-          try {
-            
-            const gasEstimate = await publicClient.estimateContractGas({
-              account: account,
-              address: getAddress(contracts.superRouter, chainId),
-              abi: superRouterAbi,
-              functionName: methodName as
-                | 'swapETHForExactTokens'
-                | 'swapExactETHForTokens'
-                | 'swapExactETHForTokensSupportingFeeOnTransferTokens'
-                | 'swapExactTokensForETH'
-                | 'swapExactTokensForETHSupportingFeeOnTransferTokens'
-                | 'swapExactTokensForTokens'
-                | 'swapExactTokensForTokensSupportingFeeOnTransferTokens'
-                | 'swapTokensForExactETH'
-                | 'swapTokensForExactTokens',
-              args: args as any,
-              value: value,
-              chainId,
-              gasPrice
-            })
-            return { call, gasEstimate }
-          } catch (error: any) {
-            return {call, error}
-          }
-
-        }
+            try {
+              const gasEstimate = await publicClient.estimateContractGas({
+                account: account,
+                address: getAddress(contract, chainId),
+                abi: pancakeRouterAbi,
+                functionName: methodName as
+                  | 'swapETHForExactTokens'
+                  | 'swapExactETHForTokens'
+                  | 'swapExactETHForTokensSupportingFeeOnTransferTokens'
+                  | 'swapExactTokensForETH'
+                  | 'swapExactTokensForETHSupportingFeeOnTransferTokens'
+                  | 'swapExactTokensForTokens'
+                  | 'swapExactTokensForTokensSupportingFeeOnTransferTokens'
+                  | 'swapTokensForExactETH'
+                  | 'swapTokensForExactTokens',
+                args: args as any,
+                value: value,
+                chainId,
+                gasPrice
+              })
+              return { call, gasEstimate }
+            } catch (error: any) {
+              return { call, error }
+            }
 
         }),
       )
@@ -441,8 +368,8 @@ export function useSwapCallbackBest(
 
         try {
           const { request} = await simulateContract(config, {
-            address: isMarswap ? getAddress(contract, chainId) : getAddress(contracts.superRouter, chainId),
-            abi: isMarswap  ? pancakeRouterAbi : superRouterAbi,
+            address: getAddress(contract, chainId),
+            abi: pancakeRouterAbi,
             functionName: methodName,
             args: args as any,
             ...(value && !isZero(value) ? { value, from: account } : { from: account }),
@@ -492,7 +419,6 @@ export function useFetchSwapRequest(
 
 
 
-  const isMarswap = dex ? dex.isMars : false
   const router = dex ? dex.router : undefined
   const chainId = dex ? dex.chainId : undefined
 
@@ -526,13 +452,11 @@ export function useFetchSwapRequest(
               contract,
             } = call
 
-            if (!isMarswap) args.push(getAddress(contract, chainId))
-
             try {
               const gasEstimate = await publicClient.estimateContractGas({
                 account: account,
-                address: isMarswap ? getAddress(contract, chainId) : getAddress(contracts.superRouter, chainId),
-                abi: isMarswap ? pancakeRouterAbi : superRouterAbi,
+                address: getAddress(contract, chainId),
+                abi: pancakeRouterAbi,
                 functionName: methodName as
                   | 'swapETHForExactTokens'
                   | 'swapExactETHForTokens'
@@ -576,8 +500,8 @@ export function useFetchSwapRequest(
 
         try {
           const {request} = await simulateContract(config, {
-            address: isMarswap ? getAddress(contract, chainId) : getAddress(contracts.superRouter, chainId),
-            abi: isMarswap ? pancakeRouterAbi : superRouterAbi,
+            address: getAddress(contract, chainId),
+            abi: pancakeRouterAbi,
             functionName: methodName,
             args: args as any,
             ...(value && !isZero(value) ? { value, from: account } : { from: account }),
@@ -594,7 +518,7 @@ export function useFetchSwapRequest(
       },
       error: null,
     }
-  }, [trade, account, chainId, recipient, swapCalls, isMarswap])
+  }, [trade, account, chainId, recipient, swapCalls])
 }
 
 

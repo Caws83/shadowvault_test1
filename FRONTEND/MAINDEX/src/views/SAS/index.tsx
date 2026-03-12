@@ -53,7 +53,6 @@ import CircleLoader from '../../components/Loader/CircleLoader'
 import Page from './Page'
 import { useAccount, usePublicClient } from 'wagmi'
 import { useNavigate } from 'react-router-dom'
-import contracts from 'config/constants/contracts'
 import PageHeader from 'components/PageHeader'
 
 
@@ -262,8 +261,8 @@ export default function Swap({ hideGraph }: { hideGraph?: boolean }) {
   )
   const noRoute = !route
 
-  // check whether the user has approved the router on the input token
-  const spender = dexList[bestTrade]?.isMars ? dexList[bestTrade]?.router : contracts.superRouter
+  // check whether the user has approved the router on the input token (always use DEX router)
+  const spender = dexList[bestTrade]?.router ?? localDex?.router
   const [approval, approveCallback] = useApproveCallbackFromTrade(getAddress(spender, localDex.chainId), localDex.chainId, trade, allowedSlippage)
 
   // check if user has gone through approval process, used to show two step buttons, reset on token change

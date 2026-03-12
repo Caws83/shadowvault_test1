@@ -24,6 +24,8 @@ interface ImportMetaEnv {
   readonly VITE_ENABLE_AI_AGENT?: string
   /** Backend base URL for AI agent (e.g. https://your-api.up.railway.app). If set, requests go here instead of relative /api/ai-agent. */
   readonly VITE_AI_AGENT_API_URL?: string
+  /** Site URL for link preview image (og:image). Defaults to Netlify URL if unset. */
+  readonly VITE_SITE_URL?: string
 }
 
 interface ImportMeta {
