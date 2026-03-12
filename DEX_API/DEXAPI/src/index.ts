@@ -1654,8 +1654,8 @@ const InitialStartupNFT = async () => {
     await fs.promises.access('./market.json', fs.constants.F_OK)
     const history = await fs.promises.readFile('./market.json', 'utf-8')
     marketInfo = JSON.parse(history)
-  } catch (e) {
-    console.log(e, 'no Old Data')
+  } catch {
+    // No prior market data (e.g. first deploy); market.json is gitignored
   }
 
   if (isZeroAddress(nftMarket)) {

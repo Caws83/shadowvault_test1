@@ -3,6 +3,9 @@ import { HashRouter, Route, Routes } from 'react-router-dom'
 import { ResetCSS } from 'uikit'
 import BigNumber from 'bignumber.js'
 import { usePollBlockNumber } from 'state/block/hooks'
+import ListsUpdater from 'state/lists/updater'
+import { useChainId } from 'wagmi'
+import { defaultChainId } from 'config/constants/chains'
 import { DatePickerPortal } from 'components/DatePicker'
 import GlobalStyle from './style/Global'
 import './style/global.css'
@@ -69,7 +72,13 @@ BigNumber.config({
 })
 
 const App: React.FC = () => {
+  const chainId = useChainId() ?? defaultChainId
   usePollBlockNumber()
+  // Fetch Uniswap/SushiSwap token lists so Swap token selector has full list
+  return <><ListsUpdater chainId={chainId} /><AppContent /></>
+}
+
+const AppContent: React.FC = () => {
   // useFetchProfile();
   // usePollCoreFarmData();
   // useGetNftPools();

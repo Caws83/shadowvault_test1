@@ -222,7 +222,8 @@ const ShadowVaultAIAgentPanel: React.FC = () => {
 
       try {
         const apiBase = import.meta.env.VITE_AI_AGENT_API_URL ?? ''
-        const response = await fetch(apiBase ? `${apiBase.replace(/\/$/, '')}/api/ai-agent` : '/api/ai-agent', {
+        const url = apiBase ? `${apiBase.replace(/\/$/, '')}/api/ai-agent` : '/api/ai-agent'
+        const response = await fetch(url, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -241,16 +242,35 @@ const ShadowVaultAIAgentPanel: React.FC = () => {
           signal: controller.signal,
         })
 
-        if (!response.body) {
-          const text = await response.text()
+        const addAssistantMessage = (content: string) => {
           setMessages((prev) => [
             ...prev,
             {
               id: `assistant-${Date.now()}`,
               role: 'assistant',
-              content: text || 'No response received from AI agent.',
+              content: content || 'No response received from AI agent.',
             },
           ])
+        }
+
+        if (!response.ok) {
+          const text = await response.text()
+          let errMsg = text
+          try {
+            const j = JSON.parse(text)
+            if (j?.error) errMsg = j.error
+          } catch {
+            // use text as-is
+          }
+          addAssistantMessage(`AI backend error (${response.status}): ${errMsg}`)
+          analytics.track('RESPONSE_RECEIVED', { length: 0 })
+          setIsStreaming(false)
+          return
+        }
+
+        if (!response.body) {
+          const text = await response.text()
+          addAssistantMessage(text || 'No response received from AI agent.')
           analytics.track('RESPONSE_RECEIVED', { length: text.length || 0 })
           setIsStreaming(false)
           return
@@ -267,11 +287,6 @@ const ShadowVaultAIAgentPanel: React.FC = () => {
 
         setMessages((prev) => [...prev, assistantMessage])
 
-        // Stream text chunks from the backend
-        // Backend should send plain text chunks (no SSE framing)
-        // to keep this simple.
-        // If you switch to SSE, adapt the parsing here.
-        // eslint-disable-next-line no-constant-condition
         while (true) {
           const { done, value } = await reader.read()
           if (done) break
@@ -283,6 +298,16 @@ const ShadowVaultAIAgentPanel: React.FC = () => {
             content: assistantMessage.content + chunk,
           }
           setMessages((prev) => prev.map((m) => (m.id === assistantMessage.id ? assistantMessage : m)))
+        }
+
+        if (!assistantMessage.content.trim()) {
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === assistantMessage.id
+                ? { ...m, content: 'No response from AI. Check that the backend is running and OPENAI_API_KEY is set on Railway.' }
+                : m
+            )
+          )
         }
 
         analytics.track('RESPONSE_RECEIVED', { length: assistantMessage.content.length })

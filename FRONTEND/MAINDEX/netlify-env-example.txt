@@ -1,0 +1,13 @@
+VITE_AI_AGENT_API_URL=https://shadowvaulttest1-production.up.railway.app
+VITE_ENABLE_AI_AGENT=true
+VITE_CHAIN_ID=97
+VITE_GTAG=GTM-TLF66T4
+VITE_NODE_1=https://data-seed-prebsc-1-s1.binance.org:8545
+VITE_NODE_2=https://bsc-dataseed.binance.org
+VITE_NODE_3=https://eth.llamarpc.com
+VITE_NODE_PRODUCTION=https://rpc.sepolia.org
+VITE_GRAPH_API_PROFILE=https://api.thegraph.com/subgraphs/name/pancakeswap/profile
+VITE_GRAPH_API_PREDICTION=https://api.thegraph.com/subgraphs/name/pancakeswap/prediction-v2
+VITE_GRAPH_API_LOTTERY=https://api.thegraph.com/subgraphs/name/pancakeswap/lottery
+VITE_SNAPSHOT_BASE_URL=https://hub.snapshot.org
+VITE_SNAPSHOT_VOTING_API=https://voting-api.pancakeswap.info/api

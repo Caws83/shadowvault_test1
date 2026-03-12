@@ -12,7 +12,7 @@ import { acceptListUpdate } from './actions'
 import { useActiveListUrls } from './hooks'
 import { useAccount } from 'wagmi'
 
-export default function Updater(chainId: number): null {
+export default function Updater({ chainId }: { chainId: number }): null {
   const dispatch = useDispatch<AppDispatch>()
   const isWindowVisible = useIsWindowVisible()
 

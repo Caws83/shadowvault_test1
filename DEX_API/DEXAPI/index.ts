@@ -69,10 +69,14 @@ const app = express()
 
 app.use(
   cors({
-    origin: [
-      'http://localhost:5173',
-      'https://venerable-cupcake-ec1bc0.netlify.app'
-    ],
+    origin: (origin: string | undefined, cb: (err: Error | null, allow?: boolean) => void) => {
+      const allowed =
+        !origin ||
+        origin === 'http://localhost:5173' ||
+        origin === 'https://venerable-cupcake-ec1bc0.netlify.app' ||
+        /^https:\/\/[a-z0-9-]+\.netlify\.app$/.test(origin)
+      cb(null, allowed)
+    },
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     allowedHeaders: 'Content-Type,Authorization'
   })
@@ -1163,8 +1167,8 @@ const InitialStartupNFT = async () => {
     await fs.promises.access('./market.json', fs.constants.F_OK)
     const history = await fs.promises.readFile('./market.json', 'utf-8')
     marketInfo = JSON.parse(history)
-  } catch (e) {
-    console.log(e, 'no Old Data')
+  } catch {
+    // No prior market data (e.g. first deploy); market.json is gitignored
   }
 
   if (isZeroAddress(nftMarket)) {

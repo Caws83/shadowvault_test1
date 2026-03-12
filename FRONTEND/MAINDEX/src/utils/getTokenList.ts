@@ -58,6 +58,22 @@ export default async function getTokenList(
 
     const json = await response.json()
     if (!tokenListValidator(json)) {
+      // Known aggregator lists may use schema extensions; allow them if structure is usable
+      const isKnownAggregator =
+        listUrl.includes('uniswap') ||
+        listUrl.includes('sushiswap')
+      const hasValidStructure =
+        Array.isArray(json?.tokens) &&
+        json.tokens.length > 0 &&
+        json.tokens.every(
+          (t: any) =>
+            typeof t?.chainId === 'number' &&
+            typeof t?.address === 'string' &&
+            typeof t?.decimals === 'number'
+        )
+      if (isKnownAggregator && hasValidStructure) {
+        return json as TokenList
+      }
       const validationErrors: string =
         tokenListValidator.errors?.reduce<string>((memo, error) => {
           const add = `${(error as any).dataPath} ${error.message ?? ''}`
