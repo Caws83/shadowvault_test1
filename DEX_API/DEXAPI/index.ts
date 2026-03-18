@@ -71,10 +71,13 @@ const app = express()
 app.use(
   cors({
     origin: (origin: string | undefined, cb: (err: Error | null, allow?: boolean) => void) => {
+      const frontendOrigin = process.env.FRONTEND_ORIGIN
       const allowed =
         !origin ||
         origin === 'http://localhost:5173' ||
+        origin === 'http://localhost:3000' ||
         origin === 'https://venerable-cupcake-ec1bc0.netlify.app' ||
+        (!!frontendOrigin && origin === frontendOrigin) ||
         /^https:\/\/[a-z0-9-]+\.netlify\.app$/.test(origin)
       cb(null, allowed)
     },

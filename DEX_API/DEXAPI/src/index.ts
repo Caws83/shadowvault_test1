@@ -110,12 +110,24 @@ const EVENT_TOPIC_PAIRCREATED =
 
 const app = express()
 
+// Allow localhost, known Netlify app, any *.netlify.app, or env FRONTEND_ORIGIN.
+// Callback second arg must be the origin string to reflect (or false to deny).
+const corsOrigin = (origin: string | undefined, cb: (err: Error | null, origin?: string | false) => void) => {
+  if (!origin) return cb(null, undefined)
+  const allowed = [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'https://venerable-cupcake-ec1bc0.netlify.app'
+  ]
+  if (process.env.FRONTEND_ORIGIN) allowed.push(process.env.FRONTEND_ORIGIN)
+  if (allowed.includes(origin) || /^https:\/\/[a-z0-9-]+\.netlify\.app$/i.test(origin)) {
+    return cb(null, origin)
+  }
+  return cb(null, false)
+}
 app.use(
   cors({
-    origin: [
-      'http://localhost:5173',
-      'https://venerable-cupcake-ec1bc0.netlify.app'
-    ],
+    origin: corsOrigin,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     allowedHeaders: 'Content-Type,Authorization'
   })
