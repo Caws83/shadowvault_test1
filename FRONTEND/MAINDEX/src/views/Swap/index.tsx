@@ -307,6 +307,20 @@ export default function Swap () {
       if (auto) {
         setAutoAI(true);
       }
+
+      const tradeModeParam = urlParams.get('tradeMode');
+      if (tradeModeParam === 'PERPETUAL') {
+        setTradeMode('PERPETUAL');
+      }
+      const leverageParam = urlParams.get('leverage');
+      if (leverageParam != null && leverageParam !== '') {
+        const lev = parseInt(leverageParam, 10);
+        if (!Number.isNaN(lev) && lev >= 1 && lev <= 100) setLeverage(lev);
+      }
+      const marginAmountParam = urlParams.get('amount');
+      if (marginAmountParam != null && marginAmountParam !== '' && !amountInput) {
+        setAmountInp(marginAmountParam);
+      }
     };
 
     // Call the fetchData function

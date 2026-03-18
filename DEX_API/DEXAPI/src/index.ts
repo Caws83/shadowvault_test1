@@ -4,6 +4,7 @@ import BigNumber from 'bignumber.js'
 import fs from 'fs'
 import express, { Request, Response } from 'express'
 import { OpenAI } from 'openai'
+import { handleBotMessage } from './bot/shadowVaultBot'
 import { SimpleDirectoryReader, VectorStoreIndex, Document } from 'llamaindex'
 import path from 'path'
 import dotenv from 'dotenv'
@@ -380,8 +381,12 @@ app.post('/api/response', async (req: Request, res: Response) => {
   }
 
   try {
-    const output = await ai_response(input)
-    return res.status(200).json({ message: output })
+    const userId = (req.body.userId || req.body.wallet || requestIp.getClientIp(req) || 'anonymous').toString()
+    const result = await handleBotMessage(openai, userId, input)
+    return res.status(200).json({
+      message: result.reply,
+      ...(result.tradeIntent && { tradeIntent: result.tradeIntent })
+    })
   } catch (error) {
     console.error('Error:', error)
     return res.status(500).json({ error: 'Internal Server Error' })

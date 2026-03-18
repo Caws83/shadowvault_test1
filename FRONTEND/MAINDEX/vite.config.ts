@@ -18,13 +18,21 @@ export default defineConfig(({ mode }) => {
     )
   }
 
-  return {    
+  return {
     plugins: [
-      react(), 
+      react(),
       viteTsconfigPaths(),
       svgr({
         include: '**/*.svg?react',
       }),
-    ]
+    ],
+    server: {
+      proxy: {
+        '/api': {
+          target: 'http://localhost:3000',
+          changeOrigin: true,
+        },
+      },
+    },
   }
 })

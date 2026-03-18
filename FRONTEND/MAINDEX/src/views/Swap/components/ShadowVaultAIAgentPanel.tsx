@@ -1,5 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
+import { useAccount } from 'wagmi'
+import { Link } from 'react-router-dom'
+import { API_URL } from 'config'
 
 type Role = 'user' | 'assistant' | 'system'
 
@@ -7,6 +10,7 @@ interface ChatMessage {
   id: string
   role: Role
   content: string
+  tradeIntent?: { side: 'long' | 'short'; amount: number; leverage: number }
 }
 
 const PanelWrap = styled.div`
@@ -97,6 +101,22 @@ const MessageBubble = styled.div<{ role: Role }>`
   align-self: ${({ role }) => (role === 'assistant' ? 'flex-start' : 'flex-end')};
 `
 
+const ExecuteButton = styled(Link)`
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #e63946 0%, #9d0208 100%);
+  color: #fff;
+  text-decoration: none;
+  border: 1px solid rgba(230, 57, 70, 0.6);
+  &:hover {
+    opacity: 0.95;
+  }
+`
+
 const MessageMeta = styled.div`
   font-size: 10px;
   text-transform: uppercase;
@@ -164,17 +184,18 @@ const EmptyState = styled.div`
 // Vite exposes only VITE_* on import.meta.env. Default true so the panel shows when backend is available.
 const ShadowVaultAIAgentPanel: React.FC = () => {
   const featureEnabled = import.meta.env.VITE_ENABLE_AI_AGENT !== 'false'
+  const { address: account } = useAccount()
 
   const [messages, setMessages] = useState<ChatMessage[]>(() => [
     {
       id: 'system-welcome',
       role: 'assistant',
       content:
-        'I am the ShadowVault AI assistant.\nAsk me about DeFi strategies, your wallet activity, or how to interpret a specific transaction.',
+        'I’m the ShadowVault AI Agent. I can:\n\n• Answer Polymarket odds and markets (e.g. “/polymarket biden” or “odds for Trump 2024”)\n• Parse margin trades: say e.g. “Long YES on [market] with $200 at 5x leverage” — I’ll show risk and ask you to type CONFIRM\n• After CONFIRM, use “Execute on ShadowVault” to open the Swap page with your trade prefilled so you can sign in your wallet.',
     },
   ])
   const [input, setInput] = useState('')
-  const [isStreaming, setIsStreaming] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const scrollRef = useRef<HTMLDivElement | null>(null)
 
   const analytics = useMemo(
@@ -205,7 +226,7 @@ const ShadowVaultAIAgentPanel: React.FC = () => {
     async (e: React.FormEvent) => {
       e.preventDefault()
       const trimmed = input.trim()
-      if (!trimmed || isStreaming) return
+      if (!trimmed || isLoading) return
 
       const userMessage: ChatMessage = {
         id: `user-${Date.now()}`,
@@ -217,38 +238,29 @@ const ShadowVaultAIAgentPanel: React.FC = () => {
       setInput('')
       analytics.track('MESSAGE_SENT', { length: trimmed.length })
 
-      const controller = new AbortController()
-      setIsStreaming(true)
+      setIsLoading(true)
 
       try {
-        const apiBase = import.meta.env.VITE_AI_AGENT_API_URL ?? ''
-        const url = apiBase ? `${apiBase.replace(/\/$/, '')}/api/ai-agent` : '/api/ai-agent'
+        const apiBase = API_URL || import.meta.env.VITE_AI_AGENT_API_URL || ''
+        const url = apiBase ? `${apiBase.replace(/\/$/, '')}/api/response` : '/api/response'
         const response = await fetch(url, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            messages: [
-              {
-                role: 'system',
-                content:
-                  'You are the ShadowVault AI assistant. Help users understand DeFi strategies, wallet activity, and portfolio insights. Explain transactions clearly and provide educational guidance.',
-              },
-              ...messages.map(({ role, content }) => ({ role, content })),
-              { role: 'user', content: trimmed },
-            ],
+            inp: trimmed,
+            userId: account ?? undefined,
+            wallet: account ?? undefined,
           }),
-          signal: controller.signal,
         })
 
-        const addAssistantMessage = (content: string) => {
+        const addAssistantMessage = (content: string, tradeIntent?: ChatMessage['tradeIntent']) => {
           setMessages((prev) => [
             ...prev,
             {
               id: `assistant-${Date.now()}`,
               role: 'assistant',
-              content: content || 'No response received from AI agent.',
+              content: content || 'No response received.',
+              tradeIntent,
             },
           ])
         }
@@ -264,53 +276,15 @@ const ShadowVaultAIAgentPanel: React.FC = () => {
           }
           addAssistantMessage(`AI backend error (${response.status}): ${errMsg}`)
           analytics.track('RESPONSE_RECEIVED', { length: 0 })
-          setIsStreaming(false)
+          setIsLoading(false)
           return
         }
 
-        if (!response.body) {
-          const text = await response.text()
-          addAssistantMessage(text || 'No response received from AI agent.')
-          analytics.track('RESPONSE_RECEIVED', { length: text.length || 0 })
-          setIsStreaming(false)
-          return
-        }
-
-        const reader = response.body.getReader()
-        const decoder = new TextDecoder()
-
-        let assistantMessage: ChatMessage = {
-          id: `assistant-${Date.now()}`,
-          role: 'assistant',
-          content: '',
-        }
-
-        setMessages((prev) => [...prev, assistantMessage])
-
-        while (true) {
-          const { done, value } = await reader.read()
-          if (done) break
-          const chunk = decoder.decode(value, { stream: true })
-          if (!chunk) continue
-
-          assistantMessage = {
-            ...assistantMessage,
-            content: assistantMessage.content + chunk,
-          }
-          setMessages((prev) => prev.map((m) => (m.id === assistantMessage.id ? assistantMessage : m)))
-        }
-
-        if (!assistantMessage.content.trim()) {
-          setMessages((prev) =>
-            prev.map((m) =>
-              m.id === assistantMessage.id
-                ? { ...m, content: 'No response from AI. Check that the backend is running and OPENAI_API_KEY is set on Railway.' }
-                : m
-            )
-          )
-        }
-
-        analytics.track('RESPONSE_RECEIVED', { length: assistantMessage.content.length })
+        const data = await response.json()
+        const reply = data?.message ?? 'No response received.'
+        const tradeIntent = data?.tradeIntent ?? undefined
+        addAssistantMessage(reply, tradeIntent)
+        analytics.track('RESPONSE_RECEIVED', { length: reply.length })
       } catch (err) {
         setMessages((prev) => [
           ...prev,
@@ -322,10 +296,10 @@ const ShadowVaultAIAgentPanel: React.FC = () => {
           },
         ])
       } finally {
-        setIsStreaming(false)
+        setIsLoading(false)
       }
     },
-    [analytics, input, isStreaming, messages],
+    [analytics, input, isLoading, account],
   )
 
   // Future tool stubs – wired later into the AI agent
@@ -361,23 +335,30 @@ const ShadowVaultAIAgentPanel: React.FC = () => {
       <HeaderRow>
         <div>
           <Title>ShadowVault AI Assistant</Title>
-          <Subtitle>Ask about DeFi, your wallet, or a specific transaction hash.</Subtitle>
+          <Subtitle>Polymarket odds, margin trades (long/short), or type CONFIRM to execute — then open Swap to sign.</Subtitle>
         </div>
         <BadgeRow>
           <Badge>AI Agents</Badge>
-          <Badge>Streaming</Badge>
+          <Badge>Trading</Badge>
         </BadgeRow>
       </HeaderRow>
 
       <ChatShell>
         <MessagesScroll ref={scrollRef}>
           {messages.length === 0 ? (
-            <EmptyState>Ask anything about your ShadowVault trading, LP positions, or risk profile.</EmptyState>
+            <EmptyState>Ask Polymarket odds, or request a margin trade (e.g. “Long YES on Biden with $200 5x”). Type CONFIRM to execute, then use the button to open Swap.</EmptyState>
           ) : (
             messages.map((m) => (
               <MessageBubble key={m.id} role={m.role}>
                 <MessageMeta>{m.role === 'assistant' ? 'ShadowVault AI' : 'You'}</MessageMeta>
                 {m.content}
+                {m.role === 'assistant' && m.tradeIntent && (
+                  <ExecuteButton
+                    to={`/swap?tradeMode=PERPETUAL&leverage=${m.tradeIntent.leverage}&amount=${m.tradeIntent.amount}&marginSide=${m.tradeIntent.side}`}
+                  >
+                    Execute on ShadowVault
+                  </ExecuteButton>
+                )}
               </MessageBubble>
             ))
           )}
@@ -387,13 +368,13 @@ const ShadowVaultAIAgentPanel: React.FC = () => {
           <ChatInput
             value={input}
             onChange={handleChange}
-            placeholder="e.g. Explain my last margin liquidation on BSC, or suggest a safer SVP/BNB strategy."
+            placeholder="e.g. /polymarket biden — or Long YES on Biden 2024 with $200 at 5x leverage"
           />
-          <SendButton type="submit" disabled={!input.trim() || isStreaming}>
-            {isStreaming ? 'Thinking…' : 'Send'}
+          <SendButton type="submit" disabled={!input.trim() || isLoading}>
+            {isLoading ? 'Thinking…' : 'Send'}
           </SendButton>
         </InputRow>
-        {isStreaming && <TypingIndicator>ShadowVault AI is generating a response…</TypingIndicator>}
+        {isLoading && <TypingIndicator>ShadowVault AI is thinking…</TypingIndicator>}
       </ChatShell>
     </PanelWrap>
   )

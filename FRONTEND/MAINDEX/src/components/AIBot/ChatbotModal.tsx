@@ -36,6 +36,7 @@ interface Message {
 
 interface FetchResponse {
   message: string
+  tradeIntent?: { side: 'long' | 'short'; amount: number; leverage: number }
 }
 
 const ChatbotModal: React.FC<{ isActive: boolean }> = ({ isActive }) => {
@@ -62,21 +63,23 @@ const ChatbotModal: React.FC<{ isActive: boolean }> = ({ isActive }) => {
   }, [chain])
     
 
+  const launchManagerCalls = [
+    {
+      abi: lanchManagerAbi,
+      address: getAddress(contracts.launchManager, chainId),
+      functionName: 'creationFee' as const,
+      chainId: chainId,
+    },
+    {
+      abi: lanchManagerAbi,
+      address: getAddress(contracts.launchManager, chainId),
+      functionName: 'sponsorshipFee' as const,
+      chainId: chainId,
+    },
+  ]
+  // @ts-expect-error - useReadContracts can trigger "excessively deep" type instantiation with some ABI shapes
   const { data, refetch } = useReadContracts({
-    contracts: [
-      {
-        abi: lanchManagerAbi,
-        address: getAddress(contracts.launchManager, chainId),
-        functionName: 'creationFee',
-        chainId: chainId,
-      },
-      {
-        abi: lanchManagerAbi,
-        address: getAddress(contracts.launchManager, chainId),
-        functionName: 'sponsorshipFee',
-        chainId: chainId,
-      },
-    ],
+    contracts: launchManagerCalls,
   })
 
   useEffect(() => {
@@ -166,7 +169,11 @@ const ChatbotModal: React.FC<{ isActive: boolean }> = ({ isActive }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ inp: inputValue }),
+        body: JSON.stringify({
+          inp: inputValue,
+          userId: account || undefined,
+          wallet: account || undefined,
+        }),
       })
 
       if (!response.ok) {
@@ -179,8 +186,10 @@ const ChatbotModal: React.FC<{ isActive: boolean }> = ({ isActive }) => {
       const botResponse: Message = {
         text: botMessage.message,
         sender: 'bot',
-        command: botMessage.command,
-        url: botMessage.url,
+        command: res.tradeIntent ? 'open_margin_trade' : botMessage.command,
+        url: res.tradeIntent
+          ? `/swap?tradeMode=PERPETUAL&leverage=${res.tradeIntent.leverage}&amount=${res.tradeIntent.amount}&marginSide=${res.tradeIntent.side}`
+          : botMessage.url,
         call: botMessage.call,
       }
 
@@ -456,7 +465,8 @@ const onCreateRocket = async (inputCommand) => {
       chainId,
     });
 
-    const hash = await writeContract(config, request);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const hash = await writeContract(config, request as any);
     const receipt = await waitForTransactionReceipt(config, { hash }) as TransactionReceipt;
 
     if (receipt.status) {
@@ -568,6 +578,8 @@ const createRocket = async (inputCommand) => {
         return 'CREATE';
       case 'zap_token':
         return 'ZAP';
+      case 'open_margin_trade':
+        return 'Execute on ShadowVault';
       default:
         return '';
     }

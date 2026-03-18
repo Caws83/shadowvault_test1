@@ -20,6 +20,8 @@ interface ImportMetaEnv {
 
   readonly VITE_API_PROFILE: string
 
+  /** Backend API base URL (e.g. http://localhost:3000 for local dev). Bots/response and other API calls use this. */
+  readonly VITE_API_URL?: string
   /** Set to 'false' to hide the AI Agent panel. Omit or any other value shows it. */
   readonly VITE_ENABLE_AI_AGENT?: string
   /** Backend base URL for AI agent (e.g. https://your-api.up.railway.app). If set, requests go here instead of relative /api/ai-agent. */

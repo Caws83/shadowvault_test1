@@ -11,7 +11,10 @@ export const BASE_BSC_SCAN_URLS = {
   245022926: 'https://devnet.neonscan.org/',
 }
 
-export const API_URL = 'https://api.marswap.exchange'
+export const API_URL =
+  (typeof import.meta !== 'undefined' && (import.meta.env?.VITE_API_URL as string))
+    ? (import.meta.env.VITE_API_URL as string).replace(/\/$/, '')
+    : 'https://api.marswap.exchange'
 export const BLOCKS_PER_YEAR = (60 / EPOCH_TIME) * 60 * 24 * 365 // 10512000
 export const BASE_URL = `${window.location.origin}/`
 export const BASE_ADD_LIQUIDITY_URL = `${BASE_URL}/#/add`
