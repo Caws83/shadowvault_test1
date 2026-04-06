@@ -1,3 +1,5 @@
+# Backend API (ChangeNOW proxy, /api/*, /V2/*). Must match your Railway DEX API URL.
+VITE_API_URL=https://shadowvaulttest1-production.up.railway.app
 VITE_AI_AGENT_API_URL=https://shadowvaulttest1-production.up.railway.app
 VITE_ENABLE_AI_AGENT=true
 VITE_CHAIN_ID=97

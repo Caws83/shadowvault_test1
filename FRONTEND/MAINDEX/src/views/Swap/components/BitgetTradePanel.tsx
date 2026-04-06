@@ -345,7 +345,7 @@ export default function BitgetTradePanel({
   positionsLoading = false,
   nativeSymbol = 'BNB',
 }: BitgetTradePanelProps) {
-  const [activeTab, setActiveTab] = useState<'swap' | 'margin' | 'bots'>('margin')
+  const [activeTab, setActiveTab] = useState<'swap' | 'margin' | 'bots'>('swap')
 
   const formatCollateral = (wei: bigint) => {
     const str = wei.toString()

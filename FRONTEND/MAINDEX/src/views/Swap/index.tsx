@@ -2,7 +2,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { CurrencyAmount, JSBI, Token, Trade } from 'sdk'
-import { Button, Text, Box, useModal, Flex, Card, CardHeader, TextHeader } from 'uikit'
+import { Button, Text, Box, useModal, Flex } from 'uikit'
 import { useIsTransactionUnsupported } from 'hooks/Trades'
 import { useTranslation } from 'contexts/Localization'
 import { getAddress, getWrappedAddress } from 'utils/addressHelpers'
@@ -12,15 +12,13 @@ import { dexs, dexList, defaultDex } from 'config/constants/dex'
 import { BigNumber } from 'bignumber.js'
 import { useGetFactoryTxFee } from 'utils/calls/factory'
 import { GreyCard } from '../../components/Card'
-import Column, { AutoColumn } from '../../components/Layout/Column'
+import { AutoColumn } from '../../components/Layout/Column'
 import ConfirmSwapModal from './components/ConfirmSwapModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { AutoRow, RowBetween } from '../../components/Layout/Row'
 import confirmPriceImpactWithoutFee from './components/confirmPriceImpactWithoutFee'
 import { ArrowWrapper, Wrapper } from './components/styleds'
 import ImportTokenWarningModal from './components/ImportTokenWarningModal'
-import ProgressSteps from './components/ProgressSteps'
-import { AppBody } from '../../components/App'
 import { INITIAL_ALLOWED_SLIPPAGE } from '../../config/constants'
 import { useCurrency, useAllTokens } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
@@ -36,7 +34,6 @@ import {
 import { useUserSlippageTolerance, useUserDex, useGasTokenManager } from '../../state/user/hooks'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
-import CircleLoader from '../../components/Loader/CircleLoader'
 import Page from '../Page'
 import { useAccount, usePublicClient } from 'wagmi'
 import { useNavigate } from 'react-router-dom'
@@ -60,53 +57,13 @@ import { LeverageMode } from 'features/ai-agent/types'
 import CopyAddress from 'components/Menu/UserMenu/CopyAddress'
 import useToast from 'hooks/useToast'
 import { useMarginOpen, useUserPositions } from 'hooks/useMarginContract'
+import { API_URL } from 'config'
 
 const Label = styled(Text)`
   font-size: 14px;
   font-weight: bold;
   color: ${({ theme }) => theme.colors.secondary};
 `
-export const MenuWrapper = styled(Card)`
-  border-radius: 10px;
-`
-
-const StyledCardHeader = styled(CardHeader)`
-  background: #1b1b1f;
-  border-bottom: 1px solid #3c3f44;
-  padding: 0;
-`;
-
-const HeaderContainer = styled(Flex)`
-  width: 100%;
-  padding: 24px;
-  background: #1b1b1f;
-  padding-left: 48px;
-`;
-
-const StyledButton = styled(Button)`
-  background-image: linear-gradient(9deg, rgb(156, 69, 69) 0%, rgb(110, 40, 40) 100%);
-  color: white;
-`
-
-const AnimatedBorderBox = styled.div`
-  position: relative;
-  border-radius: 24px;
-  padding: 4px;
-  background: linear-gradient(90deg, #1a1a1a, rgba(80, 45, 45, 0.6), #1a1a1a);
-  background-size: 200% 100%;
-  animation: gradient 6s ease-in-out infinite;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-
-  @keyframes gradient {
-    0%, 100% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-  }
-`
-
 const SwapPageLayout = styled.div`
   display: flex;
   width: 100%;
@@ -190,29 +147,32 @@ const FeeBadge = styled.span`
   white-space: nowrap;
 `
 
-const SwapBranding = styled.div`
-  margin-bottom: 16px;
-  padding: 12px 0 8px;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-`
-
-const SwapBrandTitle = styled.div`
-  font-size: 18px;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: 0.02em;
-  margin-bottom: 4px;
-`
-
-const SwapTagline = styled.div`
-  font-size: 13px;
-  color: rgba(255,255,255,0.75);
-`
-
-const SpanRed = styled.span`
-  color: ${({ theme }) => theme.colors.primary};
+const SwapPrimaryButton = styled(Button)`
+  width: 100%;
+  margin-top: 12px;
   font-weight: 600;
+  text-transform: none;
 `
+
+type ChangeNowTransaction = {
+  id?: string
+  payinAddress?: string
+  payinAmount?: string
+  payoutAddress?: string
+  payoutAmount?: string
+}
+
+const CHANGE_NOW_TICKER_MAP: Record<string, string> = {
+  weth: 'eth',
+  wbnb: 'bnb',
+  wmatic: 'matic',
+  wbtc: 'btc',
+}
+
+function normalizeChangeNowTicker(symbol: string): string {
+  const s = symbol.trim().toLowerCase()
+  return CHANGE_NOW_TICKER_MAP[s] ?? s
+}
 
 export default function Swap () {
   const { t } = useTranslation()
@@ -379,7 +339,7 @@ export default function Swap () {
     })
 
   const { address: account } = useAccount()
-  const { toastInfo } = useToast()
+  const { toastInfo, toastError, toastSuccess } = useToast()
 
   const navigate = useNavigate()
 
@@ -556,29 +516,27 @@ export default function Swap () {
   }, [ dex, payWithPM, payToken, showWrap, changed,swapInputError]); // Dependencies for the effect
   
 
+  /** On-chain swap (Trade mode: Public) — used by ConfirmSwapModal after user confirms */
   const handleSwap = useCallback(async () => {
     if (priceImpactWithoutFee && !confirmPriceImpactWithoutFee(priceImpactWithoutFee)) {
       return
     }
     setSwapState({ attemptingTxn: true, tradeToConfirm, swapErrorMessage: undefined, txHash: undefined })
 
-    if(approval !== ApprovalState.APPROVED){
-      console.log("gere ger==")
+    if (approval !== ApprovalState.APPROVED) {
       try {
         await approveCallback()
-      } catch{
-        console.log("failed approval")
+      } catch {
+        setSwapState({ attemptingTxn: false, tradeToConfirm, swapErrorMessage: undefined, txHash: undefined })
         return
       }
-     }
-    
+    }
 
     swapCallback()
-      .then(hash => {
+      .then((hash) => {
         setSwapState({ attemptingTxn: false, tradeToConfirm, swapErrorMessage: undefined, txHash: hash })
       })
-      .catch(error => {
-        console.log(error)
+      .catch((error) => {
         setSwapState({
           attemptingTxn: false,
           tradeToConfirm,
@@ -586,7 +544,67 @@ export default function Swap () {
           txHash: undefined,
         })
       })
-  }, [priceImpactWithoutFee, swapCallback, tradeToConfirm])
+  }, [
+    approval,
+    approveCallback,
+    priceImpactWithoutFee,
+    swapCallback,
+    tradeToConfirm,
+  ])
+
+  /** ChangeNOW anon swap (Trade mode: Private) — no AMM route required */
+  const handlePrivateAnonSwap = useCallback(async () => {
+    if (!account) {
+      toastError(t('Wallet'), t('Connect your wallet'))
+      return
+    }
+    const fromSym = normalizeChangeNowTicker(currencies[Field.INPUT]?.symbol || '')
+    const toSym = normalizeChangeNowTicker(currencies[Field.OUTPUT]?.symbol || '')
+    const amount = parsedAmounts[Field.INPUT]?.toExact()
+    if (!fromSym || !toSym || !amount || !parseFloat(amount)) {
+      toastError(t('Private swap'), t('Enter amount and select tokens'))
+      return
+    }
+
+    setSwapState({ attemptingTxn: true, tradeToConfirm, swapErrorMessage: undefined, txHash: undefined })
+    try {
+      const response = await fetch(`${API_URL}/api/changenow/transaction`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          from: fromSym,
+          to: toSym,
+          amount,
+          address: recipient || account,
+          refundAddress: account,
+        }),
+      })
+      const data: ChangeNowTransaction | { error?: string } = await response.json()
+      if (!response.ok) {
+        throw new Error((data as { error?: string })?.error || 'ChangeNOW transaction failed')
+      }
+      const order = data as ChangeNowTransaction
+      setSwapState({ attemptingTxn: false, tradeToConfirm, swapErrorMessage: undefined, txHash: undefined })
+      onUserInput(Field.INPUT, '')
+      toastSuccess(
+        t('Private swap created'),
+        `${t('Order')}: ${order.id || '—'} — ${t('Deposit to')}: ${order.payinAddress || '—'}`,
+      )
+    } catch (e) {
+      setSwapState({ attemptingTxn: false, tradeToConfirm, swapErrorMessage: undefined, txHash: undefined })
+      toastError(t('Private swap failed'), (e as Error)?.message || t('Try again'))
+    }
+  }, [
+    account,
+    currencies,
+    onUserInput,
+    parsedAmounts,
+    recipient,
+    t,
+    toastError,
+    toastSuccess,
+    tradeToConfirm,
+  ])
 
   // warnings on slippage
   const priceImpactSeverity = warningSeverity(priceImpactWithoutFee)
@@ -914,6 +932,50 @@ export default function Swap () {
             </AutoColumn>
 
             <PayMasterPreview paymasterInfo={paymasterInfo} dex={dex} onDisableStatusChange={handleDisableStatusChange} error={entireError}/>
+
+            {!showWrap && (
+              <Flex flexDirection="column" gap="8px" mt="8px" px="16px">
+                {tradeMode === 'PERPETUAL' ? (
+                  <Text fontSize="12px" color="textSubtle" textAlign="center">
+                    {t('Perpetual trading uses the Margin tab. Switch to Margin and place your order there.')}
+                  </Text>
+                ) : tradeMode === 'PRIVATE' ? (
+                  <>
+                    <Text fontSize="12px" color="textSubtle" textAlign="center">
+                      {t('Anon swap via ChangeNOW — you will receive a deposit address to send from your wallet.')}
+                    </Text>
+                    <SwapPrimaryButton
+                      scale="lg"
+                      disabled={
+                        showConnectButton ||
+                        attemptingTxn ||
+                        !currencies[Field.INPUT] ||
+                        !currencies[Field.OUTPUT] ||
+                        !parsedAmounts[Field.INPUT]?.greaterThan(JSBI.BigInt(0))
+                      }
+                      onClick={handlePrivateAnonSwap}
+                    >
+                      {attemptingTxn ? t('Creating order…') : t('Private swap (Anon)')}
+                    </SwapPrimaryButton>
+                  </>
+                ) : (
+                  <SwapPrimaryButton
+                    scale="lg"
+                    disabled={
+                      showConnectButton ||
+                      swapIsUnsupported ||
+                      !isValid ||
+                      priceImpactSeverity > 3 ||
+                      !!swapCallbackError ||
+                      attemptingTxn
+                    }
+                    onClick={() => onPresentConfirmModal()}
+                  >
+                    {t('Swap')}
+                  </SwapPrimaryButton>
+                )}
+              </Flex>
+            )}
 
             {showConnectButton && (
               <Flex justifyContent="center" alignItems="center" mt="12px" mb="8px">
