@@ -134,9 +134,9 @@ const InputRow = styled.form`
 
 const ChatInput = styled.textarea`
   flex: 1;
-  min-height: 44px;
-  max-height: 96px;
-  padding: 8px 10px;
+  min-height: 48px;
+  max-height: 120px;
+  padding: 10px 12px;
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.16);
   background: rgba(4, 4, 8, 0.95);
@@ -191,7 +191,7 @@ const ShadowVaultAIAgentPanel: React.FC = () => {
       id: 'system-welcome',
       role: 'assistant',
       content:
-        'I’m the ShadowVault AI Agent. I can:\n\n• Answer Polymarket odds and markets (e.g. “/polymarket biden” or “odds for Trump 2024”)\n• Parse margin trades: say e.g. “Long YES on [market] with $200 at 5x leverage” — I’ll show risk and ask you to type CONFIRM\n• After CONFIRM, use “Execute on ShadowVault” to open the Swap page with your trade prefilled so you can sign in your wallet.',
+        'Polymarket odds · margin trades (describe size & leverage) · type CONFIRM when you accept the risk. Then tap Execute on ShadowVault to open Swap prefilled so you can sign.',
     },
   ])
   const [input, setInput] = useState('')
@@ -335,7 +335,7 @@ const ShadowVaultAIAgentPanel: React.FC = () => {
       <HeaderRow>
         <div>
           <Title>ShadowVault AI Assistant</Title>
-          <Subtitle>Polymarket odds, margin trades (long/short), or type CONFIRM to execute — then open Swap to sign.</Subtitle>
+          <Subtitle>Odds, margin, CONFIRM — then Swap to sign.</Subtitle>
         </div>
         <BadgeRow>
           <Badge>AI Agents</Badge>
@@ -346,7 +346,7 @@ const ShadowVaultAIAgentPanel: React.FC = () => {
       <ChatShell>
         <MessagesScroll ref={scrollRef}>
           {messages.length === 0 ? (
-            <EmptyState>Ask Polymarket odds, or request a margin trade (e.g. “Long YES on Biden with $200 5x”). Type CONFIRM to execute, then use the button to open Swap.</EmptyState>
+            <EmptyState>Ask odds or describe a margin trade. Type CONFIRM, then Execute on ShadowVault.</EmptyState>
           ) : (
             messages.map((m) => (
               <MessageBubble key={m.id} role={m.role}>
@@ -368,7 +368,8 @@ const ShadowVaultAIAgentPanel: React.FC = () => {
           <ChatInput
             value={input}
             onChange={handleChange}
-            placeholder="e.g. /polymarket biden — or Long YES on Biden 2024 with $200 at 5x leverage"
+            placeholder="/polymarket biden — or Long YES with $200 at 5x"
+            rows={2}
           />
           <SendButton type="submit" disabled={!input.trim() || isLoading}>
             {isLoading ? 'Thinking…' : 'Send'}

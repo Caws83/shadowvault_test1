@@ -306,6 +306,8 @@ interface BitgetTradePanelProps {
   isClosePending?: boolean
   positionsLoading?: boolean
   nativeSymbol?: string
+  /** When opening /swap?tradeMode=PERPETUAL, start on Margin */
+  initialTab?: 'swap' | 'margin' | 'bots'
 }
 
 export default function BitgetTradePanel({
@@ -344,8 +346,9 @@ export default function BitgetTradePanel({
   isClosePending = false,
   positionsLoading = false,
   nativeSymbol = 'BNB',
+  initialTab = 'swap',
 }: BitgetTradePanelProps) {
-  const [activeTab, setActiveTab] = useState<'swap' | 'margin' | 'bots'>('swap')
+  const [activeTab, setActiveTab] = useState<'swap' | 'margin' | 'bots'>(initialTab)
 
   const formatCollateral = (wei: bigint) => {
     const str = wei.toString()

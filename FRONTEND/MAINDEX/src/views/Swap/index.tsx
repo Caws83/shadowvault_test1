@@ -552,7 +552,7 @@ export default function Swap () {
     tradeToConfirm,
   ])
 
-  /** ChangeNOW anon swap (Trade mode: Private) — no AMM route required */
+  /** Private route: external settlement via backend (no AMM route required) */
   const handlePrivateAnonSwap = useCallback(async () => {
     if (!account) {
       toastError(t('Wallet'), t('Connect your wallet'))
@@ -581,13 +581,13 @@ export default function Swap () {
       })
       const data: ChangeNowTransaction | { error?: string } = await response.json()
       if (!response.ok) {
-        throw new Error((data as { error?: string })?.error || 'ChangeNOW transaction failed')
+        throw new Error((data as { error?: string })?.error || 'ShadowVault private swap failed')
       }
       const order = data as ChangeNowTransaction
       setSwapState({ attemptingTxn: false, tradeToConfirm, swapErrorMessage: undefined, txHash: undefined })
       onUserInput(Field.INPUT, '')
       toastSuccess(
-        t('Private swap created'),
+        t('ShadowVault private swap'),
         `${t('Order')}: ${order.id || '—'} — ${t('Deposit to')}: ${order.payinAddress || '—'}`,
       )
     } catch (e) {
@@ -732,6 +732,14 @@ export default function Swap () {
   const pairLabel = `${inputSymbol}/${outputSymbol}`.replace('//', '/') || '—'
   const midPrice = trade?.executionPrice ? trade.executionPrice.toSignificant(6) : '0'
 
+  /** Deep link: /#/swap?tradeMode=PERPETUAL&… opens Margin tab */
+  const bitgetInitialTab = useMemo<'swap' | 'margin' | 'bots'>(() => {
+    if (typeof window === 'undefined') return 'swap'
+    const h = window.location.hash
+    const q = h.includes('?') ? h.split('?')[1] : ''
+    return new URLSearchParams(q).get('tradeMode') === 'PERPETUAL' ? 'margin' : 'swap'
+  }, [])
+
   const handleBBO = () => setLimitPrice(midPrice)
 
   return (
@@ -756,6 +764,7 @@ export default function Swap () {
 
         <TradePane>
         <BitgetTradePanel
+          initialTab={bitgetInitialTab}
           chainSelector={<ChainSelector currentChainId={localDex.chainId} onChainChange={handleChainSelect} />}
           tradeModeSelector={<TradeModeDropdown value={tradeMode} onChange={setTradeMode} />}
           pmTokenSelector={<PMTokenSelector />}
@@ -942,7 +951,7 @@ export default function Swap () {
                 ) : tradeMode === 'PRIVATE' ? (
                   <>
                     <Text fontSize="12px" color="textSubtle" textAlign="center">
-                      {t('Anon swap via ChangeNOW — you will receive a deposit address to send from your wallet.')}
+                      {t('ShadowVault private swap — you will get a deposit address to send from your wallet.')}
                     </Text>
                     <SwapPrimaryButton
                       scale="lg"
