@@ -201,7 +201,7 @@ const ActionButtons = styled.div`
   margin-bottom: 8px;
 `
 
-const ActionBtn = styled.button<{ variant: 'long' | 'short'; disabled?: boolean }>`
+const ActionBtn = styled.button<{ variant: 'long' | 'short'; disabled?: boolean; preferred?: boolean }>`
   flex: 1;
   padding: 14px 20px;
   border: none;
@@ -211,6 +211,7 @@ const ActionBtn = styled.button<{ variant: 'long' | 'short'; disabled?: boolean 
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   transition: opacity 0.2s;
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+  box-shadow: ${({ preferred }) => (preferred ? '0 0 0 2px rgba(230,57,70,0.35) inset' : 'none')};
 
   ${({ variant }) =>
     variant === 'long'
@@ -308,6 +309,7 @@ interface BitgetTradePanelProps {
   nativeSymbol?: string
   /** When opening /swap?tradeMode=PERPETUAL, start on Margin */
   initialTab?: 'swap' | 'margin' | 'bots'
+  preferredSide?: 'long' | 'short' | null
 }
 
 export default function BitgetTradePanel({
@@ -347,6 +349,7 @@ export default function BitgetTradePanel({
   positionsLoading = false,
   nativeSymbol = 'BNB',
   initialTab = 'swap',
+  preferredSide = null,
 }: BitgetTradePanelProps) {
   const [activeTab, setActiveTab] = useState<'swap' | 'margin' | 'bots'>(initialTab)
 
@@ -484,6 +487,7 @@ export default function BitgetTradePanel({
                 <ActionBtn
                   type="button"
                   variant="long"
+                  preferred={preferredSide === 'long'}
                   disabled={isLongDisabled}
                   onClick={onOpenLong}
                 >
@@ -492,6 +496,7 @@ export default function BitgetTradePanel({
                 <ActionBtn
                   type="button"
                   variant="short"
+                  preferred={preferredSide === 'short'}
                   disabled={isShortDisabled}
                   onClick={onOpenShort}
                 >

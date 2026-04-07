@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { Flex, Text } from 'uikit'
 
@@ -104,6 +104,7 @@ const DepthSelect = styled.select`
 interface OrderBookProps {
   midPrice: string
   pairLabel: string
+  symbol?: string
 }
 
 function genBids(mid: number): { price: string; amount: string; total: string }[] {
@@ -130,15 +131,90 @@ function genAsks(mid: number): { price: string; amount: string; total: string }[
   return out
 }
 
-export default function OrderBook({ midPrice, pairLabel }: OrderBookProps) {
+type BookRow = { price: string; amount: string; total: string }
+
+const toBookRows = (levels: [string, string][]): BookRow[] => {
+  let running = 0
+  return levels.map(([p, q]) => {
+    const qty = parseFloat(q) || 0
+    running += qty
+    return {
+      price: (parseFloat(p) || 0).toFixed(2),
+      amount: qty.toFixed(4),
+      total: running.toFixed(4),
+    }
+  })
+}
+
+export default function OrderBook({ midPrice, pairLabel, symbol }: OrderBookProps) {
   const [activeTab, setActiveTab] = useState<'orderbook' | 'trades'>('orderbook')
-  const { bids, asks } = useMemo(() => {
+  const [book, setBook] = useState<{ bids: BookRow[]; asks: BookRow[] } | null>(null)
+  const [bookError, setBookError] = useState<string | null>(null)
+  const [fallbackOnly, setFallbackOnly] = useState(false)
+
+  const fallbackBook = useMemo(() => {
     const mid = parseFloat(midPrice) > 0 ? parseFloat(midPrice) : 1
     return { bids: genBids(mid), asks: genAsks(mid) }
   }, [midPrice])
+  const bids = book?.bids?.length ? book.bids : fallbackBook.bids
+  const asks = book?.asks?.length ? book.asks : fallbackBook.asks
+
+  useEffect(() => {
+    if (fallbackOnly) return
+    const base = (symbol || pairLabel.split('/')[0] || '').toUpperCase().trim()
+    if (!base) return
+    const market = `${base}USDT`
+    const controller = new AbortController()
+    let failures = 0
+    let stopPolling = false
+
+    const loadDepth = async () => {
+      if (stopPolling) return
+      try {
+        setBookError(null)
+        const response = await fetch(
+          `https://api.binance.com/api/v3/depth?symbol=${market}&limit=12`,
+          { signal: controller.signal },
+        )
+        if (!response.ok) throw new Error(`Depth unavailable for ${market}`)
+        const data = await response.json()
+        const asksRaw = (data?.asks || []).slice(0, 12) as [string, string][]
+        const bidsRaw = (data?.bids || []).slice(0, 12) as [string, string][]
+        setBook({
+          asks: toBookRows(asksRaw),
+          bids: toBookRows(bidsRaw),
+        })
+        failures = 0
+      } catch (e) {
+        if ((e as Error)?.name === 'AbortError') return
+        setBook(null)
+        setBookError((e as Error)?.message || 'Orderbook unavailable')
+        failures += 1
+        // If external feed keeps failing, switch to stable local fallback depth.
+        if (failures >= 3) {
+          stopPolling = true
+          setFallbackOnly(true)
+        }
+      }
+    }
+
+    loadDepth()
+    const id = window.setInterval(loadDepth, 6000)
+    return () => {
+      controller.abort()
+      window.clearInterval(id)
+    }
+  }, [fallbackOnly, pairLabel, symbol])
 
   const maxBid = Math.max(...bids.map((b) => parseFloat(b.total)), 0.01)
   const maxAsk = Math.max(...asks.map((a) => parseFloat(a.total)), 0.01)
+  const safeWidth = (v: number) => {
+    if (!Number.isFinite(v)) return 0
+    if (v < 0) return 0
+    if (v > 100) return 100
+    return v
+  }
+  const safeDepthTotal = maxBid + maxAsk > 0 ? maxBid + maxAsk : 1
 
   return (
     <Wrap>
@@ -167,10 +243,15 @@ export default function OrderBook({ midPrice, pairLabel }: OrderBookProps) {
             <span style={{ textAlign: 'right' }}>Quantity ({pairLabel.split('/')[0] || 'BTC'})</span>
             <span style={{ textAlign: 'right' }}>Total ({pairLabel.split('/')[0] || 'BTC'})</span>
           </Header>
+          {bookError && (
+            <Text fontSize="11px" color="textSubtle" px="12px" py="4px">
+              Live book unavailable, showing fallback depth.
+            </Text>
+          )}
           <div style={{ flex: 1, minHeight: 0, overflow: 'auto', maxHeight: 200 }}>
             {[...asks].reverse().map((a, i) => (
               <Row key={'a' + i}>
-                <DepthBar width={(parseFloat(a.total) / maxAsk) * 100} isAsk />
+                <DepthBar width={safeWidth((parseFloat(a.total) / maxAsk) * 100)} isAsk />
                 <span style={{ color: '#a55b5b' }}>{a.price}</span>
                 <span style={{ textAlign: 'right' }}>{a.amount}</span>
                 <span style={{ textAlign: 'right', color: 'rgba(255,255,255,0.6)' }}>{a.total}</span>
@@ -181,7 +262,7 @@ export default function OrderBook({ midPrice, pairLabel }: OrderBookProps) {
           <div style={{ flex: 1, minHeight: 0, overflow: 'auto', maxHeight: 200 }}>
             {bids.map((b, i) => (
               <Row key={'b' + i}>
-                <DepthBar width={(parseFloat(b.total) / maxBid) * 100} />
+                <DepthBar width={safeWidth((parseFloat(b.total) / maxBid) * 100)} />
                 <span style={{ color: '#00B42A' }}>{b.price}</span>
                 <span style={{ textAlign: 'right' }}>{b.amount}</span>
                 <span style={{ textAlign: 'right', color: 'rgba(255,255,255,0.6)' }}>{b.total}</span>
@@ -189,8 +270,8 @@ export default function OrderBook({ midPrice, pairLabel }: OrderBookProps) {
             ))}
           </div>
           <DepthBarRow style={{ flexShrink: 0 }}>
-            <DepthBarItem color="#00B42A">B {((maxBid / (maxBid + maxAsk)) * 100).toFixed(1)}%</DepthBarItem>
-            <DepthBarItem color="#a55b5b">S {((maxAsk / (maxBid + maxAsk)) * 100).toFixed(1)}%</DepthBarItem>
+            <DepthBarItem color="#00B42A">B {((maxBid / safeDepthTotal) * 100).toFixed(1)}%</DepthBarItem>
+            <DepthBarItem color="#a55b5b">S {((maxAsk / safeDepthTotal) * 100).toFixed(1)}%</DepthBarItem>
           </DepthBarRow>
         </Flex>
       )}

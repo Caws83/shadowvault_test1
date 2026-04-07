@@ -174,6 +174,19 @@ function normalizeChangeNowTicker(symbol: string): string {
   return CHANGE_NOW_TICKER_MAP[s] ?? s
 }
 
+const CHANGENOW_NETWORK_BY_CHAIN: Record<number, string> = {
+  1: 'eth',
+  56: 'bsc',
+  97: 'bsc',
+  11155111: 'eth',
+  137: 'matic',
+}
+
+const SUPPORTED_PERP_BASES = new Set([
+  'BTC', 'ETH', 'BNB', 'SOL', 'XRP', 'ADA', 'DOGE', 'AVAX', 'DOT', 'MATIC',
+  'LINK', 'UNI', 'ATOM', 'LTC', 'ARB', 'OP', 'SUI', 'PEPE', 'SHIB'
+])
+
 export default function Swap () {
   const { t } = useTranslation()
   const { chain } = useAccount()
@@ -189,6 +202,8 @@ export default function Swap () {
   const [limitPrice, setLimitPrice] = useState('')
   const [quantityPercent, setQuantityPercent] = useState(0)
   const [chartSymbol, setChartSymbol] = useState('')
+  const [deepLinkMarginSide, setDeepLinkMarginSide] = useState<'long' | 'short' | null>(null)
+  const [hasShownDeepLinkHint, setHasShownDeepLinkHint] = useState(false)
   
 
   useEffect(() => {
@@ -272,10 +287,26 @@ export default function Swap () {
       if (tradeModeParam === 'PERPETUAL') {
         setTradeMode('PERPETUAL');
       }
+      const leverageModeParam = urlParams.get('leverageMode')?.toUpperCase();
+      if (leverageModeParam === LeverageMode.PSYCHO) {
+        setLeverageMode(LeverageMode.PSYCHO);
+      }
+      if (leverageModeParam === LeverageMode.SAFE) {
+        setLeverageMode(LeverageMode.SAFE);
+      }
       const leverageParam = urlParams.get('leverage');
       if (leverageParam != null && leverageParam !== '') {
         const lev = parseInt(leverageParam, 10);
-        if (!Number.isNaN(lev) && lev >= 1 && lev <= 100) setLeverage(lev);
+        if (!Number.isNaN(lev) && lev >= 1 && lev <= 100) {
+          setLeverage(lev);
+          if (lev > 10) setLeverageMode(LeverageMode.PSYCHO);
+        }
+      }
+      const marginSide = urlParams.get('marginSide')?.toLowerCase()
+      if (marginSide === 'long' || marginSide === 'short') {
+        setDeepLinkMarginSide(marginSide)
+        setHasShownDeepLinkHint(false)
+        setTradeModeUI('open')
       }
       const marginAmountParam = urlParams.get('amount');
       if (marginAmountParam != null && marginAmountParam !== '' && !amountInput) {
@@ -286,6 +317,18 @@ export default function Swap () {
     // Call the fetchData function
     fetchData().catch(console.error); // Handle potential errors
   }, [chain?.id, setAmountInp, setAutoAI]);
+
+  const getLeverageBounds = useCallback(
+    (mode: LeverageMode): { min: number; max: number } =>
+      mode === LeverageMode.SAFE ? { min: 5, max: 10 } : { min: 1, max: 100 },
+    [],
+  )
+
+  useEffect(() => {
+    const { min, max } = getLeverageBounds(leverageMode)
+    if (leverage < min) setLeverage(min)
+    if (leverage > max) setLeverage(max)
+  }, [getLeverageBounds, leverage, leverageMode])
 
   useEffect(() => {
     handleTypeInput(amountInp)
@@ -345,6 +388,15 @@ export default function Swap () {
 
   // get custom setting values for user
   const [allowedSlippage] = useUserSlippageTolerance()
+
+  useEffect(() => {
+    if (!deepLinkMarginSide || tradeMode !== 'PERPETUAL' || hasShownDeepLinkHint) return
+    toastInfo(
+      `Perpetual ${deepLinkMarginSide === 'long' ? 'Long' : 'Short'} ready`,
+      `Mode: ${leverageMode} • Leverage: ${leverage}x`,
+    )
+    setHasShownDeepLinkHint(true)
+  }, [deepLinkMarginSide, hasShownDeepLinkHint, leverage, leverageMode, toastInfo, tradeMode])
 
   // Multi Dex
 
@@ -561,6 +613,7 @@ export default function Swap () {
     const fromSym = normalizeChangeNowTicker(currencies[Field.INPUT]?.symbol || '')
     const toSym = normalizeChangeNowTicker(currencies[Field.OUTPUT]?.symbol || '')
     const amount = parsedAmounts[Field.INPUT]?.toExact()
+    const chainNetwork = CHANGENOW_NETWORK_BY_CHAIN[localDex.chainId]
     if (!fromSym || !toSym || !amount || !parseFloat(amount)) {
       toastError(t('Private swap'), t('Enter amount and select tokens'))
       return
@@ -574,6 +627,7 @@ export default function Swap () {
         body: JSON.stringify({
           from: fromSym,
           to: toSym,
+          ...(chainNetwork ? { fromNetwork: chainNetwork, toNetwork: chainNetwork } : {}),
           amount,
           address: recipient || account,
           refundAddress: account,
@@ -600,6 +654,7 @@ export default function Swap () {
     onUserInput,
     parsedAmounts,
     recipient,
+    localDex.chainId,
     t,
     toastError,
     toastSuccess,
@@ -660,6 +715,40 @@ export default function Swap () {
     },
 
     [onCurrencySelection],
+  )
+
+  const findTokenBySymbol = useCallback(
+    (symbol: string): Token | undefined => {
+      const target = symbol.trim().toUpperCase()
+      const all = Object.values(defaultTokens || {})
+      return all.find((t) => t?.symbol?.toUpperCase() === target)
+    },
+    [defaultTokens],
+  )
+
+  /**
+   * Keep perpetual pair dropdown synced with swap currencies.
+   * Example selection "BTC" -> INPUT=BTC, OUTPUT=USDT when available on current chain.
+   */
+  const handlePerpPairChange = useCallback(
+    (baseSymbol: string) => {
+      const base = baseSymbol.trim().toUpperCase()
+      setChartSymbol(base)
+
+      const baseToken = findTokenBySymbol(base)
+      const quoteToken = findTokenBySymbol('USDT') || findTokenBySymbol('USDC')
+
+      if (baseToken) {
+        onCurrencySelection(Field.INPUT, baseToken, localDex.chainId)
+      } else {
+        toastInfo('Pair sync', `${base}/USDT selected for chart. Token not found in list on this chain.`)
+      }
+
+      if (quoteToken) {
+        onCurrencySelection(Field.OUTPUT, quoteToken, localDex.chainId)
+      }
+    },
+    [findTokenBySymbol, localDex.chainId, onCurrencySelection, toastInfo],
   )
 
   const swapIsUnsupported = useIsTransactionUnsupported(localDex.chainId, currencies?.INPUT, currencies?.OUTPUT)
@@ -731,6 +820,8 @@ export default function Swap () {
   const outputSymbol = currencies[Field.OUTPUT]?.symbol ?? ''
   const pairLabel = `${inputSymbol}/${outputSymbol}`.replace('//', '/') || '—'
   const midPrice = trade?.executionPrice ? trade.executionPrice.toSignificant(6) : '0'
+  const selectedPerpBase = (chartSymbol || inputSymbol || '').toUpperCase()
+  const perpPairSupported = !selectedPerpBase || SUPPORTED_PERP_BASES.has(selectedPerpBase)
 
   /** Deep link: /#/swap?tradeMode=PERPETUAL&… opens Margin tab */
   const bitgetInitialTab = useMemo<'swap' | 'margin' | 'bots'>(() => {
@@ -741,6 +832,14 @@ export default function Swap () {
   }, [])
 
   const handleBBO = () => setLimitPrice(midPrice)
+  const handleLeverageChange = useCallback(
+    (next: number) => {
+      const { min, max } = getLeverageBounds(leverageMode)
+      if (Number.isNaN(next)) return
+      setLeverage(Math.max(min, Math.min(max, next)))
+    },
+    [getLeverageBounds, leverageMode],
+  )
 
   return (
     <Page maxWidth="100%" px="0" style={{ paddingTop: '8px', paddingBottom: '16px', paddingLeft: '24px', paddingRight: '24px' }}>
@@ -750,7 +849,7 @@ export default function Swap () {
           <Flex mb="12px" alignItems="center" gap="12px" flexWrap="wrap">
             <PairSelectorDropdown
               value={chartSymbol || inputSymbol || 'BTC'}
-              onChange={(s) => setChartSymbol(s)}
+              onChange={handlePerpPairChange}
             />
           </Flex>
           <ChartSection>
@@ -759,7 +858,7 @@ export default function Swap () {
         </ChartPane>
 
         <OrderBookPane>
-          <OrderBook midPrice={midPrice} pairLabel={pairLabel} />
+          <OrderBook midPrice={midPrice} pairLabel={pairLabel} symbol={selectedPerpBase || undefined} />
         </OrderBookPane>
 
         <TradePane>
@@ -773,9 +872,14 @@ export default function Swap () {
               Fee: {parseFloat(new BigNumber(FLAT_FEE).shiftedBy(-18).toFixed(5))} {publicClient?.chain?.nativeCurrency?.symbol ?? 'ETH'}
             </FeeBadge>
           }
+          preferredSide={tradeMode === 'PERPETUAL' ? deepLinkMarginSide : null}
           onDeposit={onPresentDepositModal}
           onTransfer={() => toastInfo('Transfer', 'Coming soon')}
           onOpenLong={async () => {
+            if (tradeMode === 'PERPETUAL' && !perpPairSupported) {
+              toastInfo(t('Perpetual'), t('Selected pair is not supported yet'))
+              return
+            }
             if (marginSupported && isNativeInput && marginAmountValid) {
               try {
                 await marginOpenLong(marginCollateralWei, leverage)
@@ -802,6 +906,10 @@ export default function Swap () {
             onPresentConfirmModal()
           }}
           onOpenShort={async () => {
+            if (tradeMode === 'PERPETUAL' && !perpPairSupported) {
+              toastInfo(t('Perpetual'), t('Selected pair is not supported yet'))
+              return
+            }
             if (marginSupported && isNativeInput && marginAmountValid) {
               try {
                 await marginOpenShort(marginCollateralWei, leverage)
@@ -827,14 +935,14 @@ export default function Swap () {
             setSwapState({ tradeToConfirm: trade, attemptingTxn: false, swapErrorMessage: undefined, txHash: undefined })
             onPresentConfirmModal()
           }}
-          isLongDisabled={showConnectButton || marginPending || (marginSupported ? !isNativeInput || !marginAmountValid : (swapIsUnsupported || showWrap || !isValid || priceImpactSeverity > 3 || !!swapCallbackError))}
-          isShortDisabled={showConnectButton || marginPending || (marginSupported ? !isNativeInput || !marginAmountValid : (swapIsUnsupported || showWrap || !isValid || priceImpactSeverity > 3 || !!swapCallbackError))}
+          isLongDisabled={showConnectButton || marginPending || (tradeMode === 'PERPETUAL' && !perpPairSupported) || (marginSupported ? !isNativeInput || !marginAmountValid : (swapIsUnsupported || showWrap || !isValid || priceImpactSeverity > 3 || !!swapCallbackError))}
+          isShortDisabled={showConnectButton || marginPending || (tradeMode === 'PERPETUAL' && !perpPairSupported) || (marginSupported ? !isNativeInput || !marginAmountValid : (swapIsUnsupported || showWrap || !isValid || priceImpactSeverity > 3 || !!swapCallbackError))}
           orderType={orderType}
           onOrderTypeChange={setOrderType}
           marginMode={marginMode}
           onMarginModeChange={setMarginMode}
           leverage={leverage}
-          onLeverageChange={setLeverage}
+          onLeverageChange={handleLeverageChange}
           mode={tradeModeUI}
           onModeChange={setTradeModeUI}
           price={limitPrice}

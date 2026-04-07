@@ -330,6 +330,32 @@ app.get('/api/data', async (_req: Request, res: Response) => {
   }
 })
 
+// Lightweight compatibility endpoints used by top menu / free-spin UI.
+app.get('/api/publicData', (req: Request, res: Response) => {
+  const chainId = Number(req.query.chainId || 97)
+  return res.json({
+    publicData: {
+      active: true,
+      chainId,
+      serverTime: Date.now()
+    }
+  })
+})
+
+app.get('/api/userData', (req: Request, res: Response) => {
+  const user = String(req.query.user || '').toLowerCase()
+  const chainId = Number(req.query.chainId || 97)
+  // Keep stable defaults so UI never crashes if spin backend is not wired.
+  return res.json({
+    userSpinData: {
+      user,
+      chainId,
+      spins: 0,
+      lastFreeSpinEpoch: 0
+    }
+  })
+})
+
 app.get('/api/changenow/currencies', async (_req: Request, res: Response) => {
   if (!CHANGENOW_API_KEY) {
     return res.status(500).json({ error: 'CHANGENOW_API_KEY is not configured' })
@@ -363,6 +389,8 @@ app.get('/api/changenow/estimate', async (req: Request, res: Response) => {
   const from = (req.query.from as string)?.toLowerCase()
   const to = (req.query.to as string)?.toLowerCase()
   const amount = req.query.amount as string
+  const fromNetwork = (req.query.fromNetwork as string)?.toLowerCase()
+  const toNetwork = (req.query.toNetwork as string)?.toLowerCase()
 
   if (!from || !to || !amount) {
     return res.status(400).json({ error: 'from, to and amount are required' })
@@ -376,6 +404,8 @@ app.get('/api/changenow/estimate', async (req: Request, res: Response) => {
         query: {
           fromCurrency: from,
           toCurrency: to,
+          ...(fromNetwork ? { fromNetwork } : {}),
+          ...(toNetwork ? { toNetwork } : {}),
           fromAmount: amount,
           flow: 'standard'
         }
@@ -399,6 +429,8 @@ app.post('/api/changenow/transaction', async (req: Request, res: Response) => {
 
   const from = (req.body.from as string)?.toLowerCase()
   const to = (req.body.to as string)?.toLowerCase()
+  const fromNetwork = (req.body.fromNetwork as string)?.toLowerCase()
+  const toNetwork = (req.body.toNetwork as string)?.toLowerCase()
   const amount = req.body.amount as string
   const address = req.body.address as string
   const refundAddress = (req.body.refundAddress as string) || address
@@ -415,6 +447,8 @@ app.post('/api/changenow/transaction', async (req: Request, res: Response) => {
         body: {
           fromCurrency: from,
           toCurrency: to,
+          ...(fromNetwork ? { fromNetwork } : {}),
+          ...(toNetwork ? { toNetwork } : {}),
           fromAmount: amount,
           address,
           refundAddress,
@@ -437,7 +471,9 @@ app.post('/api/changenow/transaction', async (req: Request, res: Response) => {
     return res.json(data)
   } catch (error) {
     console.error('ChangeNOW create transaction error:', error)
-    return res.status(500).json({ error: 'Failed to create ChangeNOW transaction' })
+    return res.status(500).json({
+      error: (error as Error)?.message || 'Failed to create ChangeNOW transaction'
+    })
   }
 })
 

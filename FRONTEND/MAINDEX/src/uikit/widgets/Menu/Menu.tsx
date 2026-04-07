@@ -181,12 +181,20 @@ const Menu: React.FC<NavProps> = ({
   useEffect(() => {
       const API_URL = `${baseAPI}/api/publicData?chainId=${chainId}`;
       fetch(API_URL)
-        .then((response) => response.json())
+        .then(async (response) => {
+          if (!response.ok) return null
+          const text = await response.text()
+          try {
+            return JSON.parse(text)
+          } catch {
+            return null
+          }
+        })
         .then((jsonData) => {
-          if (jsonData.publicData) {
+          if (jsonData?.publicData) {
             setIsActive(true);
           } else {
-            console.error('userData is missing from the API response.');
+            setIsActive(false);
           }
         })
         .catch((error) => {

@@ -60,16 +60,25 @@ const FreeSpinView: React.FC<{isActive: boolean}> = ({isActive}) => {
     if (address) {
       const API_URL = `${baseAPI}/api/userData?user=${address}&&chainId=${chainId}`;
       fetch(API_URL)
-        .then((response) => response.json())
+        .then(async (response) => {
+          if (!response.ok) return null
+          const text = await response.text()
+          try {
+            return JSON.parse(text)
+          } catch {
+            return null
+          }
+        })
         .then((jsonData) => {
-          if (jsonData.userSpinData) {
+          if (jsonData?.userSpinData) {
             setUD(jsonData.userSpinData);
           } else {
-            console.error('userData is missing from the API response.');
+            setUD(undefined);
           }
         })
         .catch((error) => {
           console.error('Error fetching data:', error);
+          setUD(undefined);
         });
     } else {
       setUD(undefined);
