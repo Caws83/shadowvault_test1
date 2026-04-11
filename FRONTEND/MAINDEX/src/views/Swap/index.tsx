@@ -57,6 +57,7 @@ import { LeverageMode } from 'features/ai-agent/types'
 import CopyAddress from 'components/Menu/UserMenu/CopyAddress'
 import useToast from 'hooks/useToast'
 import { useMarginOpen, useUserPositions } from 'hooks/useMarginContract'
+import { useHyperliquidPerp } from 'hooks/useHyperliquidPerp'
 import { API_URL } from 'config'
 
 const Label = styled(Text)`
@@ -182,11 +183,6 @@ const CHANGENOW_NETWORK_BY_CHAIN: Record<number, string> = {
   137: 'matic',
 }
 
-const SUPPORTED_PERP_BASES = new Set([
-  'BTC', 'ETH', 'BNB', 'SOL', 'XRP', 'ADA', 'DOGE', 'AVAX', 'DOT', 'MATIC',
-  'LINK', 'UNI', 'ATOM', 'LTC', 'ARB', 'OP', 'SUI', 'PEPE', 'SHIB'
-])
-
 export default function Swap () {
   const { t } = useTranslation()
   const { chain } = useAccount()
@@ -200,6 +196,7 @@ export default function Swap () {
   const [leverage, setLeverage] = useState(10)
   const [tradeModeUI, setTradeModeUI] = useState<'open' | 'close'>('open')
   const [limitPrice, setLimitPrice] = useState('')
+  const [hlPostOnly, setHlPostOnly] = useState(false)
   const [quantityPercent, setQuantityPercent] = useState(0)
   const [chartSymbol, setChartSymbol] = useState('')
   const [deepLinkMarginSide, setDeepLinkMarginSide] = useState<'long' | 'short' | null>(null)
@@ -820,8 +817,44 @@ export default function Swap () {
   const outputSymbol = currencies[Field.OUTPUT]?.symbol ?? ''
   const pairLabel = `${inputSymbol}/${outputSymbol}`.replace('//', '/') || '—'
   const midPrice = trade?.executionPrice ? trade.executionPrice.toSignificant(6) : '0'
-  const selectedPerpBase = (chartSymbol || inputSymbol || '').toUpperCase()
-  const perpPairSupported = !selectedPerpBase || SUPPORTED_PERP_BASES.has(selectedPerpBase)
+  const selectedPerpBase = (chartSymbol || inputSymbol || 'BTC').toUpperCase()
+
+  const hlPerp = useHyperliquidPerp(selectedPerpBase, account ?? undefined, tradeMode === 'PERPETUAL')
+
+  const displayMidPrice = useMemo(() => {
+    if (tradeMode !== 'PERPETUAL' || !hlPerp.orderbook) return midPrice
+    const bids = hlPerp.orderbook.bids
+    const asks = hlPerp.orderbook.asks
+    if (!bids.length || !asks.length) return midPrice
+    const bb = parseFloat(bids[0].price)
+    const ba = parseFloat(asks[0].price)
+    if (!Number.isFinite(bb) || !Number.isFinite(ba) || bb <= 0 || ba <= 0) return midPrice
+    return ((bb + ba) / 2).toFixed(6)
+  }, [tradeMode, hlPerp.orderbook, midPrice])
+
+  const perpPairSupported = tradeMode !== 'PERPETUAL' || hlPerp.coinSupported
+
+  const hlOnlyIsolated = useMemo(() => {
+    const u = hlPerp.universe.find((x) => x.name === selectedPerpBase)
+    return !!u?.onlyIsolated
+  }, [hlPerp.universe, selectedPerpBase])
+
+  useEffect(() => {
+    if (tradeMode === 'PERPETUAL' && hlOnlyIsolated && marginMode === 'cross') {
+      setMarginMode('isolated')
+    }
+  }, [tradeMode, hlOnlyIsolated, marginMode])
+
+  useEffect(() => {
+    if (tradeMode !== 'PERPETUAL' || !hlPerp.maxLevForCoin) return
+    if (leverage > hlPerp.maxLevForCoin) {
+      setLeverage(hlPerp.maxLevForCoin)
+    }
+  }, [tradeMode, hlPerp.maxLevForCoin, leverage])
+
+  useEffect(() => {
+    if (orderType === 'market') setHlPostOnly(false)
+  }, [orderType])
 
   /** Deep link: /#/swap?tradeMode=PERPETUAL&… opens Margin tab */
   const bitgetInitialTab = useMemo<'swap' | 'margin' | 'bots'>(() => {
@@ -831,15 +864,88 @@ export default function Swap () {
     return new URLSearchParams(q).get('tradeMode') === 'PERPETUAL' ? 'margin' : 'swap'
   }, [])
 
-  const handleBBO = () => setLimitPrice(midPrice)
+  const handleBBO = () => setLimitPrice(displayMidPrice)
   const handleLeverageChange = useCallback(
     (next: number) => {
       const { min, max } = getLeverageBounds(leverageMode)
       if (Number.isNaN(next)) return
-      setLeverage(Math.max(min, Math.min(max, next)))
+      const cap = tradeMode === 'PERPETUAL' && hlPerp.maxLevForCoin ? Math.min(max, hlPerp.maxLevForCoin) : max
+      setLeverage(Math.max(min, Math.min(cap, next)))
     },
-    [getLeverageBounds, leverageMode],
+    [getLeverageBounds, leverageMode, tradeMode, hlPerp.maxLevForCoin],
   )
+
+  const hlPanelMemo = useMemo(() => {
+    if (tradeMode !== 'PERPETUAL' || !hlPerp.userState) return undefined
+    return {
+      stale: !!hlPerp.orderbook?.stale,
+      accountValue: hlPerp.userState.marginSummary.accountValue,
+      totalMarginUsed: hlPerp.userState.marginSummary.totalMarginUsed,
+      withdrawable: hlPerp.userState.withdrawable,
+      positions: hlPerp.userState.positions
+        .filter((p) => p.side !== 'flat')
+        .map((p) => ({
+          coin: p.coin,
+          side: p.side,
+          szi: p.szi,
+          unrealizedPnl: p.unrealizedPnl,
+          lev: typeof p.leverage === 'object' && p.leverage && 'value' in p.leverage ? p.leverage.value : 1,
+        })),
+      openOrders: hlPerp.userState.openOrders.map((o) => ({
+        oid: o.oid,
+        coin: o.coin,
+        limitPx: o.limitPx,
+        sz: o.sz,
+        orderType: o.orderType,
+      })),
+      fills: hlPerp.userState.fills.slice(0, 25).map((f) => ({
+        coin: f.coin,
+        px: f.px,
+        sz: f.sz,
+        side: f.side,
+        time: f.time,
+      })),
+      onCancelOrder: async (coin: string, oid: number) => {
+        try {
+          await hlPerp.cancelOrder(coin, oid)
+          toastSuccess(t('Order'), t('Cancel submitted'))
+        } catch (e) {
+          toastError(t('Cancel'), (e as Error).message)
+        }
+      },
+      onCloseMarket: async (coin: string) => {
+        const pos = hlPerp.userState?.positions.find((p) => p.coin === coin && p.side !== 'flat')
+        if (!pos) return
+        const sz = Math.abs(parseFloat(pos.szi))
+        if (!(sz > 0)) return
+        try {
+          await hlPerp.placeOrder({
+            coin,
+            side: pos.side === 'long' ? 'short' : 'long',
+            orderType: 'market',
+            size: sz,
+            reduceOnly: true,
+            marginMode,
+            leverage,
+          })
+          toastSuccess(t('Close'), t('Reduce-only order sent'))
+        } catch (e) {
+          toastError(t('Close'), (e as Error).message)
+        }
+      },
+    }
+  }, [
+    tradeMode,
+    hlPerp.userState,
+    hlPerp.orderbook?.stale,
+    hlPerp.cancelOrder,
+    hlPerp.placeOrder,
+    marginMode,
+    leverage,
+    t,
+    toastSuccess,
+    toastError,
+  ])
 
   return (
     <Page maxWidth="100%" px="0" style={{ paddingTop: '8px', paddingBottom: '16px', paddingLeft: '24px', paddingRight: '24px' }}>
@@ -850,6 +956,7 @@ export default function Swap () {
             <PairSelectorDropdown
               value={chartSymbol || inputSymbol || 'BTC'}
               onChange={handlePerpPairChange}
+              hlBases={tradeMode === 'PERPETUAL' ? hlPerp.universe.map((u) => u.name) : undefined}
             />
           </Flex>
           <ChartSection>
@@ -858,7 +965,20 @@ export default function Swap () {
         </ChartPane>
 
         <OrderBookPane>
-          <OrderBook midPrice={midPrice} pairLabel={pairLabel} symbol={selectedPerpBase || undefined} />
+          <OrderBook
+            midPrice={tradeMode === 'PERPETUAL' ? displayMidPrice : midPrice}
+            pairLabel={pairLabel}
+            symbol={selectedPerpBase || undefined}
+            liveBids={tradeMode === 'PERPETUAL' ? hlPerp.orderbook?.bids : undefined}
+            liveAsks={tradeMode === 'PERPETUAL' ? hlPerp.orderbook?.asks : undefined}
+            stale={tradeMode === 'PERPETUAL' ? !!hlPerp.orderbook?.stale : false}
+            feedError={
+              tradeMode === 'PERPETUAL'
+                ? hlPerp.orderbook?.error
+                : 'Switch to Perpetual trade mode for live Hyperliquid depth'
+            }
+            liveTrades={tradeMode === 'PERPETUAL' ? hlPerp.trades : []}
+          />
         </OrderBookPane>
 
         <TradePane>
@@ -876,8 +996,40 @@ export default function Swap () {
           onDeposit={onPresentDepositModal}
           onTransfer={() => toastInfo('Transfer', 'Coming soon')}
           onOpenLong={async () => {
-            if (tradeMode === 'PERPETUAL' && !perpPairSupported) {
-              toastInfo(t('Perpetual'), t('Selected pair is not supported yet'))
+            if (tradeMode === 'PERPETUAL') {
+              if (showConnectButton) {
+                toastError(t('Wallet'), t('Connect your wallet'))
+                return
+              }
+              if (!perpPairSupported) {
+                toastInfo(t('Perpetual'), t('Pair not listed on Hyperliquid'))
+                return
+              }
+              const size = parseFloat(typedValue || '0')
+              if (!(size > 0)) {
+                toastInfo(t('Size'), t('Enter position size (base asset)'))
+                return
+              }
+              if (orderType === 'limit' && (!limitPrice || parseFloat(limitPrice) <= 0)) {
+                toastInfo(t('Price'), t('Enter limit price'))
+                return
+              }
+              try {
+                await hlPerp.placeOrder({
+                  coin: selectedPerpBase,
+                  side: tradeModeUI === 'close' ? 'short' : 'long',
+                  orderType,
+                  size,
+                  limitPrice: orderType === 'limit' ? limitPrice : undefined,
+                  reduceOnly: tradeModeUI === 'close',
+                  postOnly: orderType === 'limit' && hlPostOnly,
+                  leverage,
+                  marginMode,
+                })
+                toastSuccess(t('Order'), t('Submitted'))
+              } catch (e) {
+                toastError(t('Order'), (e as Error).message)
+              }
               return
             }
             if (marginSupported && isNativeInput && marginAmountValid) {
@@ -906,8 +1058,40 @@ export default function Swap () {
             onPresentConfirmModal()
           }}
           onOpenShort={async () => {
-            if (tradeMode === 'PERPETUAL' && !perpPairSupported) {
-              toastInfo(t('Perpetual'), t('Selected pair is not supported yet'))
+            if (tradeMode === 'PERPETUAL') {
+              if (showConnectButton) {
+                toastError(t('Wallet'), t('Connect your wallet'))
+                return
+              }
+              if (!perpPairSupported) {
+                toastInfo(t('Perpetual'), t('Pair not listed on Hyperliquid'))
+                return
+              }
+              const size = parseFloat(typedValue || '0')
+              if (!(size > 0)) {
+                toastInfo(t('Size'), t('Enter position size (base asset)'))
+                return
+              }
+              if (orderType === 'limit' && (!limitPrice || parseFloat(limitPrice) <= 0)) {
+                toastInfo(t('Price'), t('Enter limit price'))
+                return
+              }
+              try {
+                await hlPerp.placeOrder({
+                  coin: selectedPerpBase,
+                  side: tradeModeUI === 'close' ? 'long' : 'short',
+                  orderType,
+                  size,
+                  limitPrice: orderType === 'limit' ? limitPrice : undefined,
+                  reduceOnly: tradeModeUI === 'close',
+                  postOnly: orderType === 'limit' && hlPostOnly,
+                  leverage,
+                  marginMode,
+                })
+                toastSuccess(t('Order'), t('Submitted'))
+              } catch (e) {
+                toastError(t('Order'), (e as Error).message)
+              }
               return
             }
             if (marginSupported && isNativeInput && marginAmountValid) {
@@ -935,10 +1119,26 @@ export default function Swap () {
             setSwapState({ tradeToConfirm: trade, attemptingTxn: false, swapErrorMessage: undefined, txHash: undefined })
             onPresentConfirmModal()
           }}
-          isLongDisabled={showConnectButton || marginPending || (tradeMode === 'PERPETUAL' && !perpPairSupported) || (marginSupported ? !isNativeInput || !marginAmountValid : (swapIsUnsupported || showWrap || !isValid || priceImpactSeverity > 3 || !!swapCallbackError))}
-          isShortDisabled={showConnectButton || marginPending || (tradeMode === 'PERPETUAL' && !perpPairSupported) || (marginSupported ? !isNativeInput || !marginAmountValid : (swapIsUnsupported || showWrap || !isValid || priceImpactSeverity > 3 || !!swapCallbackError))}
+          isLongDisabled={
+            tradeMode === 'PERPETUAL'
+              ? showConnectButton ||
+                !perpPairSupported ||
+                !(parseFloat(typedValue || '0') > 0) ||
+                (orderType === 'limit' && (!limitPrice || parseFloat(limitPrice) <= 0))
+              : showConnectButton || marginPending || (marginSupported ? !isNativeInput || !marginAmountValid : (swapIsUnsupported || showWrap || !isValid || priceImpactSeverity > 3 || !!swapCallbackError))
+          }
+          isShortDisabled={
+            tradeMode === 'PERPETUAL'
+              ? showConnectButton ||
+                !perpPairSupported ||
+                !(parseFloat(typedValue || '0') > 0) ||
+                (orderType === 'limit' && (!limitPrice || parseFloat(limitPrice) <= 0))
+              : showConnectButton || marginPending || (marginSupported ? !isNativeInput || !marginAmountValid : (swapIsUnsupported || showWrap || !isValid || priceImpactSeverity > 3 || !!swapCallbackError))
+          }
           orderType={orderType}
           onOrderTypeChange={setOrderType}
+          hlPostOnly={tradeMode === 'PERPETUAL' ? hlPostOnly : undefined}
+          onHlPostOnlyChange={tradeMode === 'PERPETUAL' ? setHlPostOnly : undefined}
           marginMode={marginMode}
           onMarginModeChange={setMarginMode}
           leverage={leverage}
@@ -952,9 +1152,12 @@ export default function Swap () {
           quantityPercent={quantityPercent}
           onQuantityPercentChange={handleQuantityPercentChange}
           inputSymbol={inputSymbol}
-          midPrice={midPrice}
+          midPrice={tradeMode === 'PERPETUAL' ? displayMidPrice : midPrice}
           onBBO={handleBBO}
           availableBalance={currencyBalances[Field.INPUT]?.toSignificant(6) ?? '0.00'}
+          hlPanel={hlPanelMemo}
+          leverageMax={tradeMode === 'PERPETUAL' ? hlPerp.maxLevForCoin : 100}
+          isolatedOnly={tradeMode === 'PERPETUAL' && hlOnlyIsolated}
           leverageModeSelector={
             <div>
               <Text fontSize="12px" color="textSubtle" mb="8px">Leverage: {leverage}x • {marginMode}</Text>

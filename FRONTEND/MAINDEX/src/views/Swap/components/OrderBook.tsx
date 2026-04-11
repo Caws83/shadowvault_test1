@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Flex, Text } from 'uikit'
 
@@ -91,120 +91,36 @@ const DepthBarItem = styled.span<{ color: string }>`
   color: ${({ color }) => color};
 `
 
-const DepthSelect = styled.select`
-  background: rgba(0,0,0,0.3);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 4px;
-  color: rgba(255,255,255,0.9);
-  padding: 4px 8px;
-  font-size: 12px;
-  cursor: pointer;
-`
+type BookRow = { price: string; amount: string; total: string }
 
 interface OrderBookProps {
   midPrice: string
   pairLabel: string
   symbol?: string
+  /** Live L2 from backend (Hyperliquid). No mock fallback. */
+  liveBids?: BookRow[]
+  liveAsks?: BookRow[]
+  /** Data older than server threshold */
+  stale?: boolean
+  feedError?: string | null
+  /** Public trades from Hyperliquid */
+  liveTrades?: { side: 'buy' | 'sell'; px: string; sz: string; time: number }[]
 }
 
-function genBids(mid: number): { price: string; amount: string; total: string }[] {
-  const out: { price: string; amount: string; total: string }[] = []
-  let tot = 0
-  for (let i = 0; i < 12; i++) {
-    const p = mid * (1 - (i + 1) * 0.0003)
-    const a = 0.01 + Math.random() * 1.5
-    tot += a
-    out.push({ price: p.toFixed(2), amount: a.toFixed(4), total: tot.toFixed(4) })
-  }
-  return out
-}
-
-function genAsks(mid: number): { price: string; amount: string; total: string }[] {
-  const out: { price: string; amount: string; total: string }[] = []
-  let tot = 0
-  for (let i = 0; i < 12; i++) {
-    const p = mid * (1 + (i + 1) * 0.0003)
-    const a = 0.01 + Math.random() * 1.5
-    tot += a
-    out.push({ price: p.toFixed(2), amount: a.toFixed(4), total: tot.toFixed(4) })
-  }
-  return out
-}
-
-type BookRow = { price: string; amount: string; total: string }
-
-const toBookRows = (levels: [string, string][]): BookRow[] => {
-  let running = 0
-  return levels.map(([p, q]) => {
-    const qty = parseFloat(q) || 0
-    running += qty
-    return {
-      price: (parseFloat(p) || 0).toFixed(2),
-      amount: qty.toFixed(4),
-      total: running.toFixed(4),
-    }
-  })
-}
-
-export default function OrderBook({ midPrice, pairLabel, symbol }: OrderBookProps) {
+export default function OrderBook({
+  midPrice,
+  pairLabel,
+  symbol,
+  liveBids = [],
+  liveAsks = [],
+  stale,
+  feedError,
+  liveTrades = [],
+}: OrderBookProps) {
   const [activeTab, setActiveTab] = useState<'orderbook' | 'trades'>('orderbook')
-  const [book, setBook] = useState<{ bids: BookRow[]; asks: BookRow[] } | null>(null)
-  const [bookError, setBookError] = useState<string | null>(null)
-  const [fallbackOnly, setFallbackOnly] = useState(false)
 
-  const fallbackBook = useMemo(() => {
-    const mid = parseFloat(midPrice) > 0 ? parseFloat(midPrice) : 1
-    return { bids: genBids(mid), asks: genAsks(mid) }
-  }, [midPrice])
-  const bids = book?.bids?.length ? book.bids : fallbackBook.bids
-  const asks = book?.asks?.length ? book.asks : fallbackBook.asks
-
-  useEffect(() => {
-    if (fallbackOnly) return
-    const base = (symbol || pairLabel.split('/')[0] || '').toUpperCase().trim()
-    if (!base) return
-    const market = `${base}USDT`
-    const controller = new AbortController()
-    let failures = 0
-    let stopPolling = false
-
-    const loadDepth = async () => {
-      if (stopPolling) return
-      try {
-        setBookError(null)
-        const response = await fetch(
-          `https://api.binance.com/api/v3/depth?symbol=${market}&limit=12`,
-          { signal: controller.signal },
-        )
-        if (!response.ok) throw new Error(`Depth unavailable for ${market}`)
-        const data = await response.json()
-        const asksRaw = (data?.asks || []).slice(0, 12) as [string, string][]
-        const bidsRaw = (data?.bids || []).slice(0, 12) as [string, string][]
-        setBook({
-          asks: toBookRows(asksRaw),
-          bids: toBookRows(bidsRaw),
-        })
-        failures = 0
-      } catch (e) {
-        if ((e as Error)?.name === 'AbortError') return
-        setBook(null)
-        setBookError((e as Error)?.message || 'Orderbook unavailable')
-        failures += 1
-        // If external feed keeps failing, switch to stable local fallback depth.
-        if (failures >= 3) {
-          stopPolling = true
-          setFallbackOnly(true)
-        }
-      }
-    }
-
-    loadDepth()
-    const id = window.setInterval(loadDepth, 6000)
-    return () => {
-      controller.abort()
-      window.clearInterval(id)
-    }
-  }, [fallbackOnly, pairLabel, symbol])
+  const bids = liveBids
+  const asks = liveAsks
 
   const maxBid = Math.max(...bids.map((b) => parseFloat(b.total)), 0.01)
   const maxAsk = Math.max(...asks.map((a) => parseFloat(a.total)), 0.01)
@@ -215,6 +131,10 @@ export default function OrderBook({ midPrice, pairLabel, symbol }: OrderBookProp
     return v
   }
   const safeDepthTotal = maxBid + maxAsk > 0 ? maxBid + maxAsk : 1
+
+  const baseLabel = symbol || pairLabel.split('/')[0] || '—'
+
+  const hasBook = bids.length > 0 || asks.length > 0
 
   return (
     <Wrap>
@@ -230,22 +150,33 @@ export default function OrderBook({ midPrice, pairLabel, symbol }: OrderBookProp
       {activeTab === 'orderbook' && (
         <Flex flexDirection="column" flex={1} minHeight={0} style={{ overflow: 'hidden' }}>
           <ObToolbar style={{ flexShrink: 0 }}>
-            <span style={{ color: 'rgba(255,255,255,0.5)', cursor: 'pointer' }} title="Settings">⚙</span>
-            <span style={{ color: 'rgba(255,255,255,0.5)', cursor: 'pointer' }} title="Grid">⊞</span>
-            <DepthSelect defaultValue="0.1">
-              <option value="0.01">0.01</option>
-              <option value="0.1">0.1</option>
-              <option value="1">1</option>
-            </DepthSelect>
+            <span style={{ color: 'rgba(255,255,255,0.5)' }} title="Hyperliquid L2">
+              HL
+            </span>
+            {stale && (
+              <Text fontSize="11px" color="warning">
+                Stale feed
+              </Text>
+            )}
+            {feedError && (
+              <Text fontSize="11px" color="failure">
+                {feedError}
+              </Text>
+            )}
           </ObToolbar>
           <Header style={{ flexShrink: 0 }}>
             <span>Price</span>
-            <span style={{ textAlign: 'right' }}>Quantity ({pairLabel.split('/')[0] || 'BTC'})</span>
-            <span style={{ textAlign: 'right' }}>Total ({pairLabel.split('/')[0] || 'BTC'})</span>
+            <span style={{ textAlign: 'right' }}>Quantity ({baseLabel})</span>
+            <span style={{ textAlign: 'right' }}>Total ({baseLabel})</span>
           </Header>
-          {bookError && (
-            <Text fontSize="11px" color="textSubtle" px="12px" py="4px">
-              Live book unavailable, showing fallback depth.
+          {!hasBook && !feedError && (
+            <Text fontSize="12px" color="textSubtle" px="12px" py="8px">
+              Loading order book…
+            </Text>
+          )}
+          {!hasBook && feedError && (
+            <Text fontSize="12px" color="textSubtle" px="12px" py="8px">
+              {feedError}
             </Text>
           )}
           <div style={{ flex: 1, minHeight: 0, overflow: 'auto', maxHeight: 200 }}>
@@ -277,9 +208,23 @@ export default function OrderBook({ midPrice, pairLabel, symbol }: OrderBookProp
       )}
 
       {activeTab === 'trades' && (
-        <Flex flex={1} p="16px" alignItems="center" justifyContent="center" flexDirection="column">
-          <Text color="textSubtle" fontSize="14px">Recent trades</Text>
-          <Text color="textSubtle" fontSize="12px" mt="8px">Connect wallet for live trades</Text>
+        <Flex flex={1} p="12px" flexDirection="column" style={{ overflow: 'auto', maxHeight: 360 }}>
+          {liveTrades.length === 0 ? (
+            <Text color="textSubtle" fontSize="12px">
+              No recent trades
+            </Text>
+          ) : (
+            liveTrades.map((t, i) => (
+              <Flex key={`${t.time}-${i}`} justifyContent="space-between" py="4px" fontSize="12px">
+                <Text color={t.side === 'buy' ? 'success' : 'failure'}>{t.side.toUpperCase()}</Text>
+                <Text>{t.px}</Text>
+                <Text color="textSubtle">{t.sz}</Text>
+                <Text color="textSubtle" fontSize="11px">
+                  {new Date(t.time).toLocaleTimeString()}
+                </Text>
+              </Flex>
+            ))
+          )}
         </Flex>
       )}
     </Wrap>

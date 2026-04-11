@@ -1,7 +1,16 @@
-# Backend API (ChangeNOW proxy, /api/*, /V2/*). Must match your Railway DEX API URL.
-VITE_API_URL=https://shadowvaulttest1-production.up.railway.app
-VITE_AI_AGENT_API_URL=https://shadowvaulttest1-production.up.railway.app
+# Netlify → Site settings → Environment variables (build + runtime for VITE_*)
+#
+# The browser loads these. It does NOT load Railway secrets.
+# Point the app at your API; ChangeNOW + Hyperliquid keys stay on Railway only.
+
+# Required: your deployed DEX API (Railway URL). No trailing slash.
+VITE_API_URL=https://your-service.up.railway.app
+
+# Optional: same base if AI agent uses a dedicated path (often same as VITE_API_URL)
+VITE_AI_AGENT_API_URL=https://your-service.up.railway.app
 VITE_ENABLE_AI_AGENT=true
+
+# Chain / UI (match your deployment)
 VITE_CHAIN_ID=97
 VITE_GTAG=GTM-TLF66T4
 VITE_NODE_1=https://data-seed-prebsc-1-s1.binance.org:8545
@@ -13,3 +22,6 @@ VITE_GRAPH_API_PREDICTION=https://api.thegraph.com/subgraphs/name/pancakeswap/pr
 VITE_GRAPH_API_LOTTERY=https://api.thegraph.com/subgraphs/name/pancakeswap/lottery
 VITE_SNAPSHOT_BASE_URL=https://hub.snapshot.org
 VITE_SNAPSHOT_VOTING_API=https://voting-api.pancakeswap.info/api
+
+# Do NOT put these on Netlify (they belong on Railway / DEX API only):
+# CHANGENOW_API_KEY, HYPERLIQUID_AGENT_PRIVATE_KEY, OPENAI_API_KEY

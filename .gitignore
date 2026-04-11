@@ -3,5 +3,8 @@
 .env.*
 !.env.example
 
+# Cursor IDE / worktree metadata (local only)
+.cursor/
+
 # Dependencies
 node_modules/

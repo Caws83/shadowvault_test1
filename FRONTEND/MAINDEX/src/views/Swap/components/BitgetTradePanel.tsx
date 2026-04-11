@@ -1,7 +1,7 @@
 /**
  * Bitget-style Trade Panel - Limit/Market, Leverage, Margin mode
  */
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { Flex, Text, Button } from 'uikit'
 import type { MarginPosition } from 'hooks/useMarginContract'
@@ -269,8 +269,6 @@ const CloseBtn = styled.button`
   }
 `
 
-const LEVERAGE_OPTIONS = [2, 5, 10, 20, 50, 100]
-
 interface BitgetTradePanelProps {
   onOpenLong?: () => void
   onOpenShort?: () => void
@@ -280,6 +278,9 @@ interface BitgetTradePanelProps {
   onTransfer?: () => void
   orderType: 'limit' | 'market'
   onOrderTypeChange: (t: 'limit' | 'market') => void
+  /** Hyperliquid post-only (Alo) when limit — only used when callbacks are set */
+  hlPostOnly?: boolean
+  onHlPostOnlyChange?: (v: boolean) => void
   marginMode: 'isolated' | 'cross'
   onMarginModeChange: (m: 'isolated' | 'cross') => void
   leverage: number
@@ -310,6 +311,21 @@ interface BitgetTradePanelProps {
   /** When opening /swap?tradeMode=PERPETUAL, start on Margin */
   initialTab?: 'swap' | 'margin' | 'bots'
   preferredSide?: 'long' | 'short' | null
+  /** Hyperliquid account (when set, replaces on-chain margin positions in Margin tab) */
+  hlPanel?: {
+    stale: boolean
+    accountValue: string
+    totalMarginUsed: string
+    withdrawable: string
+    positions: { coin: string; side: string; szi: string; unrealizedPnl: string; lev: number }[]
+    openOrders: { oid: number; coin: string; limitPx: string; sz: string; orderType: string }[]
+    onCancelOrder: (coin: string, oid: number) => void
+    onCloseMarket: (coin: string) => void
+    fills: { coin: string; px: string; sz: string; side: string; time: number }[]
+  }
+  leverageMax?: number
+  /** Some HL perps are isolated-only */
+  isolatedOnly?: boolean
 }
 
 export default function BitgetTradePanel({
@@ -321,6 +337,8 @@ export default function BitgetTradePanel({
   onTransfer = () => {},
   orderType,
   onOrderTypeChange,
+  hlPostOnly = false,
+  onHlPostOnlyChange,
   marginMode,
   onMarginModeChange,
   leverage,
@@ -350,8 +368,20 @@ export default function BitgetTradePanel({
   nativeSymbol = 'BNB',
   initialTab = 'swap',
   preferredSide = null,
+  hlPanel,
+  leverageMax = 100,
+  isolatedOnly = false,
 }: BitgetTradePanelProps) {
   const [activeTab, setActiveTab] = useState<'swap' | 'margin' | 'bots'>(initialTab)
+
+  const levOptions = useMemo(() => {
+    const base = [2, 5, 10, 20, 50, 100].filter((x) => x <= leverageMax)
+    if (!base.includes(leverageMax) && leverageMax > 1) {
+      base.push(leverageMax)
+      base.sort((a, b) => a - b)
+    }
+    return base.length ? base : [leverageMax]
+  }, [leverageMax])
 
   const formatCollateral = (wei: bigint) => {
     const str = wei.toString()
@@ -390,6 +420,11 @@ export default function BitgetTradePanel({
         {activeTab === 'margin' && (
           <>
             <Section>
+              {hlPanel?.stale && (
+                <Text fontSize="12px" mb="12px" style={{ color: '#e6a23c' }}>
+                  Market data may be stale — confirm prices before trading.
+                </Text>
+              )}
               {leverageModeSelector && (
                 <div style={{ marginBottom: '24px' }}>
                   {leverageModeSelector}
@@ -400,12 +435,17 @@ export default function BitgetTradePanel({
                   <Btn active={marginMode === 'isolated'} onClick={() => onMarginModeChange('isolated')}>
                     Isolated
                   </Btn>
-                  <Btn active={marginMode === 'cross'} onClick={() => onMarginModeChange('cross')}>
+                  <Btn
+                    active={marginMode === 'cross'}
+                    disabled={isolatedOnly}
+                    title={isolatedOnly ? 'This perp is isolated-only on Hyperliquid' : undefined}
+                    onClick={() => !isolatedOnly && onMarginModeChange('cross')}
+                  >
                     Cross
                   </Btn>
                 </div>
                 <LeverageSelect value={leverage} onChange={(e) => onLeverageChange(Number(e.target.value))}>
-                  {LEVERAGE_OPTIONS.map((x) => (
+                  {levOptions.map((x) => (
                     <option key={x} value={x}>{x}x</option>
                   ))}
                 </LeverageSelect>
@@ -427,9 +467,21 @@ export default function BitgetTradePanel({
                 <Btn style={{ flex: 1 }} active={orderType === 'market'} onClick={() => onOrderTypeChange('market')}>
                   Market
                 </Btn>
-                <Btn style={{ flex: 1, opacity: 0.7 }} title="Coming soon">
-                  Post only ▾
-                </Btn>
+                {onHlPostOnlyChange ? (
+                  <Btn
+                    style={{ flex: 1 }}
+                    active={orderType === 'limit' && hlPostOnly}
+                    disabled={orderType !== 'limit'}
+                    onClick={() => orderType === 'limit' && onHlPostOnlyChange(!hlPostOnly)}
+                    title="Add-only limit (maker)"
+                  >
+                    Post only
+                  </Btn>
+                ) : (
+                  <Btn style={{ flex: 1, opacity: 0.7 }} title="Hyperliquid perpetual only" disabled>
+                    Post only
+                  </Btn>
+                )}
               </Row>
 
               {orderType === 'limit' && (
@@ -491,7 +543,7 @@ export default function BitgetTradePanel({
                   disabled={isLongDisabled}
                   onClick={onOpenLong}
                 >
-                  Open Long
+                  {mode === 'close' ? 'Close Long' : 'Open Long'}
                 </ActionBtn>
                 <ActionBtn
                   type="button"
@@ -500,23 +552,85 @@ export default function BitgetTradePanel({
                   disabled={isShortDisabled}
                   onClick={onOpenShort}
                 >
-                  Open Short
+                  {mode === 'close' ? 'Close Short' : 'Open Short'}
                 </ActionBtn>
               </ActionButtons>
             </Section>
 
             <Section style={{ borderBottom: 'none' }}>
               <AssetsTitle style={{ marginBottom: 8 }}>Account</AssetsTitle>
-              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>
-                <div style={{ marginBottom: 4 }}>Maintenance margin rate (MMR) 0.00%</div>
-                <div style={{ marginBottom: 4 }}>Maintenance margin 0.00</div>
-                <div><a href="#" style={{ color: 'rgba(230, 57, 70, 0.95)' }}>Position tier guide</a> <span style={{ marginLeft: 4 }}>More</span></div>
-              </div>
+              {hlPanel ? (
+                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.75)' }}>
+                  <div style={{ marginBottom: 4 }}>Account value: {hlPanel.accountValue} USDC</div>
+                  <div style={{ marginBottom: 4 }}>Margin used: {hlPanel.totalMarginUsed}</div>
+                  <div style={{ marginBottom: 4 }}>Withdrawable: {hlPanel.withdrawable}</div>
+                </div>
+              ) : (
+                <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>
+                  <div style={{ marginBottom: 4 }}>On-chain margin view (non-HL)</div>
+                </div>
+              )}
             </Section>
 
+            {hlPanel && hlPanel.fills.length > 0 && (
+              <Section style={{ borderBottom: 'none' }}>
+                <PositionsTitle>Recent fills ({hlPanel.fills.length})</PositionsTitle>
+                <PositionsWrap>
+                  {hlPanel.fills.map((f, i) => (
+                    <PositionRow key={`${f.coin}-${f.time}-${i}`}>
+                      <PositionCol>{new Date(f.time).toLocaleTimeString()}</PositionCol>
+                      <PositionCol>{f.coin}</PositionCol>
+                      <PositionCol type={f.side === 'B' ? 'long' : 'short'}>{f.side === 'B' ? 'buy' : 'sell'}</PositionCol>
+                      <PositionCol>{f.px} @ {f.sz}</PositionCol>
+                    </PositionRow>
+                  ))}
+                </PositionsWrap>
+              </Section>
+            )}
+
+            {hlPanel && hlPanel.openOrders.length > 0 && (
+              <Section style={{ borderBottom: 'none' }}>
+                <PositionsTitle>Open orders ({hlPanel.openOrders.length})</PositionsTitle>
+                <PositionsWrap>
+                  {hlPanel.openOrders.map((o) => (
+                    <PositionRow key={`${o.coin}-${o.oid}`}>
+                      <PositionCol>{o.coin}</PositionCol>
+                      <PositionCol>{o.orderType}</PositionCol>
+                      <PositionCol>{o.limitPx}</PositionCol>
+                      <CloseBtn
+                        type="button"
+                        onClick={() => hlPanel.onCancelOrder(o.coin, o.oid)}
+                      >
+                        Cancel
+                      </CloseBtn>
+                    </PositionRow>
+                  ))}
+                </PositionsWrap>
+              </Section>
+            )}
+
             <Section style={{ borderBottom: 'none' }}>
-              <PositionsTitle>Positions ({positions.length})</PositionsTitle>
-              {positionsLoading ? (
+              <PositionsTitle>Positions ({hlPanel ? hlPanel.positions.length : positions.length})</PositionsTitle>
+              {hlPanel ? (
+                hlPanel.positions.length === 0 ? (
+                  <Text fontSize="12px" color="textSubtle">No open positions</Text>
+                ) : (
+                  <PositionsWrap>
+                    {hlPanel.positions.map((p) => (
+                      <PositionRow key={p.coin}>
+                        <PositionCol type={p.side === 'long' ? 'long' : 'short'}>{p.side}</PositionCol>
+                        <PositionCol>{p.coin}</PositionCol>
+                        <PositionCol>{p.szi}</PositionCol>
+                        <PositionCol>{p.lev}x</PositionCol>
+                        <PositionCol>{p.unrealizedPnl}</PositionCol>
+                        <CloseBtn type="button" onClick={() => hlPanel.onCloseMarket(p.coin)}>
+                          Close
+                        </CloseBtn>
+                      </PositionRow>
+                    ))}
+                  </PositionsWrap>
+                )
+              ) : positionsLoading ? (
                 <Text fontSize="12px" color="textSubtle">Loading positions...</Text>
               ) : positions.length === 0 ? (
                 <Text fontSize="12px" color="textSubtle">No open positions</Text>

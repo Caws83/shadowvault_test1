@@ -180,7 +180,7 @@ function extractPolymarketQuery(message: string): string {
  * Main handler: trade intent → Polymarkets + risk summary + pending; CONFIRM → place trade; polymarket-only → fetch odds; else OpenAI.
  */
 export async function handleBotMessage(
-  openai: OpenAI,
+  openai: OpenAI | null,
   userId: string,
   message: string
 ): Promise<BotResponse> {
@@ -249,6 +249,12 @@ export async function handleBotMessage(
       return `• ${m.question}\n  ${prices}`
     })
     return { reply: `Polymarkets (${query || 'recent'}):\n\n${lines.join('\n\n')}` }
+  }
+
+  if (!openai) {
+    return {
+      reply: 'AI chat is not configured on this server (missing OPENAI_API_KEY). Trade shortcuts and Polymarket search still work when applicable.'
+    }
   }
 
   const history = session.history.slice(-MAX_HISTORY)

@@ -95,9 +95,11 @@ const TOP_PAIRS = [
 interface PairSelectorDropdownProps {
   value: string
   onChange: (pair: string) => void
+  /** Base asset symbols from Hyperliquid meta (e.g. BTC, ETH). When set, replaces static list. */
+  hlBases?: string[]
 }
 
-export default function PairSelectorDropdown({ value, onChange }: PairSelectorDropdownProps) {
+export default function PairSelectorDropdown({ value, onChange, hlBases }: PairSelectorDropdownProps) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -118,7 +120,7 @@ export default function PairSelectorDropdown({ value, onChange }: PairSelectorDr
         <Text color="primary">{open ? '▲' : '▼'}</Text>
       </Trigger>
       <Dropdown open={open}>
-        {TOP_PAIRS.map((pair) => (
+        {(hlBases && hlBases.length > 0 ? hlBases.map((b) => `${b}USDT`) : TOP_PAIRS).map((pair) => (
           <Item
             key={pair}
             onClick={() => {

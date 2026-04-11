@@ -8,15 +8,18 @@ import { handleBotMessage } from './src/bot/shadowVaultBot'
 import { SimpleDirectoryReader, VectorStoreIndex, Document } from 'llamaindex'
 import path from 'path'
 import dotenv from 'dotenv'
+import { resolveChangeNowConfig, logServerEnvHints, cleanEnvString } from './src/env/envRead'
 import bodyParser from 'body-parser'
 import { Ratelimit } from '@upstash/ratelimit'
 import { Redis } from '@upstash/redis'
 import requestIp from 'request-ip'
+import { mountHyperliquidApi } from './src/hyperliquid/routes'
 
 const EthDater = require('ethereum-block-by-date')
 const cors = require('cors')
 
 dotenv.config()
+dotenv.config({ path: path.join(__dirname, '../.env') })
 
 interface colInfo {
   volume: string
@@ -93,16 +96,15 @@ app.use(
       cb(null, allowed)
     },
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    allowedHeaders: 'Content-Type,Authorization'
+    allowedHeaders: 'Content-Type,Authorization,X-Wallet-Address'
   })
 )
 
 app.use(bodyParser.json())
 
-const CHANGENOW_BASE_URL = (
-  process.env.CHANGENOW_BASE_URL || 'https://api.changenow.io'
-).replace(/\/$/, '')
-const CHANGENOW_API_KEY = process.env.CHANGENOW_API_KEY || ''
+const _changenowResolved = resolveChangeNowConfig()
+const CHANGENOW_BASE_URL = _changenowResolved.baseUrl
+const CHANGENOW_API_KEY = _changenowResolved.apiKey
 
 type ChangeNowAttempt = {
   method: 'GET' | 'POST'
@@ -168,9 +170,8 @@ const callChangeNowWithFallback = async (attempts: ChangeNowAttempt[]) => {
   throw new Error(errors.join(' | '))
 }
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-})
+const openaiApiKey = cleanEnvString(process.env.OPENAI_API_KEY)
+const openai = openaiApiKey ? new OpenAI({ apiKey: openaiApiKey }) : null
 
 const redisConfigured =
   !!process.env.UPSTASH_REDIS_URL && !!process.env.UPSTASH_REDIS_TOKEN
@@ -277,6 +278,9 @@ const createQueryEngine = async () => {
 }
 
 const askOpenAI = async (inp: string) => {
+  if (!openai) {
+    return 'AI assistant is unavailable (OPENAI_API_KEY is not set on the server).'
+  }
   const completion = await openai.chat.completions.create({
     model: 'gpt-4o-mini',
     messages: [
@@ -506,6 +510,8 @@ app.get('/api/changenow/status/:id', async (req: Request, res: Response) => {
   }
 })
 
+mountHyperliquidApi(app)
+
 if (process.env.ENABLE_DOCS_BOOT === 'true') {
   createQueryEngine()
 }
@@ -563,6 +569,9 @@ app.post('/api/response', async (req: Request, res: Response) => {
 
 app.post('/api/ai-agent', async (req: Request, res: Response) => {
   try {
+    if (!openai) {
+      return res.status(503).json({ error: 'OPENAI_API_KEY is not configured' })
+    }
     const { messages } = req.body as {
       messages?: { role: string; content: string }[]
     }
@@ -1469,5 +1478,6 @@ setInterval(() => {
 
 const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000
 app.listen(port, () => {
+  logServerEnvHints()
   console.log(`Server is running on port ${port}`)
 })
