@@ -3,7 +3,7 @@
 .env.*
 !.env.example
 
-# Cursor IDE / worktree metadata (local only)
+# Cursor IDE (local only)
 .cursor/
 
 # Dependencies
