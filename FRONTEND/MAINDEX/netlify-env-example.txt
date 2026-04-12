@@ -3,9 +3,8 @@
 # The browser loads these. It does NOT load Railway secrets.
 # ChangeNOW + Hyperliquid keys stay on Railway only.
 
-# REQUIRED for production: your Railway DEX API origin (no trailing slash).
-# Prebuild generates public/_redirects so /api/* and /V2/* proxy to this host (same-origin in the browser).
-# Alias for prebuild only (same value): RAILWAY_PUBLIC_URL
+# REQUIRED: full URL with https:// — Netlify rejects bare hostnames in _redirects (prebuild auto-prepends https:// if missing).
+# No trailing slash. Alias: RAILWAY_PUBLIC_URL
 VITE_API_URL=https://your-service.up.railway.app
 
 # Railway DEX API: set FRONTEND_ORIGINS on Railway if you use a custom domain (not *.netlify.app).
