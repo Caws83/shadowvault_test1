@@ -105,6 +105,8 @@ interface OrderBookProps {
   feedError?: string | null
   /** Public trades from Hyperliquid */
   liveTrades?: { side: 'buy' | 'sell'; px: string; sz: string; time: number }[]
+  /** Trades tab: fetch error (distinct from order book feedError) */
+  tradesFeedError?: string | null
 }
 
 export default function OrderBook({
@@ -116,6 +118,7 @@ export default function OrderBook({
   stale,
   feedError,
   liveTrades = [],
+  tradesFeedError,
 }: OrderBookProps) {
   const [activeTab, setActiveTab] = useState<'orderbook' | 'trades'>('orderbook')
 
@@ -209,11 +212,17 @@ export default function OrderBook({
 
       {activeTab === 'trades' && (
         <Flex flex={1} p="12px" flexDirection="column" style={{ overflow: 'auto', maxHeight: 360 }}>
-          {liveTrades.length === 0 ? (
+          {tradesFeedError && (
+            <Text color="failure" fontSize="12px" mb="8px">
+              {tradesFeedError}
+            </Text>
+          )}
+          {!tradesFeedError && liveTrades.length === 0 && (
             <Text color="textSubtle" fontSize="12px">
               No recent trades
             </Text>
-          ) : (
+          )}
+          {liveTrades.length > 0 &&
             liveTrades.map((t, i) => (
               <Flex key={`${t.time}-${i}`} justifyContent="space-between" py="4px" fontSize="12px">
                 <Text color={t.side === 'buy' ? 'success' : 'failure'}>{t.side.toUpperCase()}</Text>
@@ -223,8 +232,7 @@ export default function OrderBook({
                   {new Date(t.time).toLocaleTimeString()}
                 </Text>
               </Flex>
-            ))
-          )}
+            ))}
         </Flex>
       )}
     </Wrap>

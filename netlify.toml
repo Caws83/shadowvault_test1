@@ -1,9 +1,9 @@
-# Netlify deployment config for ShadowVault Protocol
+# Netlify — ShadowVault frontend (FRONTEND/MAINDEX) → static `dist/` from `npm run build` (Vite is build-only).
+# Backend DEX API is a separate deploy: repo folder DEX_API/DEXAPI (Express: `npm run build && npm start`).
 #
-# REQUIRED for order book + AI + /api on production:
-#   Site → Environment variables → VITE_API_URL = https://YOUR-RAILWAY-API.up.railway.app (no trailing slash)
-#   Prebuild writes FRONTEND/MAINDEX/public/_redirects to proxy /api/* and /V2/* to that host (same-origin in browser).
-#   Redeploy after changing the variable.
+# REQUIRED so /api (ChangeNOW, Hyperliquid, etc.) hits your DEX API:
+#   Netlify → Environment → VITE_API_URL = https://YOUR-RAILWAY-DEX.up.railway.app (no trailing slash)
+#   Prebuild writes public/_redirects to proxy /api/* and /V2/* to that host. Redeploy after changing it.
 #
 [build]
   base = "FRONTEND/MAINDEX"

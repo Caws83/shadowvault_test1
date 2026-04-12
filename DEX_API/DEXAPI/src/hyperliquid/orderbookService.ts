@@ -15,7 +15,8 @@ import type { NormalizedL2Book } from './types'
 import { hlLog } from './logger'
 
 const POLL_MS = Number(process.env.HYPERLIQUID_ORDERBOOK_POLL_MS || 1500)
-const STALE_MS = Number(process.env.HYPERLIQUID_STALE_MS || 12000)
+/** Mark book "stale" in UI if last good snapshot older than this (ms). Default 45s — 12s was too aggressive on slow networks. */
+const STALE_MS = Number(process.env.HYPERLIQUID_STALE_MS || 45000)
 const RECON_MS = Number(process.env.HYPERLIQUID_RECONCILE_MS || 30000)
 
 type Entry = {

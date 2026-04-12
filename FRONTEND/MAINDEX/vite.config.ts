@@ -27,8 +27,25 @@ export default defineConfig(({ mode }) => {
       }),
     ],
     server: {
+      // Same-origin `/api` when getDexApiBaseUrl() is '' (e.g. prod build + `vite preview`)
       proxy: {
         '/api': {
+          target: 'http://localhost:3000',
+          changeOrigin: true,
+        },
+        '/V2': {
+          target: 'http://localhost:3000',
+          changeOrigin: true,
+        },
+      },
+    },
+    preview: {
+      proxy: {
+        '/api': {
+          target: 'http://localhost:3000',
+          changeOrigin: true,
+        },
+        '/V2': {
           target: 'http://localhost:3000',
           changeOrigin: true,
         },

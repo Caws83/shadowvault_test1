@@ -15,14 +15,16 @@ import requestIp from 'request-ip'
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { Wallet } from '@ethersproject/wallet'
 import { Contract, EventFilter } from 'ethers'
+import { mountChangeNowApi } from './changenow'
 import { mountHyperliquidApi } from './hyperliquid'
 import { logServerEnvHints } from './env/envRead'
 
 const EthDater = require('ethereum-block-by-date')
 const cors = require('cors')
 
-// Always load DEX_API/DEXAPI/.env (running `node dist/index.js` → __dirname is …/dist, parent = DEXAPI)
-dotenv.config({ path: path.join(__dirname, '..', '.env') })
+/** DEX_API/DEXAPI project root (`tsc` emits `src/index.ts` → `dist/index.js`, so one `..` from `dist`) */
+const DEX_API_ROOT = path.join(__dirname, '..')
+dotenv.config({ path: path.join(DEX_API_ROOT, '.env') })
 
 interface spinData {
   [user: string]: {
@@ -97,15 +99,15 @@ interface GlobalConfig {
   CHAINS: Record<number, ChainConfigGame>
 }
 
-const routerAbi = require('../abis/routerAbi.json')
-const marshotAbi = require('../abis/marshotAbi.json')
-const tokenAbi = require('../abis/token.json')
-const lpabi = require('../abis/lp.json')
-const fabi = require('../abis/factory.json')
-const infoAbi = require('../abis/info.json')
-const marketAbi = require('../abis/nftMarket.json')
-const nftColAbi = require('../abis/nftCollections.json')
-const divTrackerAbi = require('../abis/divTracker.json')
+const routerAbi = require(path.join(DEX_API_ROOT, 'abis', 'routerAbi.json'))
+const marshotAbi = require(path.join(DEX_API_ROOT, 'abis', 'marshotAbi.json'))
+const tokenAbi = require(path.join(DEX_API_ROOT, 'abis', 'token.json'))
+const lpabi = require(path.join(DEX_API_ROOT, 'abis', 'lp.json'))
+const fabi = require(path.join(DEX_API_ROOT, 'abis', 'factory.json'))
+const infoAbi = require(path.join(DEX_API_ROOT, 'abis', 'info.json'))
+const marketAbi = require(path.join(DEX_API_ROOT, 'abis', 'nftMarket.json'))
+const nftColAbi = require(path.join(DEX_API_ROOT, 'abis', 'nftCollections.json'))
+const divTrackerAbi = require(path.join(DEX_API_ROOT, 'abis', 'divTracker.json'))
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 const EVENT_TOPIC_PAIRCREATED =
@@ -119,7 +121,15 @@ const corsOrigin = (origin: string | undefined, cb: (err: Error | null, origin?:
   if (!origin) return cb(null, undefined)
   const allowed = [
     'http://localhost:5173',
+    'http://127.0.0.1:5173',
+    'http://localhost:5174',
+    'http://127.0.0.1:5174',
+    'http://localhost:5175',
+    'http://127.0.0.1:5175',
+    'http://localhost:5176',
+    'http://127.0.0.1:5176',
     'http://localhost:3000',
+    'http://127.0.0.1:3000',
     'https://venerable-cupcake-ec1bc0.netlify.app'
   ]
   const extras = process.env.FRONTEND_ORIGINS
@@ -146,6 +156,7 @@ app.use(
 
 app.use(bodyParser.json())
 
+mountChangeNowApi(app)
 mountHyperliquidApi(app)
 
 const openai = new OpenAI({
@@ -1722,7 +1733,19 @@ setInterval(() => {
   saveSpins()
 }, intervalInMilliseconds)
 
-const port = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000
+function resolveListenPort(): number {
+  const raw = process.env.PORT
+  if (raw == null || String(raw).trim() === '') return 3000
+  const n = parseInt(String(raw).trim(), 10)
+  if (!Number.isFinite(n) || n < 1 || n > 65535) {
+    console.warn(`[env] Invalid PORT="${raw}" (must be 1–65535) — defaulting to 3000`)
+    return 3000
+  }
+  return n
+}
+
+const port = resolveListenPort()
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`)
+  logServerEnvHints()
+  console.log(`[dex-api] listening on port ${port} (NODE_ENV=${process.env.NODE_ENV || 'undefined'})`)
 })

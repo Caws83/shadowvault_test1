@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { API_URL } from 'config'
+import { dexApiUrl } from 'config'
 
 export type HlUniverseEntry = {
   name: string
@@ -69,7 +69,7 @@ export function useHyperliquidPerp(
   } | null>(null)
   const [userError, setUserError] = useState<string | null>(null)
   const [loadingUser, setLoadingUser] = useState(false)
-  const base = API_URL.replace(/\/$/, '')
+  const [tradesError, setTradesError] = useState<string | null>(null)
 
   const coinUpper = useMemo(() => coin.trim().toUpperCase(), [coin])
 
@@ -78,7 +78,7 @@ export function useHyperliquidPerp(
     let cancelled = false
     const load = async () => {
       try {
-        const r = await fetch(`${base}/api/hyperliquid/meta`)
+        const r = await fetch(dexApiUrl('/api/hyperliquid/meta'))
         const j = await r.json()
         if (!r.ok) throw new Error(j?.error || 'meta')
         if (!cancelled) {
@@ -93,22 +93,30 @@ export function useHyperliquidPerp(
     return () => {
       cancelled = true
     }
-  }, [base, enabled])
+  }, [enabled])
 
   useEffect(() => {
     if (!enabled || !coinUpper) return
     let stop = false
     const tick = async () => {
       try {
-        const r = await fetch(`${base}/api/hyperliquid/orderbook?coin=${encodeURIComponent(coinUpper)}`)
-        const j = await r.json()
+        const r = await fetch(
+          dexApiUrl(`/api/hyperliquid/orderbook?coin=${encodeURIComponent(coinUpper)}`),
+        )
+        const j = (await r.json()) as {
+          bids?: { price: string; amount: string; total: string }[]
+          asks?: { price: string; amount: string; total: string }[]
+          stale?: boolean
+          lastUpdate?: number | null
+          error?: string | null
+        }
         if (stop) return
         setOrderbook({
           bids: j.bids || [],
           asks: j.asks || [],
-          stale: !!j.stale,
+          stale: !!j.stale || !r.ok,
           lastUpdate: j.lastUpdate ?? null,
-          error: j.error || null,
+          error: j.error || (!r.ok ? `HTTP ${r.status}` : null),
         })
       } catch {
         if (!stop) {
@@ -126,19 +134,36 @@ export function useHyperliquidPerp(
       stop = true
       window.clearInterval(id)
     }
-  }, [base, coinUpper, enabled])
+  }, [coinUpper, enabled])
 
   useEffect(() => {
     if (!enabled || !coinUpper) return
     let stop = false
     const tick = async () => {
       try {
-        const r = await fetch(`${base}/api/hyperliquid/trades?coin=${encodeURIComponent(coinUpper)}`)
-        const j = await r.json()
-        if (stop || !r.ok) return
+        const r = await fetch(
+          dexApiUrl(`/api/hyperliquid/trades?coin=${encodeURIComponent(coinUpper)}`),
+        )
+        let j: {
+          trades?: { side: 'buy' | 'sell'; px: string; sz: string; time: number }[]
+          error?: string
+        } = {}
+        try {
+          j = await r.json()
+        } catch {
+          j = {}
+        }
+        if (stop) return
+        if (!r.ok) {
+          setTrades([])
+          setTradesError(j.error || `Trades HTTP ${r.status}`)
+          return
+        }
+        setTradesError(null)
         setTrades((j.trades || []).slice(0, 40))
       } catch {
         setTrades([])
+        setTradesError('Network error')
       }
     }
     tick()
@@ -147,7 +172,7 @@ export function useHyperliquidPerp(
       stop = true
       window.clearInterval(id)
     }
-  }, [base, coinUpper, enabled])
+  }, [coinUpper, enabled])
 
   useEffect(() => {
     if (!enabled || !wallet) {
@@ -158,9 +183,12 @@ export function useHyperliquidPerp(
     const tick = async () => {
       setLoadingUser(true)
       try {
-        const r = await fetch(`${base}/api/hyperliquid/user?address=${encodeURIComponent(wallet)}`, {
-          headers: { 'X-Wallet-Address': wallet },
-        })
+        const r = await fetch(
+          dexApiUrl(`/api/hyperliquid/user?address=${encodeURIComponent(wallet)}`),
+          {
+            headers: { 'X-Wallet-Address': wallet },
+          },
+        )
         const j = await r.json()
         if (stop) return
         if (!r.ok) {
@@ -191,7 +219,7 @@ export function useHyperliquidPerp(
       stop = true
       window.clearInterval(id)
     }
-  }, [base, enabled, wallet])
+  }, [enabled, wallet])
 
   const coinSupported = useMemo(() => {
     if (!coinUpper) return false
@@ -215,7 +243,7 @@ export function useHyperliquidPerp(
       leverage?: number
       marginMode: 'cross' | 'isolated'
     }) => {
-      const r = await fetch(`${base}/api/hyperliquid/order`, {
+      const r = await fetch(dexApiUrl('/api/hyperliquid/order'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
@@ -226,12 +254,12 @@ export function useHyperliquidPerp(
       }
       return j
     },
-    [base],
+    [],
   )
 
   const cancelOrder = useCallback(
     async (c: string, oid: number) => {
-      const r = await fetch(`${base}/api/hyperliquid/cancel`, {
+      const r = await fetch(dexApiUrl('/api/hyperliquid/cancel'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ coin: c, oid }),
@@ -242,12 +270,12 @@ export function useHyperliquidPerp(
       }
       return j
     },
-    [base],
+    [],
   )
 
   const setLeverageOnly = useCallback(
     async (c: string, leverage: number, marginMode: 'cross' | 'isolated') => {
-      const r = await fetch(`${base}/api/hyperliquid/leverage`, {
+      const r = await fetch(dexApiUrl('/api/hyperliquid/leverage'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ coin: c, leverage, marginMode }),
@@ -258,7 +286,7 @@ export function useHyperliquidPerp(
       }
       return j
     },
-    [base],
+    [],
   )
 
   return {
@@ -266,6 +294,7 @@ export function useHyperliquidPerp(
     metaError,
     orderbook,
     trades,
+    tradesError,
     userState,
     userError,
     loadingUser,

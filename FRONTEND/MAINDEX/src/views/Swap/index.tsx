@@ -59,7 +59,7 @@ import CopyAddress from 'components/Menu/UserMenu/CopyAddress'
 import useToast from 'hooks/useToast'
 import { useMarginOpen, useUserPositions } from 'hooks/useMarginContract'
 import { useHyperliquidPerp } from 'hooks/useHyperliquidPerp'
-import { API_URL } from 'config'
+import { dexApiUrl } from 'config'
 
 const Label = styled(Text)`
   font-size: 14px;
@@ -625,7 +625,7 @@ export default function Swap () {
 
     setSwapState({ attemptingTxn: true, tradeToConfirm, swapErrorMessage: undefined, txHash: undefined })
     try {
-      const response = await fetch(`${API_URL}/api/changenow/transaction`, {
+      const response = await fetch(dexApiUrl('/api/changenow/transaction'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -650,7 +650,12 @@ export default function Swap () {
       )
     } catch (e) {
       setSwapState({ attemptingTxn: false, tradeToConfirm, swapErrorMessage: undefined, txHash: undefined })
-      toastError(t('Private swap failed'), (e as Error)?.message || t('Try again'))
+      const err = e as Error
+      const hint =
+        err?.message === 'Failed to fetch' || err?.name === 'TypeError'
+          ? ' — check DEX API is running (port 3000) and VITE_API_URL is unset for Vite proxy'
+          : ''
+      toastError(t('Private swap failed'), (err?.message || t('Try again')) + hint)
     }
   }, [
     account,
@@ -841,6 +846,17 @@ export default function Swap () {
 
   const perpPairSupported = tradeMode !== 'PERPETUAL' || hlPerp.coinSupported
 
+  /** In Perpetual mode, snap to a Hyperliquid-listed base (prefer BTC) if the chart/input implied a spot-only symbol. */
+  useEffect(() => {
+    if (tradeMode !== 'PERPETUAL') return
+    if (!hlPerp.universe.length) return
+    if (hlPerp.coinSupported) return
+    const fallback = hlPerp.universe.some((u) => u.name === 'BTC')
+      ? 'BTC'
+      : hlPerp.universe[0]?.name
+    if (fallback) handlePerpPairChange(fallback)
+  }, [tradeMode, hlPerp.universe, hlPerp.coinSupported, handlePerpPairChange])
+
   const hlOnlyIsolated = useMemo(() => {
     const u = hlPerp.universe.find((x) => x.name === selectedPerpBase)
     return !!u?.onlyIsolated
@@ -981,10 +997,11 @@ export default function Swap () {
             stale={tradeMode === 'PERPETUAL' ? !!hlPerp.orderbook?.stale : false}
             feedError={
               tradeMode === 'PERPETUAL'
-                ? hlPerp.orderbook?.error
+                ? hlPerp.orderbook?.error || hlPerp.metaError
                 : 'Switch to Perpetual trade mode for live Hyperliquid depth'
             }
             liveTrades={tradeMode === 'PERPETUAL' ? hlPerp.trades : []}
+            tradesFeedError={tradeMode === 'PERPETUAL' ? hlPerp.tradesError : null}
           />
         </OrderBookPane>
 
