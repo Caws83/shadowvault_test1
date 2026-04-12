@@ -1,15 +1,14 @@
 # Netlify → Site settings → Environment variables (build + runtime for VITE_*)
 #
 # The browser loads these. It does NOT load Railway secrets.
-# Point the app at your API; ChangeNOW + Hyperliquid keys stay on Railway only.
+# ChangeNOW + Hyperliquid keys stay on Railway only.
 
-# Required: your deployed DEX API (Railway URL). No trailing slash.
-# Must match the API your users' browsers will call (not localhost). If unset, the app defaults to https://api.marswap.exchange
+# REQUIRED for production: your Railway DEX API origin (no trailing slash).
+# Prebuild generates public/_redirects so /api/* and /V2/* proxy to this host (same-origin in the browser).
+# Alias for prebuild only (same value): RAILWAY_PUBLIC_URL
 VITE_API_URL=https://your-service.up.railway.app
 
-# Railway DEX API: set FRONTEND_ORIGINS to your Netlify URL(s) if you use a custom domain
-# (e.g. https://app.yoursite.com). *.netlify.app is allowed by default; bare custom domains are not unless listed.
-# Example: FRONTEND_ORIGINS=https://your-custom-domain.com,https://www.your-custom-domain.com
+# Railway DEX API: set FRONTEND_ORIGINS on Railway if you use a custom domain (not *.netlify.app).
 
 # Optional: same base if AI agent uses a dedicated path (often same as VITE_API_URL)
 VITE_AI_AGENT_API_URL=https://your-service.up.railway.app

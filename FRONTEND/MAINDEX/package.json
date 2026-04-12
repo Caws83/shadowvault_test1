@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "npx vite dev",
+    "prebuild": "node scripts/generate-netlify-redirects.cjs",
     "build": "npx vite build --mode production",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
     "format:check": "prettier --check 'src/**/*.{js,jsx,ts,tsx}'",

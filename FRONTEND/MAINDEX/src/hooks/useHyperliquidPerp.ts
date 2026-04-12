@@ -75,6 +75,10 @@ export function useHyperliquidPerp(
 
   useEffect(() => {
     if (!enabled) return
+    if (import.meta.env.PROD && !VITE_API_URL_CONFIGURED) {
+      setMetaError(NETLIFY_VITE_API_HINT)
+      return
+    }
     let cancelled = false
     const load = async () => {
       try {
