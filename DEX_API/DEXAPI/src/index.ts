@@ -15,11 +15,14 @@ import requestIp from 'request-ip'
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { Wallet } from '@ethersproject/wallet'
 import { Contract, EventFilter } from 'ethers'
+import { mountHyperliquidApi } from './hyperliquid'
+import { logServerEnvHints } from './env/envRead'
 
 const EthDater = require('ethereum-block-by-date')
 const cors = require('cors')
 
-dotenv.config()
+// Always load DEX_API/DEXAPI/.env (running `node dist/index.js` → __dirname is …/dist, parent = DEXAPI)
+dotenv.config({ path: path.join(__dirname, '..', '.env') })
 
 interface spinData {
   [user: string]: {
@@ -119,8 +122,16 @@ const corsOrigin = (origin: string | undefined, cb: (err: Error | null, origin?:
     'http://localhost:3000',
     'https://venerable-cupcake-ec1bc0.netlify.app'
   ]
-  if (process.env.FRONTEND_ORIGIN) allowed.push(process.env.FRONTEND_ORIGIN)
-  if (allowed.includes(origin) || /^https:\/\/[a-z0-9-]+\.netlify\.app$/i.test(origin)) {
+  const extras = process.env.FRONTEND_ORIGINS
+    ? process.env.FRONTEND_ORIGINS.split(',').map((s) => s.trim()).filter(Boolean)
+    : []
+  allowed.push(...extras)
+  if (process.env.FRONTEND_ORIGIN) allowed.push(process.env.FRONTEND_ORIGIN.trim())
+  if (
+    allowed.includes(origin) ||
+    /^https:\/\/[a-z0-9-]+\.netlify\.app$/i.test(origin) ||
+    /^https:\/\/(?:[a-z0-9-]+\.)*marswap\.exchange$/i.test(origin)
+  ) {
     return cb(null, origin)
   }
   return cb(null, false)
@@ -129,11 +140,13 @@ app.use(
   cors({
     origin: corsOrigin,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    allowedHeaders: 'Content-Type,Authorization'
+    allowedHeaders: 'Content-Type,Authorization,X-Wallet-Address'
   })
 )
 
 app.use(bodyParser.json())
+
+mountHyperliquidApi(app)
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
