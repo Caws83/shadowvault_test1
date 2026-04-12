@@ -1,7 +1,9 @@
 /**
  * Hyperliquid Exchange API — L1 signed actions (orders, cancels, leverage, etc.).
- * Uses `@nktkas/hyperliquid` ExchangeClient + viem LocalAccount from agent wallet.
- * No routes call this in Phase 2; Phase 4 will invoke from authenticated backend handlers only.
+ * Uses `@nktkas/hyperliquid` `ExchangeClient` + viem `LocalAccount` from the agent wallet (server-only).
+ *
+ * @see https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/exchange-endpoint
+ * @see https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/signing
  */
 import { ExchangeClient, HttpTransport } from '@nktkas/hyperliquid'
 import type { HyperliquidResolvedConfig } from './types'

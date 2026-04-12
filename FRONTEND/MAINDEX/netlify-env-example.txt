@@ -4,7 +4,12 @@
 # Point the app at your API; ChangeNOW + Hyperliquid keys stay on Railway only.
 
 # Required: your deployed DEX API (Railway URL). No trailing slash.
+# Must match the API your users' browsers will call (not localhost). If unset, the app defaults to https://api.marswap.exchange
 VITE_API_URL=https://your-service.up.railway.app
+
+# Railway DEX API: set FRONTEND_ORIGINS to your Netlify URL(s) if you use a custom domain
+# (e.g. https://app.yoursite.com). *.netlify.app is allowed by default; bare custom domains are not unless listed.
+# Example: FRONTEND_ORIGINS=https://your-custom-domain.com,https://www.your-custom-domain.com
 
 # Optional: same base if AI agent uses a dedicated path (often same as VITE_API_URL)
 VITE_AI_AGENT_API_URL=https://your-service.up.railway.app

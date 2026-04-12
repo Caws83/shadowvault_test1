@@ -21,6 +21,11 @@ export interface HyperliquidResolvedConfig {
   agentAddressExpected: `0x${string}` | null
   /** Subaccount / vault the master may sign for (optional). */
   vaultAddress: `0x${string}` | null
+  /**
+   * When `network` is mainnet: if false, signed Exchange routes (order/cancel/leverage) return 503.
+   * Controlled by `HYPERLIQUID_MAINNET_ENABLED` (default true). Ignored on testnet (writes always allowed).
+   */
+  mainnetExchangeEnabled: boolean
   /** Max retries for idempotent read-only Info calls. */
   infoMaxRetries: number
   /** Initial backoff ms for Info retries. */

@@ -53,6 +53,7 @@ import ChainSelector from './components/ChainSelector'
 import OrderBook from './components/OrderBook'
 import BitgetTradePanel from './components/BitgetTradePanel'
 import PairSelectorDropdown from './components/PairSelectorDropdown'
+import AddressInputPanel from './components/AddressInputPanel'
 import { LeverageMode } from 'features/ai-agent/types'
 import CopyAddress from 'components/Menu/UserMenu/CopyAddress'
 import useToast from 'hooks/useToast'
@@ -490,6 +491,12 @@ export default function Swap () {
       ? parsedAmounts[independentField]?.toExact() ?? ''
       : parsedAmounts[dependentField]?.toSignificant(6) ?? '',
   }
+
+  /** Margin / perp quantity must always track INPUT; `typedValue` follows `independentField` only. */
+  const marginQuantityDisplay = useMemo(() => {
+    if (independentField === Field.INPUT) return typedValue
+    return parsedAmounts[Field.INPUT]?.toExact() ?? ''
+  }, [independentField, typedValue, parsedAmounts])
 
   const route = trade?.route
   const userHasSpecifiedInputOutput = Boolean(
@@ -1005,7 +1012,7 @@ export default function Swap () {
                 toastInfo(t('Perpetual'), t('Pair not listed on Hyperliquid'))
                 return
               }
-              const size = parseFloat(typedValue || '0')
+              const size = parseFloat(marginQuantityDisplay || '0')
               if (!(size > 0)) {
                 toastInfo(t('Size'), t('Enter position size (base asset)'))
                 return
@@ -1067,7 +1074,7 @@ export default function Swap () {
                 toastInfo(t('Perpetual'), t('Pair not listed on Hyperliquid'))
                 return
               }
-              const size = parseFloat(typedValue || '0')
+              const size = parseFloat(marginQuantityDisplay || '0')
               if (!(size > 0)) {
                 toastInfo(t('Size'), t('Enter position size (base asset)'))
                 return
@@ -1123,7 +1130,7 @@ export default function Swap () {
             tradeMode === 'PERPETUAL'
               ? showConnectButton ||
                 !perpPairSupported ||
-                !(parseFloat(typedValue || '0') > 0) ||
+                !(parseFloat(marginQuantityDisplay || '0') > 0) ||
                 (orderType === 'limit' && (!limitPrice || parseFloat(limitPrice) <= 0))
               : showConnectButton || marginPending || (marginSupported ? !isNativeInput || !marginAmountValid : (swapIsUnsupported || showWrap || !isValid || priceImpactSeverity > 3 || !!swapCallbackError))
           }
@@ -1131,7 +1138,7 @@ export default function Swap () {
             tradeMode === 'PERPETUAL'
               ? showConnectButton ||
                 !perpPairSupported ||
-                !(parseFloat(typedValue || '0') > 0) ||
+                !(parseFloat(marginQuantityDisplay || '0') > 0) ||
                 (orderType === 'limit' && (!limitPrice || parseFloat(limitPrice) <= 0))
               : showConnectButton || marginPending || (marginSupported ? !isNativeInput || !marginAmountValid : (swapIsUnsupported || showWrap || !isValid || priceImpactSeverity > 3 || !!swapCallbackError))
           }
@@ -1147,7 +1154,7 @@ export default function Swap () {
           onModeChange={setTradeModeUI}
           price={limitPrice}
           onPriceChange={setLimitPrice}
-          quantity={typedValue}
+          quantity={marginQuantityDisplay}
           onQuantityChange={(v) => onUserInput(Field.INPUT, v)}
           quantityPercent={quantityPercent}
           onQuantityPercentChange={handleQuantityPercentChange}
@@ -1261,6 +1268,16 @@ export default function Swap () {
                   </Text>
                 ) : tradeMode === 'PRIVATE' ? (
                   <>
+                    <Box px="16px" mb="8px">
+                      <AddressInputPanel
+                        id="private-swap-recipient"
+                        value={recipient ?? ''}
+                        onChange={(v) => onChangeRecipient(v.length > 0 ? v : null)}
+                      />
+                      <Text fontSize="11px" color="textSubtle" mt="8px" textAlign="center">
+                        {t('Optional: payout address. Leave empty to use your connected wallet.')}
+                      </Text>
+                    </Box>
                     <Text fontSize="12px" color="textSubtle" textAlign="center">
                       {t('ShadowVault private swap — you will get a deposit address to send from your wallet.')}
                     </Text>

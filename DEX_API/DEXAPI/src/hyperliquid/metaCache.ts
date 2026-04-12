@@ -20,6 +20,7 @@ export async function getMetaCached(
   return meta
 }
 
+/** Perp `asset` field in Exchange orders = index in `meta.universe` (HL docs / SDK order types). */
 export function getAssetIndex(meta: MetaWire, coin: string): number | null {
   const u = meta.universe
   const idx = u.findIndex((x) => x.name === coin)

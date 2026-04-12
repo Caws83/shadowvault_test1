@@ -74,13 +74,17 @@ const app = express()
 const parseExtraOrigins = (): string[] => {
   const raw = process.env.FRONTEND_ORIGINS || process.env.FRONTEND_ORIGIN || ''
   return raw
-    .split(',')
+    .split(/[\n,]+/)
     .map((s) => s.trim().replace(/\/$/, ''))
     .filter(Boolean)
 }
 
 const isNetlifyHost = (origin: string) =>
   /^https:\/\/[a-z0-9][a-z0-9.-]*\.netlify\.app$/i.test(origin)
+
+/** Default prod UI host(s) for this repo — custom Netlify domains are not *.netlify.app; set FRONTEND_ORIGINS for others. */
+const isMarswapExchangeFront = (origin: string) =>
+  /^https:\/\/([a-z0-9-]+\.)*marswap\.exchange$/i.test(origin)
 
 app.use(
   cors({
@@ -92,7 +96,8 @@ app.use(
         origin === 'http://localhost:3000' ||
         origin === 'https://venerable-cupcake-ec1bc0.netlify.app' ||
         extras.includes(origin) ||
-        isNetlifyHost(origin)
+        isNetlifyHost(origin) ||
+        isMarswapExchangeFront(origin)
       cb(null, allowed)
     },
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',

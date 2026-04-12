@@ -24,6 +24,15 @@ function parsePositiveInt(raw: string | undefined, fallback: number): number {
   return Number.isFinite(n) && n > 0 ? n : fallback
 }
 
+/** Default true when unset; used for HYPERLIQUID_MAINNET_ENABLED. */
+function parseEnvBool(raw: string | undefined, defaultVal: boolean): boolean {
+  if (raw == null || String(raw).trim() === '') return defaultVal
+  const s = String(raw).trim().toLowerCase()
+  if (['false', '0', 'no', 'off'].includes(s)) return false
+  if (['true', '1', 'yes', 'on'].includes(s)) return true
+  return defaultVal
+}
+
 /**
  * Load Hyperliquid settings from env.
  * Safe to call at module load: does not throw if agent key is missing (exchange client stays disabled).
@@ -64,6 +73,10 @@ export function loadHyperliquidConfig(): HyperliquidResolvedConfig {
     hlLog.warn('Invalid HYPERLIQUID_AGENT_ADDRESS ignored', { err: (e as Error).message })
   }
 
+  const mainnetExchangeEnabled = isTestnet
+    ? true
+    : parseEnvBool(process.env.HYPERLIQUID_MAINNET_ENABLED, true)
+
   return {
     network,
     isTestnet,
@@ -74,6 +87,7 @@ export function loadHyperliquidConfig(): HyperliquidResolvedConfig {
     agentPrivateKeyConfigured,
     agentAddressExpected,
     vaultAddress,
+    mainnetExchangeEnabled,
     infoMaxRetries: parsePositiveInt(process.env.HYPERLIQUID_INFO_MAX_RETRIES, 3),
     infoRetryInitialMs: parsePositiveInt(process.env.HYPERLIQUID_INFO_RETRY_INITIAL_MS, 300),
   }

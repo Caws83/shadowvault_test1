@@ -40,9 +40,16 @@ export function logServerEnvHints(): void {
   const changenow = !!resolveChangeNowConfig().apiKey
   const hlPk = !!getFirstEnv('HYPERLIQUID_AGENT_PRIVATE_KEY')
   const openai = !!getFirstEnv('OPENAI_API_KEY')
+  const frontendOrigins = getFirstEnv('FRONTEND_ORIGINS', 'FRONTEND_ORIGIN')
   console.log('[env] service keys:', {
     changenow: changenow ? 'configured' : 'missing',
     hyperliquidAgent: hlPk ? 'configured' : 'missing',
     openai: openai ? 'configured' : 'missing',
+    corsExtraOrigins: frontendOrigins ? 'set' : 'unset',
   })
+  if (!frontendOrigins) {
+    console.log(
+      '[env] hint: set FRONTEND_ORIGINS on Railway (your Netlify URL(s), comma-separated) so browsers can call this API from a custom domain; *.netlify.app is allowed without it.',
+    )
+  }
 }

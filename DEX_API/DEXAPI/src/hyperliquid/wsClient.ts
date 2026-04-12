@@ -1,6 +1,10 @@
 /**
- * WebSocket transport + SubscriptionClient for Hyperliquid streams (L2, trades, user events).
- * Default reconnect uses exponential backoff (via `@nktkas/rews` inside WebSocketTransport).
+ * WebSocket transport + `SubscriptionClient` from `@nktkas/hyperliquid` (matches HL WS protocol).
+ * Reconnect/backoff options follow the SDK’s `WebSocketTransport` API.
+ *
+ * TODO: Wire subscriptions (e.g. `l2Book`, `trades`, user fills) via `SubscriptionClient` only using
+ * methods/types exported by this SDK version — do not hand-roll WS frames. Not used by HTTP routes yet.
+ *
  * @see https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/websocket
  */
 import { WebSocketTransport, SubscriptionClient } from '@nktkas/hyperliquid'

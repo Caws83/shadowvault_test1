@@ -1,5 +1,7 @@
 /**
- * Map Hyperliquid SDK / API shapes into stable Normalized* DTOs.
+ * Map `@nktkas/hyperliquid` Info responses into stable Normalized* DTOs for our JSON routes.
+ *
+ * @see https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/info-endpoint
  */
 import type { NormalizedL2Book, NormalizedOrderBookLevel, NormalizedPublicTrade } from './types'
 

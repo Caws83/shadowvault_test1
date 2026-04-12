@@ -1,6 +1,12 @@
 /**
- * In-memory L2 cache fed by polling + periodic full snapshot reconciliation.
- * WebSocket subscriptions can be added later; HTTP snapshot is source of truth on reconcile.
+ * In-memory L2 cache fed by polling Info API `l2Book` + periodic full snapshot reconciliation.
+ * This matches documented read-side behavior via `@nktkas/hyperliquid` `InfoClient.l2Book`.
+ *
+ * TODO: Optional upgrade path — subscribe to WS `l2Book` (see HL WebSocket docs + SDK
+ * `SubscriptionClient`) and reconcile against HTTP snapshot; do not invent non-documented channels.
+ *
+ * @see https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/info-endpoint
+ * @see https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/websocket
  */
 import type { InfoClient } from '@nktkas/hyperliquid'
 import { fetchL2Book, withInfoRetry } from './infoClient'

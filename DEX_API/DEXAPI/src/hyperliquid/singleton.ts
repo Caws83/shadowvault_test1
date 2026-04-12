@@ -1,3 +1,7 @@
+/**
+ * Process-wide Hyperliquid clients (Info always; Exchange when agent key is valid).
+ * All signing stays in this Node process — never expose `HYPERLIQUID_AGENT_PRIVATE_KEY` to clients.
+ */
 import { getHyperliquidConfig } from './config'
 import type { HyperliquidResolvedConfig } from './types'
 import { createHyperliquidInfoClient } from './infoClient'

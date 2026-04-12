@@ -1,5 +1,12 @@
 /**
  * Hyperliquid REST API for ShadowVault backend — all perp data and execution go through these routes.
+ *
+ * Official behavior is delegated to `@nktkas/hyperliquid` (InfoClient → POST /info, ExchangeClient →
+ * POST /exchange, WebSocket per docs). Do not add non-documented URL paths here.
+ *
+ * @see https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/info-endpoint
+ * @see https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/exchange-endpoint
+ * @see https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/websocket
  */
 import type { Express, Request, Response } from 'express'
 import { getAddress, isAddress } from 'viem'
@@ -14,6 +21,11 @@ import {
   primeOrderbook,
 } from './orderbookService'
 
+/**
+ * User address for Info API user-scoped calls. Hyperliquid Info API is keyed by `user` address;
+ * proving the caller owns that address is an application-layer concern (not part of HL Info wire).
+ * TODO: Add auth (signed challenge / session) before exposing sensitive account data in production.
+ */
 function parseUser(req: Request): `0x${string}` | null {
   const q = (req.query.address as string) || (req.body?.user as string) || (req.headers['x-wallet-address'] as string)
   if (!q || typeof q !== 'string') return null
@@ -42,10 +54,26 @@ export function mountHyperliquidApi(app: Express): void {
   const info = getInfoClient()
   startOrderbookService(info, cfg)
 
+  /** Kill switch for mainnet signed actions (HYPERLIQUID_MAINNET_ENABLED=false). */
+  const exchangeWritesAllowed = (res: Response): boolean => {
+    if (cfg.isTestnet || cfg.mainnetExchangeEnabled) {
+      return true
+    }
+    res.status(503).json({
+      error: 'Hyperliquid mainnet trading disabled (set HYPERLIQUID_MAINNET_ENABLED=true to enable)',
+    })
+    return false
+  }
+
   app.get('/api/hyperliquid/health', async (_req: Request, res: Response) => {
     try {
       await withInfoRetry(cfg, 'health_meta', () => info.meta({ dex: '' }))
-      res.json({ ok: true, network: cfg.network })
+      res.json({
+        ok: true,
+        network: cfg.network,
+        mainnetExchangeEnabled: cfg.isTestnet ? true : cfg.mainnetExchangeEnabled,
+        agentConfigured: cfg.agentPrivateKeyConfigured,
+      })
     } catch (e) {
       res.status(503).json({ ok: false, error: errMsg(e) })
     }
@@ -54,9 +82,11 @@ export function mountHyperliquidApi(app: Express): void {
   app.get('/api/hyperliquid/meta', async (_req: Request, res: Response) => {
     try {
       const meta = await getMetaCached(info, cfg)
+      // Asset id for orders is the index in `meta.universe` (same as getAssetIndex / Exchange `a` field).
       const universe = meta.universe
-        .filter((u) => !u.isDelisted)
-        .map((u, index) => ({
+        .map((u, index) => ({ u, index }))
+        .filter(({ u }) => !u.isDelisted)
+        .map(({ u, index }) => ({
           name: u.name,
           index,
           maxLeverage: u.maxLeverage,
@@ -166,6 +196,9 @@ export function mountHyperliquidApi(app: Express): void {
   })
 
   app.post('/api/hyperliquid/order', async (req: Request, res: Response) => {
+    if (!exchangeWritesAllowed(res)) {
+      return
+    }
     const ex = getExchangeClient()
     if (!ex) {
       return res.status(503).json({ error: 'Hyperliquid agent wallet not configured' })
@@ -219,6 +252,8 @@ export function mountHyperliquidApi(app: Express): void {
           return res.status(400).json({ error: 'No mid price for market order' })
         }
         const m = parseFloat(mid)
+        // TODO: Confirm slippage band and price tick/decimals against official docs for FrontendMarket
+        // (currently 0.8% from mid + toFixed(6); HL may require tick rounding per asset — verify before prod).
         const slip = 0.008
         const px = isBuy ? m * (1 + slip) : m * (1 - slip)
         priceStr = px.toFixed(6)
@@ -253,6 +288,9 @@ export function mountHyperliquidApi(app: Express): void {
   })
 
   app.post('/api/hyperliquid/cancel', async (req: Request, res: Response) => {
+    if (!exchangeWritesAllowed(res)) {
+      return
+    }
     const ex = getExchangeClient()
     if (!ex) {
       return res.status(503).json({ error: 'Hyperliquid agent wallet not configured' })
@@ -278,6 +316,9 @@ export function mountHyperliquidApi(app: Express): void {
   })
 
   app.post('/api/hyperliquid/leverage', async (req: Request, res: Response) => {
+    if (!exchangeWritesAllowed(res)) {
+      return
+    }
     const ex = getExchangeClient()
     if (!ex) {
       return res.status(503).json({ error: 'Hyperliquid agent wallet not configured' })

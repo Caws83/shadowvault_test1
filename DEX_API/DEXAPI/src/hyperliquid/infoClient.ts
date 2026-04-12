@@ -1,6 +1,8 @@
 /**
  * Hyperliquid Info API (read-only) with safe retry for transient failures.
- * Uses official `@nktkas/hyperliquid` InfoClient → POST /info.
+ * Uses `@nktkas/hyperliquid` `InfoClient` (HTTP POST to the documented Info endpoint — see SDK transport).
+ *
+ * @see https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/info-endpoint
  */
 import { HttpTransport, HttpRequestError, InfoClient, TransportError } from '@nktkas/hyperliquid'
 import type { HyperliquidResolvedConfig } from './types'
